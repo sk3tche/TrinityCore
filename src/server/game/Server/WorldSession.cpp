@@ -458,6 +458,13 @@ void WorldSession::LogoutPlayer(bool Save)
             _player->SaveToDB();
         }
 
+		// Dismount player when logging out...
+		if(_player->IsMounted())
+		{
+			_player->Unmount();
+			_player->RemoveAurasByType(SPELL_AURA_MOUNTED);
+		}
+
         ///- Leave all channels before player delete...
         _player->CleanupChannels();
 
