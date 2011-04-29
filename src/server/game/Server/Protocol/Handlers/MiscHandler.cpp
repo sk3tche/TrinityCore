@@ -366,7 +366,7 @@ void WorldSession::HandleLogoutRequestOpcode(WorldPacket & /*recv_data*/)
         reason = 1;
     else if (GetPlayer()->m_movementInfo.HasMovementFlag(MOVEMENTFLAG_JUMPING | MOVEMENTFLAG_FALLING))
         reason = 3;                                         // is jumping or falling
-    else if (GetPlayer()->duel || GetPlayer()->HasAura(9454)) // is dueling or frozen by GM via freeze command
+    else if (GetPlayer()->duel || GetPlayer()->HasAura(9454) || GetPlayer()->IsMounted()) // is dueling, frozen (by GM), or mounted
         reason = 2;                                         // FIXME - Need the correct value
 
     if (reason)
