@@ -2431,7 +2431,7 @@ void Spell::DoCreateItem(uint32 /*i*/, uint32 itemtype)
     // can the player store the new item?
     ItemPosCountVec dest;
     uint32 no_space = 0;
-    uint8 msg = player->CanStoreNewItem(NULL_BAG, NULL_SLOT, dest, newitemid, num_to_add, &no_space);
+    InventoryResult msg = player->CanStoreNewItem(NULL_BAG, NULL_SLOT, dest, newitemid, num_to_add, &no_space);
     if (msg != EQUIP_ERR_OK)
     {
         // convert to possible store amount
@@ -2897,7 +2897,7 @@ void Spell::EffectSummonChangeItem(SpellEffIndex effIndex)
     if (player->IsInventoryPos(pos))
     {
         ItemPosCountVec dest;
-        uint8 msg = player->CanStoreItem(m_CastItem->GetBagSlot(), m_CastItem->GetSlot(), dest, pNewItem, true);
+        InventoryResult msg = player->CanStoreItem(m_CastItem->GetBagSlot(), m_CastItem->GetSlot(), dest, pNewItem, true);
         if (msg == EQUIP_ERR_OK)
         {
             player->DestroyItem(m_CastItem->GetBagSlot(), m_CastItem->GetSlot(), true);
@@ -3498,7 +3498,7 @@ void Spell::EffectEnchantItemPerm(SpellEffIndex effIndex)
         {
             sLog->outCommand(p_caster->GetSession()->GetAccountId(),"GM %s (Account: %u) enchanting(perm): %s (Entry: %d) for player: %s (Account: %u)",
                 p_caster->GetName(),p_caster->GetSession()->GetAccountId(),
-                itemTarget->GetTemplate()->Name1,itemTarget->GetEntry(),
+                itemTarget->GetTemplate()->Name1.c_str(), itemTarget->GetEntry(),
                 item_owner->GetName(),item_owner->GetSession()->GetAccountId());
         }
 
@@ -3559,7 +3559,7 @@ void Spell::EffectEnchantItemPrismatic(SpellEffIndex effIndex)
     {
         sLog->outCommand(p_caster->GetSession()->GetAccountId(),"GM %s (Account: %u) enchanting(perm): %s (Entry: %d) for player: %s (Account: %u)",
             p_caster->GetName(),p_caster->GetSession()->GetAccountId(),
-            itemTarget->GetTemplate()->Name1,itemTarget->GetEntry(),
+            itemTarget->GetTemplate()->Name1.c_str(), itemTarget->GetEntry(),
             item_owner->GetName(),item_owner->GetSession()->GetAccountId());
     }
 
@@ -3689,7 +3689,7 @@ void Spell::EffectEnchantItemTmp(SpellEffIndex effIndex)
     {
         sLog->outCommand(p_caster->GetSession()->GetAccountId(),"GM %s (Account: %u) enchanting(temp): %s (Entry: %d) for player: %s (Account: %u)",
             p_caster->GetName(), p_caster->GetSession()->GetAccountId(),
-            itemTarget->GetTemplate()->Name1, itemTarget->GetEntry(),
+            itemTarget->GetTemplate()->Name1.c_str(), itemTarget->GetEntry(),
             item_owner->GetName(), item_owner->GetSession()->GetAccountId());
     }
 
