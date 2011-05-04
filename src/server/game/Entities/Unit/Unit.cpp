@@ -10769,30 +10769,30 @@ bool Unit::isSpellCrit(Unit *pVictim, SpellEntry const *spellProto, SpellSchoolM
             break;
         }
         case SPELL_DAMAGE_CLASS_MELEE:
-            if (pVictim)
+        {
+            if (!pVictim)
+                break;
+
+            // Custom crit by class
+            switch(spellProto->SpellFamilyName)
             {
-                // Custom crit by class
-                switch(spellProto->SpellFamilyName)
+                case SPELLFAMILY_DRUID:
                 {
-                    case SPELLFAMILY_DRUID:
-                        // Rend and Tear - bonus crit chance for Ferocious Bite on bleeding targets
-                        if (spellProto->SpellFamilyFlags[0] & 0x00800000
-                            && spellProto->SpellIconID == 1680
-                            && pVictim->HasAuraState(AURA_STATE_BLEEDING))
-                        {
-                            if (AuraEffect const *rendAndTear = GetDummyAuraEffect(SPELLFAMILY_DRUID, 2859, 1))
-                                crit_chance += rendAndTear->GetAmount();
-                            break;
-                        }
+                    // Rend and Tear - bonus crit chance for Ferocious Bite on bleeding targets
+                    if (spellProto->SpellFamilyFlags[0] & 0x00800000
+                        && spellProto->SpellIconID == 1680
+                        && pVictim->HasAuraState(AURA_STATE_BLEEDING))
+                    {
+                        if (AuraEffect const* rendAndTear = GetDummyAuraEffect(SPELLFAMILY_DRUID, 2859, 1))
+                            crit_chance += rendAndTear->GetAmount();
+                        break;
+                    }
                     break;
-                    case SPELLFAMILY_PALADIN:
-                        // Judgement of Command proc always crits on stunned target
-                        if (spellProto->SpellFamilyName == SPELLFAMILY_PALADIN)
-                            if (spellProto->SpellFamilyFlags[0] & 0x0000000000800000LL && spellProto->SpellIconID == 561)
-                                if (pVictim->HasUnitState(UNIT_STAT_STUNNED))
-                                    return true;
                 }
+                default:
+                    break;
             }
+        }
         case SPELL_DAMAGE_CLASS_RANGED:
         {
             if (pVictim)
@@ -10813,6 +10813,7 @@ bool Unit::isSpellCrit(Unit *pVictim, SpellEntry const *spellProto, SpellSchoolM
     crit_chance = crit_chance > 0.0f ? crit_chance : 0.0f;
     if (roll_chance_f(crit_chance))
         return true;
+
     return false;
 }
 
