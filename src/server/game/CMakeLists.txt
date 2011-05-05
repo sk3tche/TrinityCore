@@ -50,6 +50,8 @@ file(GLOB_RECURSE sources_Tickets Tickets/*.cpp Tickets/*.h)
 file(GLOB_RECURSE sources_Weather Weather/*.cpp Weather/*.h)
 file(GLOB_RECURSE sources_World World/*.cpp World/*.h)
 
+file(GLOB_RECURSE sources_Irc Irc/*.cpp Irc/*.h)
+
 # Create game-libary
 
 if( USE_COREPCH AND MSVC )
@@ -98,6 +100,8 @@ set(game_STAT_SRCS
   ${sources_Tickets}
   ${sources_Weather}
   ${sources_World}
+
+  ${sources_Irc}
 )
 
 include_directories(
@@ -189,6 +193,7 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/Tickets
   ${CMAKE_CURRENT_SOURCE_DIR}/Weather
   ${CMAKE_CURRENT_SOURCE_DIR}/World
+  ${CMAKE_CURRENT_SOURCE_DIR}/Irc
   ${CMAKE_SOURCE_DIR}/src/server/scripts/PrecompiledHeaders
   ${ACE_INCLUDE_DIR}
   ${MYSQL_INCLUDE_DIR}
