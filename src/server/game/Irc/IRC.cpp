@@ -24,6 +24,7 @@ bool IrcBot::HookChannel(char const* channel)
     // TODO
     // Check if channel actually exists
     _hookedChannels.push_back(channel);
+    return true;
 }
 
 bool IrcBot::UnhookChannel(char const* channel)
