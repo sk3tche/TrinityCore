@@ -10,21 +10,20 @@
 class IrcBot
 {
     public:
-
         IrcBot();
         ~IrcBot();
 
         bool Connect();
         bool Disconnect();
-        bool IsConnected() { return connected; }
+        bool IsConnected() { return _connected; }
 
         // Channels
-        bool HookChannel(const char * channel);
-        bool UnHookChannel(const char * channel);
-        bool IsChannelHooked(const char * channel);
+        bool HookChannel(char const* channel);
+        bool UnhookChannel(char const* channel);
+        bool IsChannelHooked(char const* channel);
     private:
-        bool connected; 
-        std::vector<const char *> hooked_channels;
+        bool _connected; 
+        std::vector<char const*> _hookedChannels;
         std::string error_msg;
-        std::vector<const char*>::iterator itr;
+        std::vector<char const*>::iterator _itr;
 }

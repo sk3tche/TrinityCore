@@ -3649,7 +3649,7 @@ void Unit::RemoveAurasDueToSpellByDispel(uint32 spellId, uint64 casterGUID, Unit
                     {
                         // final heal
                         int32 healAmount = aurEff->GetAmount();
-                        uint8 stack = chargesRemoved;
+                        int32 stack = chargesRemoved;
                         CastCustomSpell(this, 33778, &healAmount, &stack, NULL, true, NULL, NULL, aura->GetCasterGUID());
 
                         // mana return to caster

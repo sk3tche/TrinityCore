@@ -15,35 +15,36 @@ bool IrcBot::Connect()
 
 bool IrcBot::Disconnect()
 {
+    // close sockets
     return true;
 }
 
-bool IrcBot::HookChannel(const char *channel)
+bool IrcBot::HookChannel(char const* channel)
 {
     // TODO
     // Check if channel actually exists
-    hooked_channels.push_back(channel);
+    _hookedChannels.push_back(channel);
 }
 
-bool IrcBot::UnHookChannel(const char *channel)
+bool IrcBot::UnhookChannel(char const* channel)
 {
     bool found;
-    for(itr = hooked_channels.begin(); itr != hooked_channels.end(); itr++)
+    for (_itr = _hookedChannels.begin(); _itr != _hookedChannels.end(); _itr++)
     {
-        if(!stricmp(channel, *itr))
+        if (!stricmp(channel, *_itr))
         {
             found = true;
-            hooked_channels.erase(itr);
+            _hookedChannels.erase(_itr);
         }
     }
     return found;
 }
 
-bool IrcBot::IsChannelHooked(const char *channel)
+bool IrcBot::IsChannelHooked(char const* channel)
 {
-    for(itr = hooked_channels.begin(); itr != hooked_channels.end(); itr++)
+    for (_itr = _hookedChannels.begin(); _itr != _hookedChannels.end(); _itr++)
     {
-        if(!stricmp(channel, *itr))
+        if (!stricmp(channel, *_itr))
             return true;
     }
     return false;
