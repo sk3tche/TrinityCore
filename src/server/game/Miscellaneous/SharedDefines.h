@@ -266,7 +266,7 @@ enum SpellAttr0
     SPELL_ATTR0_UNK0                             = 0x00000001, //  0
     SPELL_ATTR0_REQ_AMMO                         = 0x00000002, //  1
     SPELL_ATTR0_ON_NEXT_SWING                    = 0x00000004, //  2 on next swing
-    SPELL_ATTR0_UNK3                             = 0x00000008, //  3 not set in 3.0.3
+    SPELL_ATTR0_CANT_REFLECTED                   = 0x00000008, //  3 spells can not be reflected
     SPELL_ATTR0_UNK4                             = 0x00000010, //  4
     SPELL_ATTR0_TRADESPELL                       = 0x00000020, //  5 trade spells, will be added by client to a sublist of profession spell
     SPELL_ATTR0_PASSIVE                          = 0x00000040, //  6 Passive spell
@@ -337,20 +337,20 @@ enum SpellAttr2
 {
     SPELL_ATTR2_ALLOW_DEAD_TARGET                = 0x00000001, //  0
     SPELL_ATTR2_UNK1                             = 0x00000002, //  1 ? many triggered spells have this flag
-    SPELL_ATTR2_CANT_REFLECTED                   = 0x00000004, //  2 ? used for detect can or not spell reflected
+    SPELL_ATTR2_IGNORE_LOS                       = 0x00000004, //  2 spells ignore line of sight detection
     SPELL_ATTR2_UNK3                             = 0x00000008, //  3
     SPELL_ATTR2_ALWAYS_APPLY_MODIFIERS           = 0x00000010, //  4 ? spell modifiers are applied dynamically (even if aura is not passive)
     SPELL_ATTR2_AUTOREPEAT_FLAG                  = 0x00000020, //  5
     SPELL_ATTR2_UNK6                             = 0x00000040, //  6
     SPELL_ATTR2_UNK7                             = 0x00000080, //  7
-    SPELL_ATTR2_UNK8                             = 0x00000100, //  8 not set in 3.0.3
+    SPELL_ATTR2_UNK8                             = 0x00000100, //  8 not set in 3.3.5a
     SPELL_ATTR2_UNK9                             = 0x00000200, //  9
-    SPELL_ATTR2_UNK10                            = 0x00000400, // 10
+    SPELL_ATTR2_UNK10                            = 0x00000400, // 10 tame spells
     SPELL_ATTR2_HEALTH_FUNNEL                    = 0x00000800, // 11
     SPELL_ATTR2_UNK12                            = 0x00001000, // 12
     SPELL_ATTR2_UNK13                            = 0x00002000, // 13 Items enchanted by spells with this flag preserve the enchant to arenas
     SPELL_ATTR2_UNK14                            = 0x00004000, // 14
-    SPELL_ATTR2_UNK15                            = 0x00008000, // 15 not set in 3.0.3
+    SPELL_ATTR2_UNK15                            = 0x00008000, // 15 not set in 3.3.5a
     SPELL_ATTR2_TAME_BEAST                       = 0x00010000, // 16
     SPELL_ATTR2_NOT_RESET_AUTO_ACTIONS           = 0x00020000, // 17 don't reset timers for melee autoattacks (swings) or ranged autoattacks (autoshoots)
     SPELL_ATTR2_UNK18                            = 0x00040000, // 18 Only Revive pet - possible req dead pet
@@ -389,7 +389,7 @@ enum SpellAttr3
     SPELL_ATTR3_UNK15                            = 0x00008000, // 15 Auto Shoot, Shoot, Throw,  - this is autoshot flag
     SPELL_ATTR3_UNK16                            = 0x00010000, // 16 no triggers effects that trigger on casting a spell?? (15290 - 2.2ptr change)
     SPELL_ATTR3_NO_INITIAL_AGGRO                 = 0x00020000, // 17 Soothe Animal, 39758, Mind Soothe
-    SPELL_ATTR3_UNK18                            = 0x00040000, // 18 added to Explosive Trap Effect 3.3.0, removed from Mutilate 3.3.0
+    SPELL_ATTR3_UNK18                            = 0x00040000, // 18 added to Explosive Trap Effect 3.3.0, removed from Mutilate 3.3.0. cannot be blocked?
     SPELL_ATTR3_DISABLE_PROC                     = 0x00080000, // 19 during aura proc no spells can trigger (20178, 20375)
     SPELL_ATTR3_DEATH_PERSISTENT                 = 0x00100000, // 20 Death persistent spells
     SPELL_ATTR3_UNK21                            = 0x00200000, // 21
@@ -479,7 +479,7 @@ enum SpellAttr5
 
 enum SpellAttr6
 {
-    SPELL_ATTR6_UNK0                             = 0x00000001, //  0 Only Move spell have this flag
+    SPELL_ATTR6_UNK0                             = 0x00000001, //  0
     SPELL_ATTR6_ONLY_IN_ARENA                    = 0x00000002, //  1 only usable in arena
     SPELL_ATTR6_IGNORE_CASTER_AURAS              = 0x00000004, //  2
     SPELL_ATTR6_UNK3                             = 0x00000008, //  3
@@ -494,32 +494,32 @@ enum SpellAttr6
     SPELL_ATTR6_UNK12                            = 0x00001000, // 12
     SPELL_ATTR6_UNK13                            = 0x00002000, // 13
     SPELL_ATTR6_UNK14                            = 0x00004000, // 14
-    SPELL_ATTR6_UNK15                            = 0x00008000, // 15 not set in 3.0.3
-    SPELL_ATTR6_UNK16                            = 0x00010000, // 16
-    SPELL_ATTR6_UNK17                            = 0x00020000, // 17
-    SPELL_ATTR6_UNK18                            = 0x00040000, // 18
+    SPELL_ATTR6_UNK15                            = 0x00008000, // 15 Disease Cloud (54368) and Touch of the Val'kyr (67892)
+    SPELL_ATTR6_UNK16                            = 0x00010000, // 16 Jump effects
+    SPELL_ATTR6_UNK17                            = 0x00020000, // 17 Mounts
+    SPELL_ATTR6_UNK18                            = 0x00040000, // 18 Vehicle spells
     SPELL_ATTR6_UNK19                            = 0x00080000, // 19
     SPELL_ATTR6_UNK20                            = 0x00100000, // 20
-    SPELL_ATTR6_CLIENT_UI_TARGET_EFFECTS         = 0x00200000, // 21 it's only client-side attribute
-    SPELL_ATTR6_UNK22                            = 0x00400000, // 22
-    SPELL_ATTR6_UNK23                            = 0x00800000, // 23 not set in 3.0.3
-    SPELL_ATTR6_UNK24                            = 0x01000000, // 24 not set in 3.0.3
-    SPELL_ATTR6_UNK25                            = 0x02000000, // 25 not set in 3.0.3
-    SPELL_ATTR6_UNK26                            = 0x04000000, // 26 not set in 3.0.3
-    SPELL_ATTR6_UNK27                            = 0x08000000, // 27 not set in 3.0.3
-    SPELL_ATTR6_UNK28                            = 0x10000000, // 28 not set in 3.0.3
-    SPELL_ATTR6_UNK29                            = 0x20000000, // 29 not set in 3.0.3
-    SPELL_ATTR6_UNK30                            = 0x40000000, // 30 not set in 3.0.3
-    SPELL_ATTR6_UNK31                            = 0x80000000  // 31 not set in 3.0.3
+    SPELL_ATTR6_CLIENT_UI_TARGET_EFFECTS         = 0x00200000, // 21 it's only client-side attribute (frostbolt, fear and silence?)
+    SPELL_ATTR6_UNK22                            = 0x00400000, // 22 Kinetic Bomb Visual (72054)
+    SPELL_ATTR6_UNK23                            = 0x00800000, // 23
+    SPELL_ATTR6_UNK24                            = 0x01000000, // 24
+    SPELL_ATTR6_UNK25                            = 0x02000000, // 25 Exorcism and Flash of Light (Art of War proc?)
+    SPELL_ATTR6_UNK26                            = 0x04000000, // 26 Various buffs and hots
+    SPELL_ATTR6_UNK27                            = 0x08000000, // 27 Heals of health procentages
+    SPELL_ATTR6_UNK28                            = 0x10000000, // 28 Death Grip spells
+    SPELL_ATTR6_UNK29                            = 0x20000000, // 29
+    SPELL_ATTR6_UNK30                            = 0x40000000, // 30 Auras (Retribution Aura, Rampage, Unleashed Rage, Elemental Oath and Ferocious Inspiration)
+    SPELL_ATTR6_UNK31                            = 0x80000000  // 31 Only spellid 2894
 };
 
 enum SpellAttr7
 {
     SPELL_ATTR7_UNK0                             = 0x00000001, //  0 Shaman's new spells (Call of the ...), Feign Death.
-    SPELL_ATTR7_UNK1                             = 0x00000002, //  1 Not set in 3.2.2a.
+    SPELL_ATTR7_UNK1                             = 0x00000002, //  1 Not set in 3.3.5a.
     SPELL_ATTR7_REACTIVATE_AT_RESURRECT          = 0x00000004, //  2 Paladin's auras and 65607 only.
     SPELL_ATTR7_DISABLED_CLIENT_SIDE             = 0x00000008, //  3 used only by client to disable spells client-side. some sort of special player flag (0x40000) bypasses that restriction
-    SPELL_ATTR7_UNK4                             = 0x00000010, //  4 Only 66109 test spell.
+    SPELL_ATTR7_UNK4                             = 0x00000010, //  4 Ron's Test Buff 4 (66109,69420,69427) and Soulstone Resurrection (47883)
     SPELL_ATTR7_SUMMON_PLAYER_TOTEM              = 0x00000020, //  5 Only Shaman player totems.
     SPELL_ATTR7_UNK6                             = 0x00000040, //  6 Dark Surge, Surge of Light, Burning Breath triggers (boss spells).
     SPELL_ATTR7_UNK7                             = 0x00000080, //  7 66218 (Launch) spell.
@@ -527,14 +527,21 @@ enum SpellAttr7
     SPELL_ATTR7_UNK9                             = 0x00000200, //  9 Teleports, mounts and other spells.
     SPELL_ATTR7_DISPEL_CHARGES                   = 0x00000400, // 10 Dispel and Spellsteal individual charges instead of whole aura.
     SPELL_ATTR7_INTERRUPT_ONLY_NONPLAYER         = 0x00000800, // 11 Only non-player casts interrupt, though Feral Charge - Bear has it.
-    SPELL_ATTR7_UNK12                            = 0x00001000, // 12 Not set in 3.2.2a.
-    SPELL_ATTR7_UNK13                            = 0x00002000, // 13 Not set in 3.2.2a.
+    SPELL_ATTR7_UNK12                            = 0x00001000, // 12
+    SPELL_ATTR7_UNK13                            = 0x00002000, // 13
     SPELL_ATTR7_UNK14                            = 0x00004000, // 14 Only 52150 (Raise Dead - Pet) spell.
     SPELL_ATTR7_UNK15                            = 0x00008000, // 15 Exorcism. Usable on players? 100% crit chance on undead and demons?
-    SPELL_ATTR7_UNK16                            = 0x00010000, // 16 Druid spells (29166, 54833, 64372, 68285).
+    SPELL_ATTR7_UNK16                            = 0x00010000, // 16 Mana gaining spells.
     SPELL_ATTR7_UNK17                            = 0x00020000, // 17 Only 27965 (Suicide) spell.
     SPELL_ATTR7_HAS_CHARGE_EFFECT                = 0x00040000, // 18 Only spells that have Charge among effects.
-    SPELL_ATTR7_ZONE_TELEPORT                    = 0x00080000  // 19 Teleports to specific zones.
+    SPELL_ATTR7_ZONE_TELEPORT                    = 0x00080000, // 19 Teleports to specific zones.
+    SPELL_ATTR7_UNK20                            = 0x00100000, // 20 Divine Shield, Blink and Ice Block
+    SPELL_ATTR7_UNK21                            = 0x00400000, // 21 Loaned Gryphon, Loaned Wind Rider, Quivering Strike
+    SPELL_ATTR7_UNK22                            = 0x00800000, // 22 Mutilate, Shattering Throw
+    SPELL_ATTR7_UNK23                            = 0x10000000, // 23
+    SPELL_ATTR7_UNK24                            = 0x20000000, // 24
+    SPELL_ATTR7_UNK25                            = 0x40000000, // 25 Prayer of Mending, Earth Shield, Burning Determination and Divine Sacrifice
+    SPELL_ATTR7_UNK26                            = 0x80000000, // 26 Divine Storm cooldown reset (70769)
 };
 
 #define MIN_TALENT_SPEC         0
