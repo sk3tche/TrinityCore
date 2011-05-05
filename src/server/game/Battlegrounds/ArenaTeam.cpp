@@ -26,7 +26,7 @@
 ArenaTeam::ArenaTeam()
 {
     TeamId            = 0;
-    Type              = 0;
+    Type              = ARENA_TYPE_NONE;
     TeamName          = "";
     CaptainGuid       = 0;
     BackgroundColor   = 0;
@@ -46,8 +46,12 @@ ArenaTeam::~ArenaTeam()
 {
 }
 
-bool ArenaTeam::Create(uint32 captainGuid, uint8 type, std::string teamName, uint32 backgroundColor, uint8 emblemStyle, uint32 emblemColor, uint8 borderStyle, uint32 borderColor)
+bool ArenaTeam::Create(uint32 captainGuid, ArenaType type, std::string teamName, uint32 backgroundColor, uint8 emblemStyle, uint32 emblemColor, uint8 borderStyle, uint32 borderColor)
 {
+    // Check if arena type is valid
+    if (!IsArenaTypeValid(type))
+        return false;
+
     // Check if captain is present
     if (!sObjectMgr->GetPlayer(captainGuid))
         return false;
@@ -69,8 +73,6 @@ bool ArenaTeam::Create(uint32 captainGuid, uint8 type, std::string teamName, uin
     EmblemColor = emblemColor;
     BorderStyle = borderStyle;
     BorderColor = borderColor;
-
-
 
     // Save arena team to db
     PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_ADD_ARENA_TEAM);
@@ -98,12 +100,12 @@ bool ArenaTeam::AddMember(const uint64& playerGuid)
     std::string playerName;
     uint8 playerClass;
 
-    // Check if arena team is full (Can't have more than type * 2 players)
-    if (GetMembersSize() >= GetType() * 2)
+    // Check if arena team is full
+    if (GetMembersSize() >= GetMaxMembersSize())
         return false;
 
     // Get player name and class either from db or ObjectMgr
-    Player *player = sObjectMgr->GetPlayer(playerGuid);
+    Player* player = sObjectMgr->GetPlayer(playerGuid);
     if (player)
     {
         playerClass = player->getClass();
@@ -125,7 +127,7 @@ bool ArenaTeam::AddMember(const uint64& playerGuid)
     }
 
     // Check if player is already in a similar arena team
-    if (player && player->GetArenaTeamId(GetSlot()) || Player::GetArenaTeamIdFromDB(playerGuid, GetType()) != 0)
+    if (player && player->GetArenaTeamId(GetSlot()) || Player::GetArenaTeamIdFromDB(playerGuid, GetType()) != ARENA_TYPE_NONE)
     {
         sLog->outError("Arena: Player %s (guid: %u) already has an arena team of type %u", playerName.c_str(), playerGuid, GetType());
         return false;
@@ -201,7 +203,7 @@ bool ArenaTeam::LoadArenaTeamFromDB(QueryResult result)
     TeamId            = fields[0].GetUInt32();
     TeamName          = fields[1].GetString();
     CaptainGuid       = MAKE_NEW_GUID(fields[2].GetUInt32(), 0, HIGHGUID_PLAYER);
-    Type              = fields[3].GetUInt8();
+    Type              = ArenaType(fields[3].GetUInt8());
     BackgroundColor   = fields[4].GetUInt32();
     EmblemStyle       = fields[5].GetUInt8();
     EmblemColor       = fields[6].GetUInt32();
@@ -213,6 +215,9 @@ bool ArenaTeam::LoadArenaTeamFromDB(QueryResult result)
     Stats.SeasonGames = fields[12].GetUInt16();
     Stats.SeasonWins  = fields[13].GetUInt16();
     Stats.Rank        = fields[14].GetUInt32();
+
+    if (!IsArenaTypeValid(Type))
+        return false;
 
     return true;
 }
@@ -244,8 +249,8 @@ bool ArenaTeam::LoadMembersFromDB(QueryResult result)
         newMember.WeekWins         = fields[3].GetUInt16();
         newMember.SeasonGames      = fields[4].GetUInt16();
         newMember.SeasonWins       = fields[5].GetUInt16();
-        newMember.Name              = fields[6].GetString();
-        newMember.Class             = fields[7].GetUInt8();
+        newMember.Name             = fields[6].GetString();
+        newMember.Class            = fields[7].GetUInt8();
         newMember.PersonalRating   = fields[8].GetUInt16();
         newMember.MatchMakerRating = fields[9].GetUInt16() > 0 ? fields[9].GetUInt16() : 1500;
 
@@ -519,13 +524,13 @@ void ArenaTeam::BroadcastEvent(ArenaTeamEvents event, uint64 guid, uint8 strCoun
     sLog->outDebug(LOG_FILTER_NETWORKIO, "WORLD: Sent SMSG_ARENA_TEAM_EVENT");
 }
 
-uint8 ArenaTeam::GetSlotByType(uint32 type)
+uint8 ArenaTeam::GetSlotByType(ArenaType type)
 {
     switch(type)
     {
-        case ARENA_TEAM_2v2: return 0;
-        case ARENA_TEAM_3v3: return 1;
-        case ARENA_TEAM_5v5: return 2;
+        case ARENA_TYPE_2v2: return 0;
+        case ARENA_TYPE_3v3: return 1;
+        case ARENA_TYPE_5v5: return 2;
         default:
             break;
     }
@@ -560,9 +565,9 @@ uint32 ArenaTeam::GetPoints(uint32 memberRating)
         points = 1511.26f / (1.0f + 1639.28f * exp(-0.00412f * (float)rating));
 
     // Type penalties for teams < 5v5
-    if  (Type == ARENA_TEAM_2v2)
+    if (Type == ARENA_TYPE_2v2)
         points *= 0.76f;
-    else if (Type == ARENA_TEAM_3v3)
+    else if (Type == ARENA_TYPE_3v3)
         points *= 0.88f;
 
     return (uint32) points;
