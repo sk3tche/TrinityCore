@@ -241,7 +241,7 @@ struct SpellValue
 {
     explicit SpellValue(SpellEntry const *proto)
     {
-        for (uint32 i = 0; i < MAX_SPELL_EFFECTS; ++i)
+        for (uint8 i = 0; i < MAX_SPELL_EFFECTS; ++i)
             EffectBasePoints[i] = proto->EffectBasePoints[i];
         MaxAffectedTargets = proto->MaxAffectedTargets;
         RadiusMod = 1.0f;

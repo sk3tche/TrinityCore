@@ -240,7 +240,7 @@ inline float GetSpellMaxRange(uint32 id, bool positive)
 
 inline bool IsSpellHaveEffect(SpellEntry const *spellInfo, SpellEffects effect)
 {
-    for (int i= 0; i < MAX_SPELL_EFFECTS; ++i)
+    for (uint8 i= 0; i < MAX_SPELL_EFFECTS; ++i)
         if (SpellEffects(spellInfo->Effect[i]) == effect)
             return true;
     return false;
@@ -248,7 +248,7 @@ inline bool IsSpellHaveEffect(SpellEntry const *spellInfo, SpellEffects effect)
 
 inline bool IsSpellHaveAura(SpellEntry const *spellInfo, AuraType aura)
 {
-    for (int i= 0; i < MAX_SPELL_EFFECTS; ++i)
+    for (uint8 i = 0; i < MAX_SPELL_EFFECTS; ++i)
         if (AuraType(spellInfo->EffectApplyAuraName[i]) == aura)
             return true;
     return false;
@@ -432,7 +432,7 @@ inline bool IsAreaAuraEffect(uint32 effect)
 
 inline bool HasAreaAuraEffect(SpellEntry const *spellInfo)
 {
-    for (uint8 i=0;i<MAX_SPELL_EFFECTS;++i)
+    for (uint8 i = 0; i < MAX_SPELL_EFFECTS; ++i)
         if (IsAreaAuraEffect(spellInfo->Effect[i]))
             return true;
     return false;
@@ -513,7 +513,7 @@ inline uint32 GetAllSpellMechanicMask(SpellEntry const* spellInfo)
     uint32 mask = 0;
     if (spellInfo->Mechanic)
         mask |= 1<<spellInfo->Mechanic;
-    for (int i = 0; i < MAX_SPELL_EFFECTS; ++i)
+    for (uint8 i = 0; i < MAX_SPELL_EFFECTS; ++i)
         if (spellInfo->Effect[i] && spellInfo->EffectMechanic[i])
             mask |= 1<<spellInfo->EffectMechanic[i];
     return mask;
@@ -1347,7 +1347,7 @@ class SpellMgr
 
         inline bool IsSpellWithCasterSourceTargetsOnly(SpellEntry const* spellInfo)
         {
-            for (int i = 0; i < MAX_SPELL_EFFECTS; ++i)
+            for (uint8 i = 0; i < MAX_SPELL_EFFECTS; ++i)
                 if (uint32 target = spellInfo->EffectImplicitTargetA[i])
                     if (!IsCasterSourceTarget(target))
                         return false;
