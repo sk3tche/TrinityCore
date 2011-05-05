@@ -220,8 +220,7 @@ void Player::UpdateArmor()
 
     SetArmor(int32(value));
 
-    Pet *pet = GetPet();
-    if (pet)
+    if (Pet* pet = GetPet())
         pet->UpdateArmor();
 
     UpdateAttackPowerAndDamage();                           // armor dependent auras update for SPELL_AURA_MOD_ATTACK_POWER_OF_ARMOR
@@ -298,21 +297,33 @@ void Player::UpdateAttackPowerAndDamage(bool ranged)
 
         switch (getClass())
         {
-            case CLASS_HUNTER: val2 = level * 2.0f + GetStat(STAT_AGILITY) - 10.0f;    break;
-            case CLASS_ROGUE:  val2 = level        + GetStat(STAT_AGILITY) - 10.0f;    break;
-            case CLASS_WARRIOR:val2 = level        + GetStat(STAT_AGILITY) - 10.0f;    break;
+            case CLASS_HUNTER:
+                val2 = level * 2.0f + GetStat(STAT_AGILITY) - 10.0f;
+                break;
+            case CLASS_ROGUE:
+                val2 = level + GetStat(STAT_AGILITY) - 10.0f;
+                break;
+            case CLASS_WARRIOR:
+                val2 = level + GetStat(STAT_AGILITY) - 10.0f;
+                break;
             case CLASS_DRUID:
+            {
                 switch (GetShapeshiftForm())
                 {
                     case FORM_CAT:
                     case FORM_BEAR:
                     case FORM_DIREBEAR:
-                        val2 = 0.0f; break;
+                        val2 = 0.0f;
+                        break;
                     default:
-                        val2 = GetStat(STAT_AGILITY) - 10.0f; break;
+                        val2 = GetStat(STAT_AGILITY) - 10.0f;
+                        break;
                 }
                 break;
-            default: val2 = GetStat(STAT_AGILITY) - 10.0f; break;
+            }
+            default:
+                val2 = GetStat(STAT_AGILITY) - 10.0f;
+                break;
         }
     }
     else
@@ -366,9 +377,9 @@ void Player::UpdateAttackPowerAndDamage(bool ranged)
                 }
                 break;
             }
-            case CLASS_MAGE:    val2 =              GetStat(STAT_STRENGTH)                         - 10.0f; break;
-            case CLASS_PRIEST:  val2 =              GetStat(STAT_STRENGTH)                         - 10.0f; break;
-            case CLASS_WARLOCK: val2 =              GetStat(STAT_STRENGTH)                         - 10.0f; break;
+            case CLASS_MAGE:    val2 = GetStat(STAT_STRENGTH) - 10.0f; break;
+            case CLASS_PRIEST:  val2 = GetStat(STAT_STRENGTH) - 10.0f; break;
+            case CLASS_WARLOCK: val2 = GetStat(STAT_STRENGTH) - 10.0f; break;
         }
     }
 
@@ -595,12 +606,21 @@ void Player::UpdateParryPercentage()
     {
         // Base parry
         value  = 5.0f;
+
         // Modify value from defense skill
         value += (int32(GetDefenseSkillValue()) - int32(GetMaxSkillValueForLevel())) * 0.04f;
-        // Parry from SPELL_AURA_MOD_PARRY_PERCENT aura
-        value += GetTotalAuraModifier(SPELL_AURA_MOD_PARRY_PERCENT);
+
         // Parry from rating
         value += GetRatingBonusValue(CR_PARRY);
+
+        // Parry diminishing return
+        float dr_k = PlayerAvoidanceDiminsihingData[getClass()].k_value;
+        float dr_cap = PlayerAvoidanceDiminsihingData[getClass()].parry_cap;
+        value = (value * dr_cap) / (value + dr_cap * dr_k);
+
+        // Parry from SPELL_AURA_MOD_PARRY_PERCENT aura
+        value += GetTotalAuraModifier(SPELL_AURA_MOD_PARRY_PERCENT);
+
         value = value < 0.0f ? 0.0f : value;
     }
     SetStatFloatValue(PLAYER_PARRY_PERCENTAGE, value);
@@ -608,15 +628,30 @@ void Player::UpdateParryPercentage()
 
 void Player::UpdateDodgePercentage()
 {
+    // Base dodge
+    float value = GetBaseDodge();
+
     // Dodge from agility
-    float value = GetDodgeFromAgility();
+    value += GetDodgeFromAgility();
+
     // Modify value from defense skill
     value += (int32(GetDefenseSkillValue()) - int32(GetMaxSkillValueForLevel())) * 0.04f;
-    // Dodge from SPELL_AURA_MOD_DODGE_PERCENT aura
-    value += GetTotalAuraModifier(SPELL_AURA_MOD_DODGE_PERCENT);
+
+    // Dodge diminishing return
+    float dr_k = PlayerAvoidanceDiminsihingData[getClass()].k_value;
+    float dr_cap = PlayerAvoidanceDiminsihingData[getClass()].dodge_cap;
+    value = (value * dr_cap) / (value + dr_cap * dr_k);
+
     // Dodge from rating
     value += GetRatingBonusValue(CR_DODGE);
+
+    // Dodge from SPELL_AURA_MOD_DODGE_PERCENT aura
+    value += GetTotalAuraModifier(SPELL_AURA_MOD_DODGE_PERCENT);
+
+    // Apply base dodge here instead?
+
     value = value < 0.0f ? 0.0f : value;
+
     SetStatFloatValue(PLAYER_DODGE_PERCENTAGE, value);
 }
 

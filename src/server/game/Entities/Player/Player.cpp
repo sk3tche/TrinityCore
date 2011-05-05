@@ -5705,7 +5705,7 @@ uint32 Player::GetShieldBlockValue() const
 float Player::GetMeleeCritFromAgility()
 {
     uint8 level = getLevel();
-    uint32 pclass = getClass();
+    uint8 pclass = getClass();
 
     if (level > GT_MAX_LEVEL)
         level = GT_MAX_LEVEL;
@@ -5719,56 +5719,60 @@ float Player::GetMeleeCritFromAgility()
     return crit*100.0f;
 }
 
+float Player::GetBaseDodge()
+{
+	float BaseDodge[MAX_CLASSES] = {
+		3.664f,     // Warrior
+		3.494f,     // Paladin
+		-4.087f,    // Hunter
+		2.095f,     // Rogue
+		3.417f,     // Priest
+		3.664f,     // DK?
+		2.108f,     // Shaman
+		3.658f,     // Mage
+		2.421f,     // Warlock
+		0.0f,       // Unk
+		5.609f      // Druid
+	};
+	return BaseDodge[getClass()-1];
+}
+
 float Player::GetDodgeFromAgility()
 {
-    // Table for base dodge values
-    float dodge_base[MAX_CLASSES] = {
-         0.0075f,   // Warrior
-         0.00652f,  // Paladin
-        -0.0545f,   // Hunter
-        -0.0059f,   // Rogue
-         0.03183f,  // Priest
-         0.0114f,   // DK
-         0.0167f,   // Shaman
-         0.034575f, // Mage
-         0.02011f,  // Warlock
-         0.0f,      // ??
-        -0.0187f    // Druid
-    };
     // Crit/agility to dodge/agility coefficient multipliers
     float crit_to_dodge[MAX_CLASSES] = {
-         1.1f,      // Warrior
-         1.0f,      // Paladin
-         1.6f,      // Hunter
-         2.0f,      // Rogue
-         1.0f,      // Priest
-         1.0f,      // DK?
-         1.0f,      // Shaman
-         1.0f,      // Mage
-         1.0f,      // Warlock
-         0.0f,      // ??
-         1.7f       // Druid
+         0.73f,      // Warrior
+         0.86f,      // Paladin
+         0.96f,      // Hunter
+         1.74f,      // Rogue
+         0.86f,      // Priest
+         0.73f,      // DK?
+         1.38f,      // Shaman
+         0.86f,      // Mage
+         0.84f,      // Warlock
+         0.0f,       // Unk
+         1.74f       // Druid
     };
 
     uint8 level = getLevel();
-    uint32 pclass = getClass();
+    uint8 pclass = getClass();
 
     if (level > GT_MAX_LEVEL)
         level = GT_MAX_LEVEL;
 
     // Dodge per agility for most classes equal crit per agility (but for some classes need apply some multiplier)
-    GtChanceToMeleeCritEntry  const *dodgeRatio = sGtChanceToMeleeCritStore.LookupEntry((pclass-1)*GT_MAX_LEVEL + level-1);
+    GtChanceToMeleeCritEntry  const* dodgeRatio = sGtChanceToMeleeCritStore.LookupEntry((pclass-1) * GT_MAX_LEVEL + level-1);
     if (dodgeRatio == NULL || pclass > MAX_CLASSES)
         return 0.0f;
 
-    float dodge=dodge_base[pclass-1] + GetStat(STAT_AGILITY) * dodgeRatio->ratio * crit_to_dodge[pclass-1];
-    return dodge*100.0f;
+    float dodge = GetStat(STAT_AGILITY) * dodgeRatio->ratio * crit_to_dodge[pclass-1];
+    return dodge * 100.0f;
 }
 
 float Player::GetSpellCritFromIntellect()
 {
     uint8 level = getLevel();
-    uint32 pclass = getClass();
+    uint8 pclass = getClass();
 
     if (level > GT_MAX_LEVEL)
         level = GT_MAX_LEVEL;
@@ -5818,7 +5822,7 @@ float Player::GetExpertiseDodgeOrParryReduction(WeaponAttackType attType) const
 float Player::OCTRegenHPPerSpirit()
 {
     uint8 level = getLevel();
-    uint32 pclass = getClass();
+    uint8 pclass = getClass();
 
     if (level > GT_MAX_LEVEL)
         level = GT_MAX_LEVEL;
@@ -5841,7 +5845,7 @@ float Player::OCTRegenHPPerSpirit()
 float Player::OCTRegenMPPerSpirit()
 {
     uint8 level = getLevel();
-    uint32 pclass = getClass();
+    uint8 pclass = getClass();
 
     if (level > GT_MAX_LEVEL)
         level = GT_MAX_LEVEL;

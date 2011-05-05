@@ -108,6 +108,29 @@ struct PlayerTalent
     uint8 spec             : 8;
 };
 
+struct PlayerAvoidanceDiminsihing
+{
+    uint8 playerClass;
+    float k_value;
+    float parry_cap;
+    float dodge_cap;
+};
+
+PlayerAvoidanceDiminsihing const PlayerAvoidanceDiminsihingData[MAX_CLASSES] =
+{
+    {CLASS_WARRIOR,         0.956f,     47.003525f,     88.129021f  },
+    {CLASS_PALADIN,         0.956f,     47.003525f,     88.129021f  },
+    {CLASS_HUNTER,          0.988f,     145.560408f,    145.560408f },
+    {CLASS_ROGUE,           0.988f,     145.560408f,    145.560408f },
+    {CLASS_PRIEST,          0.953f,     0.0f,           150.375940f },
+    {CLASS_DEATH_KNIGHT,    0.956f,     47.003525f,     88.129021f  },
+    {CLASS_SHAMAN,          0.988f,     145.560408f,    145.560408f },
+    {CLASS_MAGE,            0.953f,     0.0f,           150.375940f },
+    {CLASS_WARLOCK,         0.953f,     0.0f,           150.375940f },
+    {CLASS_UNK,             0.0f,       0.0f,           0.0f        },
+    {CLASS_DRUID,           0.972f,     0.0f,           116.890707f },
+};
+
 // Spell modifier (used for modify other spells)
 struct SpellModifier
 {
@@ -1840,6 +1863,7 @@ class Player : public Unit, public GridObject<Player>
         void UpdateDefenseBonusesMod();
         inline void RecalculateRating(CombatRating cr) { ApplyRatingMod(cr, 0, true);}
         float GetMeleeCritFromAgility();
+        float GetBaseDodge();
         float GetDodgeFromAgility();
         float GetSpellCritFromIntellect();
         float OCTRegenHPPerSpirit();
