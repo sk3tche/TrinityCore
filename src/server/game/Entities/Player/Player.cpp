@@ -3907,7 +3907,7 @@ void Player::removeSpell(uint32 spell_id, bool disabled, bool learn_low_rank)
     if (SpellChainNode const* node = sSpellMgr->GetSpellChainNode(spell_id))
     {
         if (HasSpell(node->next) && !GetTalentSpellPos(node->next))
-        removeSpell(node->next, disabled, false);
+            removeSpell(node->next, disabled, false);
     }
     //unlearn spells dependent from recently removed spells
     SpellsRequiringSpellMapBounds spellsRequiringSpell = sSpellMgr->GetSpellsRequiringSpellBounds(spell_id);

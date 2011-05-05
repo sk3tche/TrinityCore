@@ -3874,6 +3874,8 @@ void AuraEffect::HandleAuraMounted(AuraApplication const * aurApp, uint8 mode, b
             else
                 creatureEntry = 15665;
         }
+        if (target->HasStealthAura())
+            target->RemoveAurasByType(SPELL_AURA_MOD_STEALTH);
 
         CreatureTemplate const* ci = sObjectMgr->GetCreatureTemplate(creatureEntry);
         if (!ci)
