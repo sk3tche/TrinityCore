@@ -139,34 +139,34 @@ void BattlegroundWS::Update(uint32 diff)
         }
         if (m_BothFlagsKept)
         {
-          m_FlagSpellForceTimer += diff;
-          if (m_FlagDebuffState == 0 && m_FlagSpellForceTimer >= 600000)  //10 minutes
-          {
-            if (Player * plr = sObjectMgr->GetPlayer(m_FlagKeepers[0]))
-              plr->CastSpell(plr, WS_SPELL_FOCUSED_ASSAULT, true);
-            if (Player * plr = sObjectMgr->GetPlayer(m_FlagKeepers[1]))
-              plr->CastSpell(plr, WS_SPELL_FOCUSED_ASSAULT, true);
-            m_FlagDebuffState = 1;
-          }
-          else if (m_FlagDebuffState == 1 && m_FlagSpellForceTimer >= 900000) //15 minutes
-          {
-            if (Player * plr = sObjectMgr->GetPlayer(m_FlagKeepers[0]))
+            m_FlagSpellForceTimer += diff;
+            if (m_FlagDebuffState == 0 && m_FlagSpellForceTimer >= 600000)  //10 minutes
             {
-              plr->RemoveAurasDueToSpell(WS_SPELL_FOCUSED_ASSAULT);
-              plr->CastSpell(plr, WS_SPELL_BRUTAL_ASSAULT, true);
+                if (Player * plr = sObjectMgr->GetPlayer(m_FlagKeepers[0]))
+                    plr->CastSpell(plr, WS_SPELL_FOCUSED_ASSAULT, true);
+                if (Player * plr = sObjectMgr->GetPlayer(m_FlagKeepers[1]))
+                    plr->CastSpell(plr, WS_SPELL_FOCUSED_ASSAULT, true);
+                m_FlagDebuffState = 1;
             }
-            if (Player * plr = sObjectMgr->GetPlayer(m_FlagKeepers[1]))
+            else if (m_FlagDebuffState == 1 && m_FlagSpellForceTimer >= 900000) //15 minutes
             {
-              plr->RemoveAurasDueToSpell(WS_SPELL_FOCUSED_ASSAULT);
-              plr->CastSpell(plr, WS_SPELL_BRUTAL_ASSAULT, true);
+                if (Player * plr = sObjectMgr->GetPlayer(m_FlagKeepers[0]))
+                {
+                    plr->RemoveAurasDueToSpell(WS_SPELL_FOCUSED_ASSAULT);
+                    plr->CastSpell(plr, WS_SPELL_BRUTAL_ASSAULT, true);
+                }
+                if (Player * plr = sObjectMgr->GetPlayer(m_FlagKeepers[1]))
+                {
+                    plr->RemoveAurasDueToSpell(WS_SPELL_FOCUSED_ASSAULT);
+                    plr->CastSpell(plr, WS_SPELL_BRUTAL_ASSAULT, true);
+                }
+                m_FlagDebuffState = 2;
             }
-            m_FlagDebuffState = 2;
-          }
         }
         else
         {
-          m_FlagSpellForceTimer = 0; //reset timer.
-          m_FlagDebuffState = 0;
+            m_FlagSpellForceTimer   = 0; // Reset timer.
+            m_FlagDebuffState       = 0;
         }
     }
 }
@@ -325,6 +325,7 @@ void BattlegroundWS::EventPlayerCapturedFlag(Player *Source)
     UpdateTeamScore(Source->GetTeam());
     // only flag capture should be updated
     UpdatePlayerScore(Source, SCORE_FLAG_CAPTURES, 1);      // +1 flag captures
+    UpdateWorldState(BG_WS_FLAG_UNK_HORDE, uint32(-2));
 
     // update last flag capture to be used if teamscore is equal
     SetLastFlagCapture(Source->GetTeam());
@@ -496,6 +497,7 @@ void BattlegroundWS::EventPlayerClickedOnFlag(Player *Source, GameObject* target
             SpawnBGObject(BG_WS_OBJECT_A_FLAG, RESPAWN_IMMEDIATELY);
             PlaySoundToAll(BG_WS_SOUND_FLAG_RETURNED);
             UpdatePlayerScore(Source, SCORE_FLAG_RETURNS, 1);
+            UpdateWorldState(BG_WS_FLAG_UNK_ALLIANCE, uint32(-2));
             m_BothFlagsKept = false;
         }
         else
@@ -812,6 +814,8 @@ void BattlegroundWS::FillInitialWorldStates(WorldPacket& data)
         data << uint32(BG_WS_FLAG_UNK_ALLIANCE) << uint32(-1);
     else if (m_FlagState[BG_TEAM_ALLIANCE] == BG_WS_FLAG_STATE_ON_PLAYER)
         data << uint32(BG_WS_FLAG_UNK_ALLIANCE) << uint32(1);
+    else if (m_FlagState[BG_TEAM_ALLIANCE] == BG_WS_FLAG_STATE_WAIT_RESPAWN)
+        data << uint32(BG_WS_FLAG_UNK_ALLIANCE) << uint32(-2);
     else
         data << uint32(BG_WS_FLAG_UNK_ALLIANCE) << uint32(0);
 
@@ -819,6 +823,8 @@ void BattlegroundWS::FillInitialWorldStates(WorldPacket& data)
         data << uint32(BG_WS_FLAG_UNK_HORDE) << uint32(-1);
     else if (m_FlagState[BG_TEAM_HORDE] == BG_WS_FLAG_STATE_ON_PLAYER)
         data << uint32(BG_WS_FLAG_UNK_HORDE) << uint32(1);
+    else if (m_FlagState[BG_TEAM_HORDE] == BG_WS_FLAG_STATE_WAIT_RESPAWN)
+        data << uint32(BG_WS_FLAG_UNK_HORDE) << uint32(-2);
     else
         data << uint32(BG_WS_FLAG_UNK_HORDE) << uint32(0);
 

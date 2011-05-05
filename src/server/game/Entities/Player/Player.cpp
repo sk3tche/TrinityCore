@@ -5721,20 +5721,20 @@ float Player::GetMeleeCritFromAgility()
 
 float Player::GetBaseDodge()
 {
-	float BaseDodge[MAX_CLASSES] = {
-		3.664f,     // Warrior
-		3.494f,     // Paladin
-		-4.087f,    // Hunter
-		2.095f,     // Rogue
-		3.417f,     // Priest
-		3.664f,     // DK?
-		2.108f,     // Shaman
-		3.658f,     // Mage
-		2.421f,     // Warlock
-		0.0f,       // Unk
-		5.609f      // Druid
-	};
-	return BaseDodge[getClass()-1];
+    float BaseDodge[MAX_CLASSES] = {
+        3.664f,     // Warrior
+        3.494f,     // Paladin
+        -4.087f,    // Hunter
+        2.095f,     // Rogue
+        3.417f,     // Priest
+        3.664f,     // DK?
+        2.108f,     // Shaman
+        3.658f,     // Mage
+        2.421f,     // Warlock
+        0.0f,       // Unk
+        5.609f      // Druid
+    };
+    return BaseDodge[getClass()-1];
 }
 
 float Player::GetDodgeFromAgility()
