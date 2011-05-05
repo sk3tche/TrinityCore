@@ -1,8 +1,6 @@
 #include <string>
 #include <vector>
 
-#include "Common.h"
-
 #define IRC_SERVER  "irc.projectsjgr.com"
 #define IRC_PORT    6667
 #define IRC_CHANNEL "#ADMIN"
@@ -26,4 +24,4 @@ class IrcBot
         std::vector<char const*> _hookedChannels;
         std::string error_msg;
         std::vector<char const*>::iterator _itr;
-}
+};
