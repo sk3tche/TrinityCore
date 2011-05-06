@@ -19,8 +19,61 @@
 #ifndef TRINITY_CALENDAR_H
 #define TRINITY_CALENDAR_H
 
-class Calendar
-{
+#include "Common.h"
 
+// TODO - Get correct values
+enum CalendarEventType
+{
+    CALENDAR_TYPE_RAID          = 0,
+    CALENDAR_TYPE_DUNGEON       = 1,
+    CALENDAR_TYPE_PVP           = 2,
+    CALENDAR_TYPE_MEETING       = 3,
+    CALENDAR_TYPE_OTHER         = 4,
 };
+
+// TODO - Get correct values
+enum CalendarInviteStatus
+{
+    CALENDAR_STATUS_INVITED     = 0,
+    CALENDAR_STATUS_ACCEPTED    = 1,
+    CALENDAR_STATUS_DECLINED    = 2,
+    CALENDAR_STATUS_TENTATIVE   = 3,
+    CALENDAR_STATUS_OUT         = 4,
+    CALENDAR_STATUS_STANDBY     = 5,
+    CALENDAR_STATUS_CONFIRMED   = 6,
+};
+
+struct CalendarEvent
+{
+    uint64 id;
+    uint64 creator_guid;
+    std::string name;
+    std::string description;
+    uint8 type;
+    uint8 unk;
+    uint32 dungeonID;
+    uint32 unkTime;
+    uint32 time;
+    uint32 flags;
+    uint32 guildID;
+};
+
+struct CalendarInvite
+{
+    uint64 id;
+    uint64 event_id;
+    uint8 status;
+    uint8 rank;
+    uint8 type;
+    uint8 unk2;
+    uint8 unk3;
+    std::string text;
+    uint64 creator_guid;
+    uint32 time;
+    uint64 target_guid;
+};
+
+typedef UNORDERED_MAP<uint64, CalendarInvite> CalendarInviteMap;
+typedef UNORDERED_MAP<uint64, CalendarEvent> CalendarEventMap;
+
 #endif

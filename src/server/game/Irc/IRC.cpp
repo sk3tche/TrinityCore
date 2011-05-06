@@ -10,12 +10,13 @@ IrcBot::~IrcBot()
 
 bool IrcBot::Connect()
 {
+    // sScriptMgr->OnIrcConnect();
     return true;
 }
 
 bool IrcBot::Disconnect()
 {
-    // close sockets
+    // sScriptMgr->OnIrcDisonnect();
     return true;
 }
 

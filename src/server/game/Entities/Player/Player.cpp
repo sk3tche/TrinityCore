@@ -17895,33 +17895,30 @@ void Player::BindToInstance()
 
 void Player::SendRaidInfo()
 {
-    uint32 counter = 0;
+    uint32 counter = m_boundInstances[DUNGEON_DIFFICULTY_NORMAL].size() + m_boundInstances[DUNGEON_DIFFICULTY_HEROIC].size();
 
-    WorldPacket data(SMSG_RAID_INSTANCE_INFO, 4);
+    WorldPacket data(SMSG_RAID_INSTANCE_INFO, 4+counter*(4+4+8+2+2+4));
 
-    size_t p_counter = data.wpos();
-    data << uint32(counter);                                // placeholder
+    data << uint32(counter);
 
     time_t now = time(NULL);
 
-    for (uint8 i = 0; i < MAX_DIFFICULTY; ++i)
+    for (uint8 i = DUNGEON_DIFFICULTY_NORMAL; i <= DUNGEON_DIFFICULTY_HEROIC; ++i)
     {
         for (BoundInstancesMap::iterator itr = m_boundInstances[i].begin(); itr != m_boundInstances[i].end(); ++itr)
         {
             if (itr->second.perm)
             {
-                InstanceSave *save = itr->second.save;
+                InstanceSave* save = itr->second.save;
                 data << uint32(save->GetMapId());           // map id
                 data << uint32(save->GetDifficulty());      // difficulty
                 data << uint64(save->GetInstanceId());      // instance id
                 data << uint8(1);                           // expired = 0
                 data << uint8(0);                           // extended = 1
                 data << uint32(save->GetResetTime() - now); // reset time
-                ++counter;
             }
         }
     }
-    data.put<uint32>(p_counter, counter);
     GetSession()->SendPacket(&data);
 }
 
