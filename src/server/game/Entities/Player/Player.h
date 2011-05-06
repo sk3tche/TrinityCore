@@ -110,25 +110,24 @@ struct PlayerTalent
 
 struct PlayerAvoidanceDiminsihing
 {
-    uint8 playerClass;
-    float k_value;
-    float parry_cap;
-    float dodge_cap;
+    float k_value;      // Constant
+    float parry_cap;    // Cap for amount of parry in procentage
+    float dodge_cap;    // Cap for amount of dodge in procentage
 };
 
-PlayerAvoidanceDiminsihing const PlayerAvoidanceDiminsihingData[MAX_CLASSES-1] =
+PlayerAvoidanceDiminsihing const PlayerAvoidanceDiminsihingData[MAX_CLASSES] =
 {
-    {CLASS_WARRIOR,         0.956f,     47.003525f,     88.129021f  },
-    {CLASS_PALADIN,         0.956f,     47.003525f,     88.129021f  },
-    {CLASS_HUNTER,          0.988f,     145.560408f,    145.560408f },
-    {CLASS_ROGUE,           0.988f,     145.560408f,    145.560408f },
-    {CLASS_PRIEST,          0.953f,     0.0f,           150.375940f },
-    {CLASS_DEATH_KNIGHT,    0.956f,     47.003525f,     88.129021f  },
-    {CLASS_SHAMAN,          0.988f,     145.560408f,    145.560408f },
-    {CLASS_MAGE,            0.953f,     0.0f,           150.375940f },
-    {CLASS_WARLOCK,         0.953f,     0.0f,           150.375940f },
-    //{CLASS_UNK,             0.0f,       0.0f,           0.0f        },
-    {CLASS_DRUID,           0.972f,     0.0f,           116.890707f },
+    { 0.956f,     47.003525f,     88.129021f  }, // Warrior
+    { 0.956f,     47.003525f,     88.129021f  }, // Paladin
+    { 0.988f,     145.560408f,    145.560408f }, // Hunter
+    { 0.988f,     145.560408f,    145.560408f }, // Rogue
+    { 0.953f,     0.0f,           150.375940f }, // Priest
+    { 0.956f,     47.003525f,     88.129021f  }, // Death Knight
+    { 0.988f,     145.560408f,    145.560408f }, // Shaman
+    { 0.953f,     0.0f,           150.375940f }, // Mage
+    { 0.953f,     0.0f,           150.375940f }, // Warlock
+    { 0.0f,       0.0f,           0.0f        }, // Unk
+    { 0.972f,     0.0f,           116.890707f }, // Druid
 };
 
 // Spell modifier (used for modify other spells)
