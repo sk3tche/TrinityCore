@@ -46,7 +46,7 @@ class IrcBot : public ACE_Based::Runnable
         void SayToChannel(char const* channel, Player* player, char const* msg);
         bool SendData(MessageType type, char const* data);
 
-        void SplitArgs(char const* s, std::vector<char const*> & elems)
+        void SplitArgs(char const* s, std::vector<char const*> & elems);
     protected:
         int _socket;
     private:

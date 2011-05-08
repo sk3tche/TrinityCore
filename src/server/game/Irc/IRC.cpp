@@ -215,8 +215,8 @@ void IrcBot::SockRecv()
             while (getline(iss, reply))
             {
                 std::vector<char const*> args;
-                SplitArgs(reply, args);
-                if(args.length() < 3)
+                SplitArgs(reply.c_str(), args);
+                if(args.size() < 3)
                     return;
 
                 if(!stricmp(args[0], "PRIVMSG") && !stricmp(args[1], IRC_CHANNEL) && args[2][1] == '!')
@@ -240,8 +240,8 @@ void IrcBot::SockRecv()
 void IrcBot::SplitArgs(char const* s, std::vector<char const*> & elems) {
     std::stringstream ss(s);
     std::string item;
-    while(std::getline(ss, item, delim)) {
-        elems.push_back(item);
+    while(std::getline(ss, item, ' ')) {
+        elems.push_back(item.c_str());
     }
 }
 
