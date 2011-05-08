@@ -659,7 +659,6 @@ void Channel::Say(uint64 p, const char *what, uint32 lang)
 
 void Channel::SayFromIRC(char const* p, const char *what, uint32 lang)
 {
-    Player *plr = sObjectMgr->GetPlayer(p);
     uint64 guid = 0;
     QueryResult result = CharacterDatabase.PQuery("SELECT guid FROM characters WHERE name like '%s'", p);
     if (result)
