@@ -184,7 +184,7 @@ bool IrcBot::IsChannelHooked(char const* channel)
     return false;
 }
 
-void IrcBot::SayToChannel(char const* channel, Player* player, char const* msg)
+void IrcBot::SayToIRC(char const* channel, Player* player, char const* msg)
 {
     std::stringstream ss;
     ss << "<" << channel << "> [" << player->GetName() << "] says: " << msg;
@@ -216,21 +216,27 @@ void IrcBot::SockRecv()
             {
                 std::vector<char const*> args;
                 SplitArgs(reply.c_str(), args);
-                if(args.size() < 3)
+                if(args.size() < 4)
                     return;
 
-                if(!stricmp(args[0], "PRIVMSG") && !stricmp(args[1], IRC_CHANNEL) && args[2][1] == '!')
+                if(!stricmp(args[1], "PRIVMSG") && !stricmp(args[2], IRC_CHANNEL) && args[3][1] == '!')
                 {
-                    std::string command = args[2];
+                    std::string command = args[3];
                     command.erase(0, 2); // erase : and ! from the commands
                     
                     std::vector<char const*> params;
                     params.push_back(command.c_str());
 
-                    for(_itr = args.begin() + 3; _itr != args.end(); _itr++)
+                    for(_itr = args.begin() + 4; _itr != args.end(); _itr++)
                         params.push_back(*_itr);
 
-                    // ParseCommand(params);
+                    // Get nick (In between first : and first !
+                    std::string nick = args[0];
+                    nick.erase(0, 1);
+                    std::stringstream nstream;
+                    for(int i = 0; nick[i] != '!'; i++)
+                        nstream << nick[i];
+                    ParseCommand(nstream.str().c_str(), params);
                 }
             }
         }
@@ -275,4 +281,29 @@ bool IrcBot::SendData(MessageType type, char const* data)
         if (send(_socket, ss.str().c_str(), strlen(ss.str().c_str()), 0) != -1)
             return true;
     return false;
+}
+
+void IrcBot::ParseCommand(char const* nick, std::vector<char const*> args)
+{
+    if(!args.size())
+        return;
+
+    if(!stricmp(args[0], "channel"))
+    {
+        if(args.size() < 3)
+            SendData(PRIVMSG, "Not enough arguments! !channel HOOKED_CHANNEL message");
+        else if(!IsChannelHooked(args[1]))
+            SendData(PRIVMSG, "Channel is not hooked!");
+        else
+        {
+            std::stringstream ss;
+            for(_itr = args.begin()+2; _itr != args.end(); _itr++)
+                ss << *_itr << " ";
+            if(ChannelMgr * cMgr = channelMgr(0))
+            {
+                if(Channel * chn = cMgr->GetChannel(args[1], 0, false))
+                    chn->SayFromIRC(nick, ss.str().c_str(), LANG_UNIVERSAL);
+            }
+       }
+    }          
 }

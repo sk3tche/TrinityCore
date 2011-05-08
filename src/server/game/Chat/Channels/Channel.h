@@ -275,6 +275,7 @@ class Channel
         void List(Player* p);
         void Announce(uint64 p);
         void Say(uint64 p, const char *what, uint32 lang);
+        void SayFromIRC(char const* p, const char *what, uint32 lang);
         void Invite(uint64 p, const char *newp);
         void Voice(uint64 guid1, uint64 guid2);
         void DeVoice(uint64 guid1, uint64 guid2);

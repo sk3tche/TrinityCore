@@ -22,6 +22,7 @@
 #include "SocialMgr.h"
 #include "World.h"
 #include "DatabaseEnv.h"
+#include "Irc/Irc.h"
 
 Channel::Channel(const std::string& name, uint32 channel_id, uint32 Team)
  : m_announce(true), m_ownership(true), m_name(name), m_password(""), m_flags(0), m_channelId(channel_id), m_ownerGUID(0), m_Team(Team)
@@ -653,6 +654,37 @@ void Channel::Say(uint64 p, const char *what, uint32 lang)
         data << uint8(plr ? plr->chatTag() : 0);
 
         SendToAll(&data, !players[p].IsModerator() ? p : false);
+    }
+}
+
+void Channel::SayFromIRC(char const* p, const char *what, uint32 lang)
+{
+    Player *plr = sObjectMgr->GetPlayer(p);
+    uint64 guid = 0;
+    QueryResult result = CharacterDatabase.PQuery("SELECT guid FROM characters WHERE name like '%s'", p);
+    if (result)
+    {
+        guid = (*result)[0].GetUInt64();
+    }
+
+    if(!guid)
+        sIrc->SendData(PRIVMSG, "Your nickname does not exist ingame!");
+    else
+    {
+        uint32 messageLength = strlen(what) + 1;
+
+        WorldPacket data(SMSG_MESSAGECHAT, 1+4+8+4+m_name.size()+1+8+4+messageLength+1);
+        data << (uint8)CHAT_MSG_CHANNEL;
+        data << (uint32)lang;
+        data << guid;                                       // 2.1.0
+        data << uint32(0);                                  // 2.1.0
+        data << m_name;
+        data << guid;
+        data << messageLength;
+        data << what;
+        data << uint8(4);                                   // GM tag
+
+        SendToAll(&data, guid);
     }
 }
 
