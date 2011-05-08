@@ -2056,14 +2056,14 @@ void Spell::SelectEffectTargets(uint32 i, uint32 cur)
             switch(cur)
             {
                 case TARGET_UNIT_TARGET_ENEMY:
-                    if (Unit *magnet = m_caster->SelectMagnetTarget(target, m_spellInfo))
+                    if (Unit* magnet = m_caster->SelectMagnetTarget(target, m_spellInfo) && m_spellInfo->AttributesEx2 & ~SPELL_ATTR2_CANT_HIT_MAGNET)
                         if (magnet != target)
                             m_targets.setUnitTarget(magnet);
                     pushType = PUSH_CHAIN;
                     break;
                 case TARGET_UNIT_TARGET_ANY:
                     if (!IsPositiveSpell(m_spellInfo->Id))
-                        if (Unit *magnet = m_caster->SelectMagnetTarget(target, m_spellInfo))
+                        if (Unit* magnet = m_caster->SelectMagnetTarget(target, m_spellInfo) && m_spellInfo->AttributesEx2 & ~SPELL_ATTR2_CANT_HIT_MAGNET)
                             if (magnet != target)
                                 m_targets.setUnitTarget(magnet);
                     pushType = PUSH_CHAIN;
