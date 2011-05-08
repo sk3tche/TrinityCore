@@ -37,7 +37,7 @@ void IrcBot::run()
                 // else IsConnected will be true and loop will end
             }
 
-            // On connection success reset the connection counter
+            // On connection success, login to irc server (using nick and pw i guess, need help on this)
             sLog->outString("<IrcBot> - Connected.");
             sLog->outString("<IrcBot> - Logging in to the IRC server...");
             // Login?
@@ -45,6 +45,7 @@ void IrcBot::run()
             {
                 sLog->outString("<IrcBot> - Logged in");
                 // Listen to data from socket while logged in
+                // This is supposed to loop as long as we are connected.
                 while (IsConnected() && !World::IsStopped())
                     SockRecv();
             }
