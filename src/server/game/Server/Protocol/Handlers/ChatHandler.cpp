@@ -421,14 +421,14 @@ void WorldSession::HandleMessagechatOpcode(WorldPacket & recv_data)
             if (ChannelMgr* cMgr = channelMgr(_player->GetTeam()))
             {
 
-                if (Channel *chn = cMgr->GetChannel(channel, _player))
+                if (Channel* chn = cMgr->GetChannel(channel, _player))
                 {
                     sScriptMgr->OnPlayerChat(_player, type, lang, msg, chn);
 
                     chn->Say(_player->GetGUID(), msg.c_str(), lang);
 
-					if(sIrc->IsChannelHooked(channel.c_str()))
-						sIrc->SayToChannel(channel.c_str(), _player->GetName(), msg.c_str());
+                    if (sIrc->IsChannelHooked(channel.c_str()))
+                        sIrc->SayToChannel(channel.c_str(), _player->GetName(), msg.c_str());
                 }
             }
         } break;

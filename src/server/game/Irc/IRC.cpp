@@ -180,12 +180,12 @@ bool IrcBot::IsChannelHooked(char const* channel)
     return false;
 }
 
-void SayToChannel(char const* channel, char const* player, char const* msg)
+void IrcBot::SayToChannel(char const* channel, char const* player, char const* msg)
 {
-	std::stringstream ss;
-	ss << "<" << channel << "> [" << player << "] says: " << msg;
-	char const* message = ss.str().c_str();
-	// print to socket
+    std::stringstream ss;
+    ss << "<" << channel << "> [" << player << "] says: " << msg;
+    char const* message = ss.str().c_str();
+    SendData(message);
 }
 
 void IrcBot::SockRecv()
@@ -214,4 +214,13 @@ void IrcBot::SockRecv()
             }
         }
     }
+}
+
+bool IrcBot::SendData(char const* data)
+{
+    if (isConnected())
+        if (send(_socket, data, strlen(data), 0) == -1)
+            return false;
+
+    return true;
 }
