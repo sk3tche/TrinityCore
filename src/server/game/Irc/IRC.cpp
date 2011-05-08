@@ -3,6 +3,7 @@
 #include "Channel.h"
 #include "World.h"
 #include "Log.h"
+#include "Common.h"
 
 IrcBot::IrcBot()
 {}
@@ -18,7 +19,7 @@ void IrcBot::run()
         while(!Connect())
         {
             sLog->outError("Could not connect to the IRC server. Trying again in 30 seconds.");
-            sleep(30);
+            Sleep(30 * IN_MILLISECONDS);
         }
     }
     Disconnect();
