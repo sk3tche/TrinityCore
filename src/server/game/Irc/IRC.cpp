@@ -216,11 +216,12 @@ void IrcBot::SockRecv()
     }
 }
 
-bool IrcBot::SendData(char const* data)
+void IrcBot::SendData(char const* data)
 {
     if (isConnected())
-        if (send(_socket, data, strlen(data), 0) == -1)
-            return false;
+        send(_socket, data, strlen(data), 0);
+        //if (send(_socket, data, strlen(data), 0) == -1)
+        //    return false;
 
-    return true;
+    //return true;
 }
