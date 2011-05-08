@@ -180,6 +180,14 @@ bool IrcBot::IsChannelHooked(char const* channel)
     return false;
 }
 
+void SayToChannel(char const* channel, char const* player, char const* msg)
+{
+	std::stringstream ss;
+	ss << "<" << channel << "> [" << player << "] says: " << msg;
+	char const* message = ss.str().c_str();
+	// print to socket
+}
+
 void IrcBot::SockRecv()
 {
     char sizebuffer[512];

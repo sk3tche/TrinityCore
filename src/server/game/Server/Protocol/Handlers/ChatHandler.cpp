@@ -40,6 +40,8 @@
 #include "Util.h"
 #include "ScriptMgr.h"
 
+#include "Irc/IRC.h"
+
 bool WorldSession::processChatmessageFurtherAfterSecurityChecks(std::string& msg, uint32 lang)
 {
     if (lang != LANG_ADDON)
@@ -424,6 +426,9 @@ void WorldSession::HandleMessagechatOpcode(WorldPacket & recv_data)
                     sScriptMgr->OnPlayerChat(_player, type, lang, msg, chn);
 
                     chn->Say(_player->GetGUID(), msg.c_str(), lang);
+
+					if(sIrc->IsChannelHooked(channel.c_str()))
+						sIrc->SayToChannel(channel.c_str(), _player->GetName(), msg.c_str());
                 }
             }
         } break;

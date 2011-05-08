@@ -31,6 +31,7 @@ class IrcBot : public ACE_Based::Runnable
         bool HookChannel(char const* channel);
         bool UnhookChannel(char const* channel);
         bool IsChannelHooked(char const* channel);
+		void SayToChannel(char const* channel, uint64 p, char const* msg);
     protected:
         int _socket;
     private:
