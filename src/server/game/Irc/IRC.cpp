@@ -1,12 +1,28 @@
 #include "IRC.h"
 #include "ChannelMgr.h"
 #include "Channel.h"
+#include "World.h"
+#include "Log.h"
 
 IrcBot::IrcBot()
 {}
 
 IrcBot::~IrcBot()
 {}
+
+// Master
+void IrcBot::run()
+{
+    while(!World::IsStopped())
+    {
+        while(!Connect())
+        {
+            sLog->outError("Could not connect to the IRC server. Trying again in 30 seconds.");
+            sleep(30);
+        }
+    }
+    Disconnect();
+}
 
 bool IrcBot::Connect()
 {

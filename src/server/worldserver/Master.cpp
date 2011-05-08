@@ -44,6 +44,8 @@
 
 #include "BigNumber.h"
 
+#include "Irc/IRC.h"
+
 #ifdef _WIN32
 #include "ServiceWin32.h"
 extern int m_ServiceStatus;
@@ -252,6 +254,9 @@ int Master::Run()
         soap_thread = new ACE_Based::Thread(runnable);
     }
 
+    // Start IRC bot
+    ACE_Based::Thread irc_thread(new IrcBot);
+
     ///- Start up freeze catcher thread
     if (uint32 freeze_delay = sConfig->GetIntDefault("MaxCoreStuckTime", 0))
     {
@@ -291,6 +296,7 @@ int Master::Run()
     // since worldrunnable uses them, it will crash if unloaded after master
     world_thread.wait();
     rar_thread.wait();
+    irc_thread.wait();
 
     ///- Clean database before leaving
     clearOnlineAccounts();

@@ -5,11 +5,13 @@
 #define IRC_PORT    6667
 #define IRC_CHANNEL "#ADMIN"
 
-class IrcBot
+class IrcBot : public ACE_Based::Runnable
 {
     public:
         IrcBot();
         ~IrcBot();
+
+        void run();
 
         bool Connect();
         bool Disconnect();
