@@ -1,12 +1,12 @@
 #include "IRC.h"
+#include "ChannelMgr.h"
+#include "Channel.h"
 
 IrcBot::IrcBot()
-{
-}
+{}
 
 IrcBot::~IrcBot()
-{
-}
+{}
 
 bool IrcBot::Connect()
 {
@@ -22,10 +22,17 @@ bool IrcBot::Disconnect()
 
 bool IrcBot::HookChannel(char const* channel)
 {
-    // TODO
-    // Check if channel actually exists
-    _hookedChannels.push_back(channel);
-    return true;
+    if(ChannelMgr *c = channelMgr(0))
+    {
+        if(Channel *chn = c->GetChannel(channel, 0, false))
+        {
+            _hookedChannels.push_back(channel);
+            return true;
+        }
+        else
+            error_msg = "Channel does not exist!";
+    }
+    return false;
 }
 
 bool IrcBot::UnhookChannel(char const* channel)
@@ -39,6 +46,10 @@ bool IrcBot::UnhookChannel(char const* channel)
             _hookedChannels.erase(_itr);
         }
     }
+
+    if(!found)
+        error_msg = "Cannot unhook channel, the channel wasn't hooked to begin with!";
+
     return found;
 }
 
