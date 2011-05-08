@@ -17,32 +17,54 @@ IrcBot::~IrcBot()
 // Master
 void IrcBot::run()
 {
+    ACE_Based::Thread::Sleep(500);
+    sLog->outString("<IrcBot> - Starting IRC");
+    // Create a loop while the thread is running
     while (!World::IsStopped())
     {
-        while (!Connect())
+        // Initialize socket library
+        if (InitSocket())
         {
-            sLog->outError("Could not connect to the IRC server. Trying again in 30 seconds.");
-            Sleep(30 * IN_MILLISECONDS);
+            // Connect To The IRC Server
+            sLog->outString("<IrcBot> - Connecting...");
+            while (!IsConnected())
+            {
+                if (!Connect())
+                {
+                    error_msg = "<IrcBot> - Could not connect to the IRC server. Trying again in 30 seconds.";
+                    ACE_Based::Thread::Sleep(30 * IN_MILLISECONDS);
+                }
+                // else IsConnected will be true and loop will end
+            }
+
+            // On connection success reset the connection counter
+            sLog->outString("<IrcBot> - Connected.");
+            sLog->outString("<IrcBot> - Logging in to the IRC server...");
+            // Login?
+            if (true)
+            {
+                sLog->outString("<IrcBot> - Logged in");
+                // Listen to data from socket while logged in
+                while (IsConnected() && !World::IsStopped())
+                    SockRecv();
+            }
+            sLog->outString("<IrcBot> - Connection lost");
+
+            // Disconnect if connection is lost or connection failed
+            Disconnect();
         }
-        /*
-        while (IsConnected())
+        else
         {
-            SockRecv();
+            error_msg = "<IrcBot> - Couldn't initialize socket.";
+            ACE_Based::Thread::Sleep(10 * IN_MILLISECONDS);
         }
-        */
     }
-    Disconnect();
 }
 
 bool IrcBot::Connect()
 {
     // http://rabbit.eng.miami.edu/info/functions/internet.html#sockaddr_in
     _connected = false;
-    if (!InitSocket())
-    {
-        error_msg = "<IrcBot> - Cannot init socket.";
-        return false;
-    }
 
     // Check hostname
     hostent * record = gethostbyname(IRC_SERVER);
@@ -155,4 +177,32 @@ bool IrcBot::IsChannelHooked(char const* channel)
             return true;
     }
     return false;
+}
+
+void IrcBot::SockRecv()
+{
+    char sizebuffer[512];
+
+    memset(sizebuffer, 0, 512);
+    
+    int recievedBytes = recv(_socket, sizebuffer, 511, 0);
+    if (recievedBytes == -1)
+    {
+        error_msg = "<IrcBot> - Connection lost";
+        Disconnect();
+    }
+    else
+    {
+        if (-1 == recievedBytes)
+            error_msg = "<IrcBot> - Error while receiving from socket";
+        else
+        {
+            std::string reply;
+            std::istringstream iss(sizebuffer);
+            while (getline(iss, reply))
+            {
+                //OnCommand(reply);
+            }
+        }
+    }
 }
