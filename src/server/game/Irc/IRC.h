@@ -2,7 +2,7 @@
 #include <vector>
 
 #define IRC_SERVER  "irc.projectsjgr.com"
-#define IRC_PORT    6667
+uint16 const IRC_PORT = 6667;
 #define IRC_CHANNEL "#ADMIN"
 
 class IrcBot : public ACE_Based::Runnable
@@ -14,6 +14,7 @@ class IrcBot : public ACE_Based::Runnable
         void run();
 
         bool Connect();
+        bool InitSocket();
         bool Disconnect();
         bool IsConnected() { return _connected; }
 
@@ -21,8 +22,10 @@ class IrcBot : public ACE_Based::Runnable
         bool HookChannel(char const* channel);
         bool UnhookChannel(char const* channel);
         bool IsChannelHooked(char const* channel);
+    protected:
+        bool _connected;
+        int _socket;
     private:
-        bool _connected; 
         std::vector<char const*> _hookedChannels;
         std::string error_msg;
         std::vector<char const*>::iterator _itr;
