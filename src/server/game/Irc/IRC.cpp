@@ -259,7 +259,7 @@ bool IrcBot::SendData(MessageType type, char const* data)
     switch(type)
     {
         case USER:
-            ss << "USER :" << data;
+            ss << "USER " << IRC_NICK << " 0 * :" << data;
             break;
         case NICK:
             ss << "NICK :" << data;
