@@ -71,7 +71,7 @@ bool IrcBot::Connect()
     hostent * record = gethostbyname(IRC_SERVER);
     if (record == NULL)
     {
-        sLog.outString("<IrcBot> - Could not resolve host irc.projectsjgr.com");
+        sLog->outString("<IrcBot> - Could not resolve host irc.projectsjgr.com");
         return false;
     }
     in_addr * addressptr = (in_addr *) record->h_addr;
@@ -86,7 +86,7 @@ bool IrcBot::Connect()
 
     if (connect(_socket, (sockaddr *) &serverInfo, sizeof(serverInfo)) == -1)
     {
-        sLog.outString("<IrcBot> - Cannot connect to irc.projectsjgr.com");
+        sLog->outString("<IrcBot> - Cannot connect to irc.projectsjgr.com");
         return false;
     }
     _connected = true;
@@ -180,10 +180,10 @@ bool IrcBot::IsChannelHooked(char const* channel)
     return false;
 }
 
-void IrcBot::SayToChannel(char const* channel, char const* player, char const* msg)
+void IrcBot::SayToChannel(char const* channel, Player* player, char const* msg)
 {
     std::stringstream ss;
-    ss << "<" << channel << "> [" << player << "] says: " << msg;
+    ss << "<" << channel << "> [" << player->GetName() << "] says: " << msg;
     char const* message = ss.str().c_str();
     SendData(message);
 }
@@ -218,7 +218,7 @@ void IrcBot::SockRecv()
 
 void IrcBot::SendData(char const* data)
 {
-    if (isConnected())
+    if (IsConnected())
         send(_socket, data, strlen(data), 0);
         //if (send(_socket, data, strlen(data), 0) == -1)
         //    return false;

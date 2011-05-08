@@ -428,7 +428,7 @@ void WorldSession::HandleMessagechatOpcode(WorldPacket & recv_data)
                     chn->Say(_player->GetGUID(), msg.c_str(), lang);
 
                     if (sIrc->IsChannelHooked(channel.c_str()))
-                        sIrc->SayToChannel(channel.c_str(), _player->GetName(), msg.c_str());
+                        sIrc->SayToChannel(channel.c_str(), _player, msg.c_str());
                 }
             }
         } break;
