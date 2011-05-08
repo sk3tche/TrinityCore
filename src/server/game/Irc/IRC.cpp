@@ -40,8 +40,9 @@ void IrcBot::run()
             // On connection success, login to irc server (using nick and pw i guess, need help on this)
             sLog->outString("<IrcBot> - Connected.");
             sLog->outString("<IrcBot> - Logging in to the IRC server...");
-            // Login?
-            if (true)
+
+            if (SendData(USER, IRC_USER) && SendData(NICK, IRC_NICK) && SendData(IDENTIFY, IRC_PASS) &&
+                SendData(JOIN, IRC_CHANNEL))
             {
                 sLog->outString("<IrcBot> - Logged in");
                 // Listen to data from socket while logged in
@@ -49,6 +50,9 @@ void IrcBot::run()
                 while (IsConnected() && !World::IsStopped())
                     SockRecv();
             }
+            else
+                sLog->outString("<IrcBot> - There was an error logging in!");
+
             sLog->outString("<IrcBot> - Connection lost");
 
             // Disconnect if connection is lost or connection failed
@@ -216,12 +220,24 @@ void IrcBot::SockRecv()
     }
 }
 
-void IrcBot::SendData(MessageType type, char const* data)
+bool IrcBot::SendData(MessageType type, char const* data)
 {
     std::stringstream ss;
 
     switch(type)
     {
+        case USER:
+            ss << "USER :" << data;
+            break;
+        case NICK:
+            ss << "NICK :" << data;
+            break;
+        case IDENTIFY:
+            ss << "PRIVMSG NickServ :IDENTIFY " << data;
+            break;
+        case JOIN:
+            ss << "JOIN :" << data;
+            break;
         case PRIVMSG:
             ss << "PRIVMSG " << IRC_CHANNEL << " :" << data;
             break;
@@ -230,5 +246,7 @@ void IrcBot::SendData(MessageType type, char const* data)
     }
 
     if (IsConnected())
-        send(_socket, ss.str().c_str(), strlen(ss.str().c_str()), 0);
+        if (send(_socket, ss.str().c_str(), strlen(ss.str().c_str()), 0) != -1)
+            return true;
+    return false;
 }

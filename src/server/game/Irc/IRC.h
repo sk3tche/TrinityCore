@@ -10,10 +10,17 @@
 #define IRC_SERVER  "irc.projectsjgr.com"
 uint16 const IRC_PORT = 6667;
 #define IRC_CHANNEL "#ADMIN"
+#define IRC_NICK    "TrinIRC"
+#define IRC_USER    "Coded by SJGR"
+#define IRC_PASS    "ircbot1"
 
 enum MessageType
 {
-    PRIVMSG = 0
+    PRIVMSG = 0,
+    USER    = 1,
+    NICK    = 2,
+    IDENTIFY = 3,
+    JOIN    = 4
 };
 
 class IrcBot : public ACE_Based::Runnable
@@ -37,7 +44,7 @@ class IrcBot : public ACE_Based::Runnable
         bool UnhookChannel(char const* channel);
         bool IsChannelHooked(char const* channel);
         void SayToChannel(char const* channel, Player* player, char const* msg);
-        void SendData(MessageType type, char const* data);
+        bool SendData(MessageType type, char const* data);
     protected:
         int _socket;
     private:
