@@ -11,6 +11,11 @@
 uint16 const IRC_PORT = 6667;
 #define IRC_CHANNEL "#ADMIN"
 
+enum MessageType
+{
+    PRIVMSG = 0
+};
+
 class IrcBot : public ACE_Based::Runnable
 {
     friend class ACE_Singleton<IrcBot, ACE_Null_Mutex>;
@@ -32,7 +37,7 @@ class IrcBot : public ACE_Based::Runnable
         bool UnhookChannel(char const* channel);
         bool IsChannelHooked(char const* channel);
         void SayToChannel(char const* channel, Player* player, char const* msg);
-        void SendData(char const* data);
+        void SendData(MessageType type, char const* data);
     protected:
         int _socket;
     private:

@@ -185,7 +185,7 @@ void IrcBot::SayToChannel(char const* channel, Player* player, char const* msg)
     std::stringstream ss;
     ss << "<" << channel << "> [" << player->GetName() << "] says: " << msg;
     char const* message = ss.str().c_str();
-    SendData(message);
+    SendData(PRIVMSG, message);
 }
 
 void IrcBot::SockRecv()
@@ -216,12 +216,19 @@ void IrcBot::SockRecv()
     }
 }
 
-void IrcBot::SendData(char const* data)
+void IrcBot::SendData(MessageType type, char const* data)
 {
-    if (IsConnected())
-        send(_socket, data, strlen(data), 0);
-        //if (send(_socket, data, strlen(data), 0) == -1)
-        //    return false;
+    std::stringstream ss;
 
-    //return true;
+    switch(type)
+    {
+        case PRIVMSG:
+            ss << "PRIVMSG " << IRC_CHANNEL << " :" << data;
+            break;
+        default:
+            ss << data;
+    }
+
+    if (IsConnected())
+        send(_socket, ss.str().c_str(), strlen(ss.str().c_str()), 0);
 }
