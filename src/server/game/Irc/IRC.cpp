@@ -214,11 +214,37 @@ void IrcBot::SockRecv()
             std::istringstream iss(sizebuffer);
             while (getline(iss, reply))
             {
-                //OnCommand(reply);
+                std::vector<char const*> args;
+                SplitArgs(reply, args);
+                if(args.length() < 3)
+                    return;
+
+                if(!stricmp(args[0], "PRIVMSG") && !stricmp(args[1], IRC_CHANNEL) && args[2][1] == '!')
+                {
+                    std::string command = args[2];
+                    command.erase(0, 2); // erase : and ! from the commands
+                    
+                    std::vector<char const*> params;
+                    params.push_back(command.c_str());
+
+                    for(_itr = args.begin() + 3; _itr != args.end(); _itr++)
+                        params.push_back(*_itr);
+
+                    // ParseCommand(params);
+                }
             }
         }
     }
 }
+
+void IrcBot::SplitArgs(char const* s, std::vector<char const*> & elems) {
+    std::stringstream ss(s);
+    std::string item;
+    while(std::getline(ss, item, delim)) {
+        elems.push_back(item);
+    }
+}
+
 
 bool IrcBot::SendData(MessageType type, char const* data)
 {
