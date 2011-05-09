@@ -586,6 +586,9 @@ void AddSC_outdoorpvp_zm();
 // player
 void AddSC_chat_log();
 
+// Custom
+void AddSC_SJGR_scripts();
+
 #endif
 
 void AddScripts()
@@ -1213,6 +1216,6 @@ void AddCustomScripts()
 {
 #ifdef SCRIPTS
     /* This is where custom scripts should be added. */
-
+    AddSC_SJGR_scripts();
 #endif
 }
