@@ -6,7 +6,7 @@
 #include "Common.h"
 #include <sys/types.h>
 
-#define MAX_PACKET_SIZE 512
+#define MAXDATASIZE 512
 
 IrcBot::IrcBot()
 {
@@ -43,19 +43,51 @@ void IrcBot::run()
             sLog->outString("<IrcBot> - Connected.");
             sLog->outString("<IrcBot> - Logging in to the IRC server...");
 
-            if (SendData(USER, IRC_USER) && SendData(NICK, IRC_NICK) && SendData(IDENTIFY, IRC_PASS) &&
-                SendData(JOIN, IRC_CHANNEL))
+            if (SendData(NICK, IRC_NICK))
             {
-                sLog->outString("<IrcBot> - Logged in");
-                // Listen to data from socket while logged in
-                // This is supposed to loop as long as we are connected.
-                while (IsConnected() && !World::IsStopped())
-                    SockRecv();
+                sLog->outString("<IrcBot> - SendData(USER, IRC_USER) Sucessful");
+                ACE_Based::Thread::Sleep(1000);
+                if (SendData(USER, IRC_USER))
+                {
+                    sLog->outString("<IrcBot> - SendData(IDENTIFY, IRC_PASS) Sucessful");
+                    ACE_Based::Thread::Sleep(1000);
+                    if (SendData(IDENTIFY, IRC_PASS))
+                    {
+                        sLog->outString("<IrcBot> - SendData(JOIN, IRC_CHANNEL) Sucessful");
+                        ACE_Based::Thread::Sleep(1000);
+                        if (SendData(JOIN, IRC_CHANNEL))
+                        {
+                            sLog->outString("<IrcBot> - Logged in sucessfully. Recieving data...");
+                            // Listen to data from socket while logged in
+                            // This is supposed to loop as long as we are connected.
+                            while (IsConnected() && !World::IsStopped())
+                                SockRecv();
+                        }
+                        else
+                        {
+                            sLog->outString("<IrcBot> - There was an error in SendData(JOIN, IRC_CHANNEL)");
+                            ACE_Based::Thread::Sleep(10 * IN_MILLISECONDS);
+                        }
+                    }
+                    else
+                    {
+                        sLog->outString("<IrcBot> - There was an error in SendData(IDENTIFY, IRC_PASS)");
+                        ACE_Based::Thread::Sleep(10 * IN_MILLISECONDS);
+                    }
+                }
+                else
+                {
+                    sLog->outString("<IrcBot> - There was an error in SendData(NICK, IRC_USER)");
+                    ACE_Based::Thread::Sleep(10 * IN_MILLISECONDS);
+                }
             }
             else
-                sLog->outString("<IrcBot> - There was an error logging in!");
+            {
+                sLog->outString("<IrcBot> - There was an error in SendData(USER, IRC_NICK)");
+                ACE_Based::Thread::Sleep(10 * IN_MILLISECONDS);
+            }
 
-            sLog->outString("<IrcBot> - Connection lost");
+            sLog->outString("<IrcBot> - Connection has been lost. Disconnect");
 
             // Disconnect if connection is lost or connection failed
             Disconnect();
@@ -196,11 +228,11 @@ void IrcBot::SayToIRC(char const* channel, Player* player, char const* msg)
 
 void IrcBot::SockRecv()
 {
-    char sizebuffer[MAX_PACKET_SIZE];
+    char sizebuffer[MAXDATASIZE];
 
-    memset(sizebuffer, 0, MAX_PACKET_SIZE);
+    memset(sizebuffer, 0, MAXDATASIZE);
     
-    int recievedBytes = recv(_socket, sizebuffer, MAX_PACKET_SIZE-1, 0);
+    int recievedBytes = recv(_socket, sizebuffer, MAXDATASIZE-1, 0);
     if (recievedBytes == -1)
     {
         sLog->outString("<IrcBot> - Connection lost");
@@ -229,7 +261,7 @@ void IrcBot::SockRecv()
                     std::vector<char const*> params;
                     params.push_back(command.c_str());
 
-                    for(_itr = args.begin() + 4; _itr != args.end(); _itr++)
+                    for (_itr = args.begin() + 4; _itr != args.end(); _itr++)
                         params.push_back(*_itr);
 
                     // Get nick (In between first : and first !
@@ -265,29 +297,32 @@ bool IrcBot::SendData(MessageType type, char const* data)
             ss << "USER " << IRC_NICK << " 0 * :" << data;
             break;
         case NICK:
-            ss << "NICK :" << data;
+            ss << "NICK " << data;
             break;
         case IDENTIFY:
             ss << "PRIVMSG NickServ :IDENTIFY " << data;
             break;
         case JOIN:
-            ss << "JOIN :" << data;
+            ss << "JOIN " << data;
             break;
         case PRIVMSG:
             ss << "PRIVMSG " << IRC_CHANNEL << " :" << data;
             break;
         default:
             ss << data;
+            break;
     }
 
     if (IsConnected())
     {
         std::string temp = ss.str();
-        if (send(_socket, temp.c_str(), strlen(temp.c_str()), 0) != -1)
-            return true;
+        char const* message = temp.c_str();
+        sLog->outString("<IrcBot> - Sending data: %s", message);
+        if (send(_socket, message, strlen(message), 0) == -1)
+            return false;
     }
 
-    return false;
+    return true;
 }
 
 void IrcBot::ParseCommand(std::string nickName, std::vector<char const*> args)
