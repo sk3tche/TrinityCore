@@ -190,8 +190,8 @@ void IrcBot::SayToIRC(char const* channel, Player* player, char const* msg)
 {
     std::stringstream ss;
     ss << "<" << channel << "> [" << player->GetName() << "] says: " << msg;
-    char const* message = ss.str().c_str();
-    SendData(PRIVMSG, message);
+    std::string message = ss.str();
+    SendData(PRIVMSG, message.c_str());
 }
 
 void IrcBot::SockRecv()
@@ -238,7 +238,8 @@ void IrcBot::SockRecv()
                     std::stringstream nstream;
                     for (uint32 i = 0; nick[i] != '!'; i++)
                         nstream << nick[i];
-                    ParseCommand(nstream.str().c_str(), params);
+                    std::string ntemp = nstream.str();
+                    ParseCommand(ntemp.c_str(), params);
                 }
             }
         }
@@ -280,13 +281,16 @@ bool IrcBot::SendData(MessageType type, char const* data)
     }
 
     if (IsConnected())
-        if (send(_socket, ss.str().c_str(), strlen(ss.str().c_str()), 0) != -1)
+    {
+        std::string temp = ss.str();
+        if (send(_socket, temp.c_str(), strlen(temp.c_str()), 0) != -1)
             return true;
+    }
 
     return false;
 }
 
-void IrcBot::ParseCommand(char const* nickName, std::vector<char const*> args)
+void IrcBot::ParseCommand(std::string nickName, std::vector<char const*> args)
 {
     if (!args.size())
         return;
@@ -306,7 +310,7 @@ void IrcBot::ParseCommand(char const* nickName, std::vector<char const*> args)
             if (ChannelMgr* cMgr = channelMgr(0))
             {
                 if (Channel* chn = cMgr->GetChannel(args[1], 0, false))
-                    chn->SayFromIRC(nickName, ss.str().c_str());
+                    chn->SayFromIRC(nickName, ss.c_str());
             }
        }
     }          
