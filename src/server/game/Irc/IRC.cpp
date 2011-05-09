@@ -306,11 +306,11 @@ void IrcBot::ParseCommand(std::string nickName, std::vector<char const*> args)
             std::stringstream ss;
             for (_itr = args.begin()+2; _itr != args.end(); _itr++)
                 ss << *_itr << " ";
-
+            std::string temp = ss.str();
             if (ChannelMgr* cMgr = channelMgr(0))
             {
                 if (Channel* chn = cMgr->GetChannel(args[1], 0, false))
-                    chn->SayFromIRC(nickName, ss.c_str());
+                    chn->SayFromIRC(nickName.c_str(), temp.c_str());
             }
        }
     }          
