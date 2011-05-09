@@ -5727,43 +5727,41 @@ float Player::GetMeleeCritFromAgility()
     if (critBase == NULL || critRatio == NULL)
         return 0.0f;
 
-    float crit = critBase->base + GetStat(STAT_AGILITY)*critRatio->ratio;
-    return crit*100.0f;
+    float crit = critBase->base + GetStat(STAT_AGILITY) * critRatio->ratio;
+    return crit * 100.0f;
 }
 
-float Player::GetBaseDodge()
-{
-    float BaseDodge[MAX_CLASSES] = {
-        3.664f,     // Warrior
-        3.494f,     // Paladin
-        -4.087f,    // Hunter
-        2.095f,     // Rogue
-        3.417f,     // Priest
-        3.664f,     // DK?
-        2.108f,     // Shaman
-        3.658f,     // Mage
-        2.421f,     // Warlock
-        0.0f,       // Unk
-        5.609f      // Druid
-    };
-    return BaseDodge[getClass()-1];
-}
-
-float Player::GetDodgeFromAgility()
+void Player::GetDodgeFromAgility(float &diminishing, float &nondiminishing)
 {
     // Crit/agility to dodge/agility coefficient multipliers
-    float crit_to_dodge[MAX_CLASSES] = {
-         0.73f,      // Warrior
-         0.86f,      // Paladin
-         0.96f,      // Hunter
-         1.74f,      // Rogue
-         0.86f,      // Priest
-         0.73f,      // DK?
-         1.38f,      // Shaman
-         0.86f,      // Mage
-         0.84f,      // Warlock
-         0.0f,       // Unk
-         1.74f       // Druid
+    const float crit_to_dodge[MAX_CLASSES] =
+    {
+        0.85f/1.15f,    // Warrior
+        1.00f/1.15f,    // Paladin
+        1.11f/1.15f,    // Hunter
+        2.00f/1.15f,    // Rogue
+        1.00f/1.15f,    // Priest
+        0.85f/1.15f,    // DK
+        1.60f/1.15f,    // Shaman
+        1.00f/1.15f,    // Mage
+        0.97f/1.15f,    // Warlock (?)
+        0.0f,           // ??
+        2.00f/1.15f     // Druid
+    };
+
+    const float dodge_base[MAX_CLASSES] =
+    {
+        0.036640f, // Warrior
+        0.034943f, // Paladin
+        -0.040873f, // Hunter
+        0.020957f, // Rogue
+        0.034178f, // Priest
+        0.036640f, // DK
+        0.021080f, // Shaman
+        0.036587f, // Mage
+        0.024211f, // Warlock
+        0.0f,      // ??
+        0.056097f  // Druid
     };
 
     uint8 level = getLevel();
@@ -5772,13 +5770,17 @@ float Player::GetDodgeFromAgility()
     if (level > GT_MAX_LEVEL)
         level = GT_MAX_LEVEL;
 
-    // Dodge per agility for most classes equal crit per agility (but for some classes need apply some multiplier)
+    // Dodge per agility is proportional to crit per agility, which is available from DBC files
     GtChanceToMeleeCritEntry  const* dodgeRatio = sGtChanceToMeleeCritStore.LookupEntry((pclass-1) * GT_MAX_LEVEL + level-1);
     if (dodgeRatio == NULL || pclass > MAX_CLASSES)
-        return 0.0f;
+        return;
 
-    float dodge = GetStat(STAT_AGILITY) * dodgeRatio->ratio * crit_to_dodge[pclass-1];
-    return dodge * 100.0f;
+    // TODO: research if talents/effects that increase total agility by x% should increase non-diminishing part
+    float base_agility = GetCreateStat(STAT_AGILITY) * m_auraModifiersGroup[UNIT_MOD_STAT_START + STAT_AGILITY][BASE_PCT];
+    float bonus_agility = GetStat(STAT_AGILITY) - base_agility;
+    // calculate diminishing (green in char screen) and non-diminishing (white) contribution
+    diminishing = 100.0f * bonus_agility * dodgeRatio->ratio * crit_to_dodge[pclass-1];
+    nondiminishing = 100.0f * (dodge_base[pclass-1] + base_agility * dodgeRatio->ratio * crit_to_dodge[pclass-1]);
 }
 
 float Player::GetSpellCritFromIntellect()
@@ -21966,13 +21968,13 @@ void Player::AddItemDurations(Item *item)
 
 void Player::AutoUnequipOffhandIfNeed()
 {
-    Item *offItem = GetItemByPos(INVENTORY_SLOT_BAG_0, EQUIPMENT_SLOT_OFFHAND);
+    Item* offItem = GetItemByPos(INVENTORY_SLOT_BAG_0, EQUIPMENT_SLOT_OFFHAND);
     if (!offItem)
         return;
 
     // unequip offhand weapon if player doesn't have dual wield anymore
-    if ((CanDualWield() || offItem->GetProto()->InventoryType == INVTYPE_SHIELD || offItem->GetProto()->InventoryType == INVTYPE_HOLDABLE) &&
-        (CanTitanGrip() || (offItem->GetProto()->InventoryType != INVTYPE_2HWEAPON && !IsTwoHandUsed())))
+    if ((CanDualWield() || offItem->GetTemplate()->InventoryType == INVTYPE_SHIELD || offItem->GetTemplate()->InventoryType == INVTYPE_HOLDABLE) &&
+        (CanTitanGrip() || (offItem->GetTemplate()->InventoryType != INVTYPE_2HWEAPON && !IsTwoHandUsed())))
         return;
 
     ItemPosCountVec off_dest;
@@ -24633,4 +24635,12 @@ void Player::_SaveInstanceTimeRestrictions(SQLTransaction& trans)
         stmt->setUInt64(2, itr->second);
         trans->Append(stmt);
     }
+}
+
+bool Player::HasTwoHandWeaponInOneHand() const
+{
+    Item* offItem = GetItemByPos(INVENTORY_SLOT_BAG_0, EQUIPMENT_SLOT_OFFHAND);
+    Item* mainItem = GetItemByPos(INVENTORY_SLOT_BAG_0, EQUIPMENT_SLOT_MAINHAND);
+
+    return offItem && ((mainItem && mainItem->GetTemplate()->InventoryType == INVTYPE_2HWEAPON) || offItem->GetTemplate()->InventoryType == INVTYPE_2HWEAPON);
 }

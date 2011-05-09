@@ -602,25 +602,25 @@ void Player::UpdateParryPercentage()
 {
     // No parry
     float value = 0.0f;
-    if (CanParry())
+    uint32 pclass = getClass()-1;
+    float dr_cap = PlayerAvoidanceDiminsihingData[pclass].parry_cap;
+    float dr_k = PlayerAvoidanceDiminsihingData[pclass].k_value;
+
+    if (CanParry() && dr_cap > 0.0f)
     {
         // Base parry
-        value  = 5.0f;
-
-        // Modify value from defense skill
-        value += (int32(GetDefenseSkillValue()) - int32(GetMaxSkillValueForLevel())) * 0.04f;
+        float nondiminishing  = 5.0f;
 
         // Parry from rating
-        value += GetRatingBonusValue(CR_PARRY);
+        float diminishing = GetRatingBonusValue(CR_PARRY);
 
-        // Parry diminishing return
-        float dr_k = PlayerAvoidanceDiminsihingData[getClass()].k_value;
-        float dr_cap = PlayerAvoidanceDiminsihingData[getClass()].parry_cap;
-        value = (value * dr_cap) / (value + dr_cap * dr_k);
-
+        // Modify value from defense skill (only bonus from defense rating diminishes)
+        nondiminishing += (GetSkillValue(SKILL_DEFENSE) - GetMaxSkillValueForLevel()) * 0.04f;
+        diminishing += (int32(GetRatingBonusValue(CR_DEFENSE_SKILL))) * 0.04f;
         // Parry from SPELL_AURA_MOD_PARRY_PERCENT aura
-        value += GetTotalAuraModifier(SPELL_AURA_MOD_PARRY_PERCENT);
-
+        nondiminishing += GetTotalAuraModifier(SPELL_AURA_MOD_PARRY_PERCENT);
+        // apply diminishing formula to diminishing parry chance
+        value = nondiminishing + diminishing * dr_cap / (diminishing + dr_cap * dr_k);
         value = value < 0.0f ? 0.0f : value;
     }
     SetStatFloatValue(PLAYER_PARRY_PERCENTAGE, value);
@@ -628,27 +628,26 @@ void Player::UpdateParryPercentage()
 
 void Player::UpdateDodgePercentage()
 {
-    // Base dodge
-    float value = GetBaseDodge();
+    uint32 pclass = getClass()-1;
+    float diminishing = 0.0f, nondiminishing = 0.0f;
+    float dr_k = PlayerAvoidanceDiminsihingData[pclass].k_value;
+    float dr_cap = PlayerAvoidanceDiminsihingData[pclass].dodge_cap;
 
     // Dodge from agility
-    value += GetDodgeFromAgility();
+    GetDodgeFromAgility(diminishing, nondiminishing);
 
-    // Modify value from defense skill
-    value += (int32(GetDefenseSkillValue()) - int32(GetMaxSkillValueForLevel())) * 0.04f;
-
-    // Dodge diminishing return
-    float dr_k = PlayerAvoidanceDiminsihingData[getClass()].k_value;
-    float dr_cap = PlayerAvoidanceDiminsihingData[getClass()].dodge_cap;
-    value = (value * dr_cap) / (value + dr_cap * dr_k);
-
-    // Dodge from rating
-    value += GetRatingBonusValue(CR_DODGE);
+    // Modify value from defense skill (only bonus from defense rating diminishes)
+    nondiminishing += (GetSkillValue(SKILL_DEFENSE) - GetMaxSkillValueForLevel()) * 0.04f;
+    diminishing += (int32(GetRatingBonusValue(CR_DEFENSE_SKILL))) * 0.04f;
 
     // Dodge from SPELL_AURA_MOD_DODGE_PERCENT aura
-    value += GetTotalAuraModifier(SPELL_AURA_MOD_DODGE_PERCENT);
+    nondiminishing += GetTotalAuraModifier(SPELL_AURA_MOD_DODGE_PERCENT);
 
-    // Apply base dodge here instead?
+    // Dodge from rating
+    diminishing += GetRatingBonusValue(CR_DODGE);
+
+    // apply diminishing formula to diminishing dodge chance
+    float value = nondiminishing + (diminishing * dr_cap / (diminishing + dr_cap * dr_k));
 
     value = value < 0.0f ? 0.0f : value;
 
