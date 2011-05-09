@@ -6,6 +6,8 @@
 #include "Common.h"
 #include <sys/types.h>
 
+#define MAX_PACKET_SIZE 512
+
 IrcBot::IrcBot()
 {
 }
@@ -194,11 +196,11 @@ void IrcBot::SayToIRC(char const* channel, Player* player, char const* msg)
 
 void IrcBot::SockRecv()
 {
-    char sizebuffer[512];
+    char sizebuffer[MAX_PACKET_SIZE];
 
-    memset(sizebuffer, 0, 512);
+    memset(sizebuffer, 0, MAX_PACKET_SIZE);
     
-    int recievedBytes = recv(_socket, sizebuffer, 511, 0);
+    int recievedBytes = recv(_socket, sizebuffer, MAX_PACKET_SIZE-1, 0);
     if (recievedBytes == -1)
     {
         sLog->outString("<IrcBot> - Connection lost");
@@ -216,10 +218,10 @@ void IrcBot::SockRecv()
             {
                 std::vector<char const*> args;
                 SplitArgs(reply.c_str(), args);
-                if(args.size() < 4)
+                if (args.size() < 4)
                     return;
 
-                if(!stricmp(args[1], "PRIVMSG") && !stricmp(args[2], IRC_CHANNEL) && args[3][1] == '!')
+                if (!stricmp(args[1], "PRIVMSG") && !stricmp(args[2], IRC_CHANNEL) && args[3][1] == '!')
                 {
                     std::string command = args[3];
                     command.erase(0, 2); // erase : and ! from the commands
@@ -234,7 +236,7 @@ void IrcBot::SockRecv()
                     std::string nick = args[0];
                     nick.erase(0, 1);
                     std::stringstream nstream;
-                    for(int i = 0; nick[i] != '!'; i++)
+                    for (uint32 i = 0; nick[i] != '!'; i++)
                         nstream << nick[i];
                     ParseCommand(nstream.str().c_str(), params);
                 }
@@ -243,14 +245,14 @@ void IrcBot::SockRecv()
     }
 }
 
-void IrcBot::SplitArgs(char const* s, std::vector<char const*> & elems) {
+void IrcBot::SplitArgs(char const* s, std::vector<char const*> & elems)
+{
     std::stringstream ss(s);
     std::string item;
-    while(std::getline(ss, item, ' ')) {
-        elems.push_back(item.c_str());
-    }
-}
 
+    while (std::getline(ss, item, ' '))
+        elems.push_back(item.c_str());
+}
 
 bool IrcBot::SendData(MessageType type, char const* data)
 {
@@ -280,29 +282,31 @@ bool IrcBot::SendData(MessageType type, char const* data)
     if (IsConnected())
         if (send(_socket, ss.str().c_str(), strlen(ss.str().c_str()), 0) != -1)
             return true;
+
     return false;
 }
 
-void IrcBot::ParseCommand(char const* nick, std::vector<char const*> args)
+void IrcBot::ParseCommand(char const* nickName, std::vector<char const*> args)
 {
-    if(!args.size())
+    if (!args.size())
         return;
 
-    if(!stricmp(args[0], "channel"))
+    if (!stricmp(args[0], "channel"))
     {
-        if(args.size() < 3)
+        if (args.size() < 3)
             SendData(PRIVMSG, "Not enough arguments! !channel HOOKED_CHANNEL message");
-        else if(!IsChannelHooked(args[1]))
+        else if (!IsChannelHooked(args[1]))
             SendData(PRIVMSG, "Channel is not hooked!");
         else
         {
             std::stringstream ss;
-            for(_itr = args.begin()+2; _itr != args.end(); _itr++)
+            for (_itr = args.begin()+2; _itr != args.end(); _itr++)
                 ss << *_itr << " ";
-            if(ChannelMgr * cMgr = channelMgr(0))
+
+            if (ChannelMgr* cMgr = channelMgr(0))
             {
-                if(Channel * chn = cMgr->GetChannel(args[1], 0, false))
-                    chn->SayFromIRC(nick, ss.str().c_str(), LANG_UNIVERSAL);
+                if (Channel* chn = cMgr->GetChannel(args[1], 0, false))
+                    chn->SayFromIRC(nickName, ss.str().c_str());
             }
        }
     }          

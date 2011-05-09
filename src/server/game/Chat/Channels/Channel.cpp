@@ -657,33 +657,34 @@ void Channel::Say(uint64 p, const char *what, uint32 lang)
     }
 }
 
-void Channel::SayFromIRC(char const* p, const char *what, uint32 lang)
+void Channel::SayFromIRC(char const* nickName, char const *message)
 {
     uint64 guid = 0;
-    QueryResult result = CharacterDatabase.PQuery("SELECT guid FROM characters WHERE name like '%s'", p);
+    QueryResult result = CharacterDatabase.PQuery("SELECT guid FROM characters WHERE name like '%s'", nickName);
     if (result)
     {
-        guid = (*result)[0].GetUInt64();
+        Field* fields = result->Fetch();
+        guid = fields[0].GetUInt64();
     }
 
-    if(!guid)
+    if (!guid)
         sIrc->SendData(PRIVMSG, "Your nickname does not exist ingame!");
     else
     {
-        uint32 messageLength = strlen(what) + 1;
+        uint32 messageLength = strlen(message) + 1;
 
         WorldPacket data(SMSG_MESSAGECHAT, 1+4+8+4+m_name.size()+1+8+4+messageLength+1);
-        data << (uint8)CHAT_MSG_CHANNEL;
-        data << (uint32)lang;
-        data << guid;                                       // 2.1.0
-        data << uint32(0);                                  // 2.1.0
-        data << m_name;
-        data << guid;
-        data << messageLength;
-        data << what;
-        data << uint8(4);                                   // GM tag
+        data << uint8(CHAT_MSG_CHANNEL);
+        data << uint32(LANG_UNIVERSAL);     // Language
+        data << guid;                       // Target GUID
+        data << uint32(0);                  // unk
+        data << m_name;                     // Channel Name
+        data << guid;                       // Sender GUID
+        data << messageLength;              // Text Length
+        data << message;                    // Text
+        data << uint8(4);                   // GM tag
 
-        SendToAll(&data, guid);
+        SendToAll(&data, true);
     }
 }
 
