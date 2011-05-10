@@ -251,6 +251,16 @@ void IrcBot::SockRecv()
             {
                 std::vector<char const*> args;
                 SplitArgs(reply.c_str(), args);
+
+                // PING/PONG
+				if (!strcmp(args[0], "PING"))
+				{
+					char* pong;
+					sprintf(pong, "PONG %s", args[1]);
+					SendData((MessageType)NULL, pong);
+					return;
+				}
+
                 if (args.size() < 4)
                     return;
 
