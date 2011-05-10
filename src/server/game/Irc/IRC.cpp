@@ -43,20 +43,21 @@ void IrcBot::run()
             sLog->outString("<IrcBot> - Connected.");
             sLog->outString("<IrcBot> - Logging in to the IRC server...");
 
-            if (SendData(NICK, IRC_NICK))
+            if (SendData(USER, IRC_USER))
             {
                 sLog->outString("<IrcBot> - SendData(USER, IRC_USER) Sucessful");
                 ACE_Based::Thread::Sleep(1000);
-                if (SendData(USER, IRC_USER))
+                if (SendData(NICK, IRC_NICK))
                 {
-                    sLog->outString("<IrcBot> - SendData(IDENTIFY, IRC_PASS) Sucessful");
+                    sLog->outString("<IrcBot> - SendData(NICK, IRC_NICK) Sucessful");
                     ACE_Based::Thread::Sleep(1000);
                     if (SendData(IDENTIFY, IRC_PASS))
                     {
-                        sLog->outString("<IrcBot> - SendData(JOIN, IRC_CHANNEL) Sucessful");
+                        sLog->outString("<IrcBot> - SendData(IDENTIFY, IRC_PASS) Sucessful");
                         ACE_Based::Thread::Sleep(1000);
                         if (SendData(JOIN, IRC_CHANNEL))
                         {
+							sLog->outString("<IrcBot> - SendData(JOIN, IRC_CHANNEL) Sucessful");
                             sLog->outString("<IrcBot> - Logged in sucessfully. Recieving data...");
                             // Listen to data from socket while logged in
                             // This is supposed to loop as long as we are connected.
@@ -77,13 +78,13 @@ void IrcBot::run()
                 }
                 else
                 {
-                    sLog->outString("<IrcBot> - There was an error in SendData(NICK, IRC_USER)");
+                    sLog->outString("<IrcBot> - There was an error in SendData(USER, IRC_USER)");
                     ACE_Based::Thread::Sleep(10 * IN_MILLISECONDS);
                 }
             }
             else
             {
-                sLog->outString("<IrcBot> - There was an error in SendData(USER, IRC_NICK)");
+                sLog->outString("<IrcBot> - There was an error in SendData(NICK, IRC_NICK)");
                 ACE_Based::Thread::Sleep(10 * IN_MILLISECONDS);
             }
 
