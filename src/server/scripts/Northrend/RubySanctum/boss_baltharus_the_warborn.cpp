@@ -20,38 +20,38 @@
 
 enum Texts
 {
-    SAY_INTRO               = 0,    // Your power wanes, ancient one.... Soon you will join your friends.
-    SAY_AGGRO               = 1,    // Ah, the entertainment has arrived.
-    SAY_SLAY                = 2,    // Baltharus leaves no survivors! - This world has enough heroes.
-    SAY_CLONE               = 3,    // Twice the pain and half the fun.
-    SAY_DEATH               = 4,    // I... didn't see that coming....
+    SAY_INTRO                   = 0,    // Your power wanes, ancient one.... Soon you will join your friends.
+    SAY_AGGRO                   = 1,    // Ah, the entertainment has arrived.
+    SAY_SLAY                    = 2,    // Baltharus leaves no survivors! - This world has enough heroes.
+    SAY_CLONE                   = 3,    // Twice the pain and half the fun.
+    SAY_DEATH                   = 4,    // I... didn't see that coming....
 };
 
 enum Spells
 {
-    SPELL_BARRIER_CHANNEL   = 76221,
-    SPELL_ENERVATING_BRAND  = 74502,
-    SPELL_SIPHONED_MIGHT    = 74507,
-    SPELL_CLEAVE            = 40504,
-    SPELL_BLADE_TEMPEST     = 75125,
-    SPELL_CLONE             = 74511,
-    SPELL_REPELLING_WAVE    = 74509,
-    SPELL_CLEAR_DEBUFFS     = 34098,
-    SPELL_SPAWN_EFFECT      = 64195,
+    SPELL_BARRIER_CHANNEL       = 76221,
+    SPELL_ENERVATING_BRAND      = 74502,
+    SPELL_SIPHONED_MIGHT        = 74507,
+    SPELL_CLEAVE                = 40504,
+    SPELL_BLADE_TEMPEST         = 75125,
+    SPELL_CLONE                 = 74511,
+    SPELL_REPELLING_WAVE        = 74509,
+    SPELL_CLEAR_DEBUFFS         = 34098,
+    SPELL_SPAWN_EFFECT          = 64195,
 };
 
 enum Events
 {
-    EVENT_BLADE_TEMPEST     = 0,
-    EVENT_CLEAVE            = 1,
-    EVENT_ENERVATING_BRAND  = 2,
-    EVENT_INTRO_TALK        = 3,
-    EVENT_OOC_CHANNEL       = 4,
+    EVENT_BLADE_TEMPEST         = 0,
+    EVENT_CLEAVE                = 1,
+    EVENT_ENERVATING_BRAND      = 2,
+    EVENT_INTRO_TALK            = 3,
+    EVENT_OOC_CHANNEL           = 4,
 };
 
 enum Actions
 {
-    ACTION_CLONE            = 0,
+    ACTION_CLONE                = 0,
 };
 
 class boss_baltharus_the_warborn : public CreatureScript

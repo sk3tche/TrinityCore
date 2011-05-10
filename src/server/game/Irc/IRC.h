@@ -37,6 +37,7 @@ class IrcBot : public ACE_Based::Runnable
         void SockRecv();
 
         bool Connect();
+        bool Login();
         bool InitSocket();
         bool Disconnect();
         bool IsConnected() { return _connected; }

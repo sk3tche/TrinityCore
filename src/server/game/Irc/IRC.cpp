@@ -19,79 +19,34 @@ IrcBot::~IrcBot()
 // Master
 void IrcBot::run()
 {
+    // Let core breath out 500 ms after core startup :)
     ACE_Based::Thread::Sleep(500);
     sLog->outString("<IrcBot> - Starting IRC");
-    // Create a loop while the thread is running
+
+    // Create a loop while the worldserver thread is running
     while (!World::IsStopped())
     {
         // Initialize socket library
         if (InitSocket())
         {
-            // Connect To The IRC Server
             sLog->outString("<IrcBot> - Connecting...");
-            while (!IsConnected())
+            if (Connect())
             {
-                if (!Connect())
+                sLog->outString("<IrcBot> - Connected.");
+                sLog->outString("<IrcBot> - Logging in to the IRC server...");
+                if (Login())
                 {
-                    sLog->outString("<IrcBot> - Could not connect to the IRC server. Trying again in 30 seconds.");
-                    ACE_Based::Thread::Sleep(30 * IN_MILLISECONDS);
-                }
-                // else IsConnected will be true and loop will end
-            }
-
-            // On connection success, login to irc server (using nick and pw i guess, need help on this)
-            sLog->outString("<IrcBot> - Connected.");
-            sLog->outString("<IrcBot> - Logging in to the IRC server...");
-
-            if (SendData(NICK, IRC_NICK))
-            {
-                sLog->outString("<IrcBot> - SendData(USER, IRC_USER) Sucessful");
-                ACE_Based::Thread::Sleep(1000);
-                if (SendData(NICK, IRC_USER))
-                {
-                    sLog->outString("<IrcBot> - SendData(NICK, IRC_NICK) Sucessful");
-                    ACE_Based::Thread::Sleep(1000);
-                    if (SendData(IDENTIFY, IRC_PASS))
+                    sLog->outString("<IrcBot> - Logged in sucessfully. Recieving data...");
+                    while (IsConnected() && !World::IsStopped())
                     {
-                        sLog->outString("<IrcBot> - SendData(IDENTIFY, IRC_PASS) Sucessful");
-                        ACE_Based::Thread::Sleep(1000);
-                        if (SendData(JOIN, IRC_CHANNEL))
-                        {
-							sLog->outString("<IrcBot> - SendData(JOIN, IRC_CHANNEL) Sucessful");
-                            sLog->outString("<IrcBot> - Logged in sucessfully. Recieving data...");
-                            // Listen to data from socket while logged in
-                            // This is supposed to loop as long as we are connected.
-                            while (IsConnected() && !World::IsStopped())
-                                SockRecv();
-                        }
-                        else
-                        {
-                            sLog->outString("<IrcBot> - There was an error in SendData(JOIN, IRC_CHANNEL)");
-                            ACE_Based::Thread::Sleep(10 * IN_MILLISECONDS);
-                        }
-                    }
-                    else
-                    {
-                        sLog->outString("<IrcBot> - There was an error in SendData(IDENTIFY, IRC_PASS)");
-                        ACE_Based::Thread::Sleep(10 * IN_MILLISECONDS);
+                        SockRecv();
                     }
                 }
-                else
-                {
-                    sLog->outString("<IrcBot> - There was an error in SendData(USER, IRC_USER)");
-                    ACE_Based::Thread::Sleep(10 * IN_MILLISECONDS);
-                }
-            }
-            else
-            {
-                sLog->outString("<IrcBot> - There was an error in SendData(NICK, IRC_NICK)");
-                ACE_Based::Thread::Sleep(10 * IN_MILLISECONDS);
             }
 
-            sLog->outString("<IrcBot> - Connection has been lost. Disconnect");
-
-            // Disconnect if connection is lost or connection failed
+            sLog->outString("<IrcBot> - Connection has been lost. Disconnecting");
             Disconnect();
+            ACE_Based::Thread::Sleep(30 * IN_MILLISECONDS);
         }
         else
         {
@@ -99,6 +54,31 @@ void IrcBot::run()
             ACE_Based::Thread::Sleep(10 * IN_MILLISECONDS);
         }
     }
+}
+
+bool IrcBot::Login()
+{
+    if (SendData(NICK, IRC_NICK))
+    {
+        if (SendData(USER, IRC_USER))
+        {
+            if (SendData(IDENTIFY, IRC_PASS))
+            {
+                if (SendData(JOIN, IRC_CHANNEL))
+                    return true;
+                else
+                    sLog->outString("<IrcBot> - There was an error in SendData(JOIN, IRC_CHANNEL)");
+            }
+            else
+                sLog->outString("<IrcBot> - There was an error in SendData(IDENTIFY, IRC_PASS)");
+        }
+        else
+            sLog->outString("<IrcBot> - There was an error in SendData(USER, IRC_USER)");
+    }
+    else
+        sLog->outString("<IrcBot> - There was an error in SendData(NICK, IRC_NICK)");
+
+    return false;
 }
 
 bool IrcBot::Connect()
@@ -115,15 +95,13 @@ bool IrcBot::Connect()
     }
     in_addr * addressptr = (in_addr *) record->h_addr;
 
-    int mainSocket = socket(AF_INET, SOCK_STREAM, 0);
-
     sockaddr_in serverInfo;
     serverInfo.sin_family = AF_INET;
     serverInfo.sin_addr = *addressptr;
     serverInfo.sin_port = htons(IRC_PORT);
     memset(&(serverInfo.sin_zero), '\0', 8);
 
-    if (connect(_socket, (sockaddr *) &serverInfo, sizeof(serverInfo)) == -1)
+    if (connect(_socket, (sockaddr *) &serverInfo, sizeof(sockaddr)) == -1)
     {
         sLog->outString("<IrcBot> - Cannot connect to irc.projectsjgr.com");
         return false;
@@ -233,7 +211,7 @@ void IrcBot::SockRecv()
 
     memset(sizebuffer, 0, MAXDATASIZE);
     
-    int recievedBytes = recv(_socket, sizebuffer, MAXDATASIZE-1, 0);
+    int recievedBytes = recv(_socket, sizebuffer, MAXDATASIZE - 1, 0);
     if (recievedBytes == -1)
     {
         sLog->outString("<IrcBot> - Connection lost");
@@ -257,12 +235,16 @@ void IrcBot::SockRecv()
                 {
                     char pongBuffer[20];
                     sprintf(pongBuffer, "PONG %s", args[1]);
+                    sLog->outString("PONG %s", args[1]);
                     SendData(NONE, pongBuffer);
                     return;
                 }
 
                 if (args.size() < 4)
+                {
+                    sLog->outString("args.size() < 4");
                     return;
+                }
 
                 if (!stricmp(args[1], "PRIVMSG") && !stricmp(args[2], IRC_CHANNEL) && args[3][1] == '!')
                 {
