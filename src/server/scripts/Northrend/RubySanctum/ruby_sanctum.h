@@ -23,50 +23,50 @@ uint32 const EncounterCount = 4;
 enum DataTypes
 {
     // Encounter States/Boss GUIDs
-    DATA_BALTHARUS_THE_WARBORN      = 0,
-    DATA_GENERAL_ZARITHRIAN         = 1,
-    DATA_SAVINA_RAGEFIRE            = 2,
-    DATA_HALION                     = 3,
+    DATA_BALTHARUS_THE_WARBORN              = 0,
+    DATA_GENERAL_ZARITHRIAN                 = 1,
+    DATA_SAVINA_RAGEFIRE                    = 2,
+    DATA_HALION                             = 3,
 
     // Etc
-    DATA_XERESTRASZA                = 4,
-    DATA_CRYSTAL_CHANNEL_TARGET     = 5,
+    DATA_XERESTRASZA                        = 4,
+    DATA_CRYSTAL_CHANNEL_TARGET             = 5,
 };
 
 enum SharedActions
 {
-    ACTION_INTRO_TRIGGER            = 1,
-    ACTION_BALTHARUS_DEATH          = 2,
+    ACTION_INTRO_TRIGGER                    = -4042901,
+    ACTION_BALTHARUS_DEATH                  = -4042902,
 };
 
 enum CreaturesIds
 {
     // Baltharus the Warborn
-    NPC_BALTHARUS_THE_WARBORN                   = 39751,
-    NPC_BALTHARUS_THE_WARBORN_CLONE             = 39899,
-    NPC_BALTHARUS_TARGET                        = 26712,
+    NPC_BALTHARUS_THE_WARBORN               = 39751,
+    NPC_BALTHARUS_THE_WARBORN_CLONE         = 39899,
+    NPC_BALTHARUS_TARGET                    = 26712,
 
     // General Zarithrian
-    NPC_GENERAL_ZARITHRIAN                      = 39746,
-    NPC_ONYX_FLAMECALLER                        = 39814,
-    NPC_ZARITHIAN_SPAWN_STALKER                 = 39794,
+    NPC_GENERAL_ZARITHRIAN                  = 39746,
+    NPC_ONYX_FLAMECALLER                    = 39814,
+    NPC_ZARITHIAN_SPAWN_STALKER             = 39794,
 
     // Saviana Ragefire
-    NPC_SAVINA_RAGEFIRE                         = 39747,
+    NPC_SAVINA_RAGEFIRE                     = 39747,
 
     // Halion
-    NPC_HALION                                  = 39863,
-    NPC_HALION_TWILIGHT                         = 40142,
-    NPC_HALION_CONTROLLER                       = 40146,
-    NPC_LIVING_INFERNO                          = 40681,
-    NPC_LIVING_EMBER                            = 40683,
-    NPC_ORB_CARRIER                             = 40081,
-    NPC_ORB_ROTATION_FOCUS                      = 40091,
-    NPC_SHADOW_ORB_N                            = 40083,
-    NPC_SHADOW_ORB_S                            = 40100,
+    NPC_HALION                              = 39863,
+    NPC_HALION_TWILIGHT                     = 40142,
+    NPC_HALION_CONTROLLER                   = 40146,
+    NPC_LIVING_INFERNO                      = 40681,
+    NPC_LIVING_EMBER                        = 40683,
+    NPC_ORB_CARRIER                         = 40081,
+    NPC_ORB_ROTATION_FOCUS                  = 40091,
+    NPC_SHADOW_ORB_N                        = 40083,
+    NPC_SHADOW_ORB_S                        = 40100,
 
     // Xerestrasza
-    NPC_XERESTRASZA                             = 40429,
+    NPC_XERESTRASZA                         = 40429,
 };
 
 enum GameObjectsIds

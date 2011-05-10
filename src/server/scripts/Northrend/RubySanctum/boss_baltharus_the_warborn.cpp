@@ -20,7 +20,7 @@
 
 enum Texts
 {
-    SAY_INTRO                   = 0,    // Your power wanes, ancient one.... Soon you will join your friends.
+    SAY_BALTHARUS_INTRO         = 0,    // Your power wanes, ancient one.... Soon you will join your friends.
     SAY_AGGRO                   = 1,    // Ah, the entertainment has arrived.
     SAY_SLAY                    = 2,    // Baltharus leaves no survivors! - This world has enough heroes.
     SAY_CLONE                   = 3,    // Twice the pain and half the fun.
@@ -159,7 +159,7 @@ class boss_baltharus_the_warborn : public CreatureScript
                         _events.ScheduleEvent(EVENT_OOC_CHANNEL, 7000);
                     }
                     else if (_events.ExecuteEvent() == EVENT_INTRO_TALK)
-                        Talk(SAY_INTRO);
+                        Talk(SAY_BALTHARUS_INTRO);
 
                     return;
                 }
@@ -239,8 +239,7 @@ class spell_baltharus_enervating_brand : public SpellScriptLoader
         }
 };
 
-// Spellscript 74511. Add should spawn with same health as caster
-
+// 74511
 class spell_baltharus_summon_clone : public SpellScriptLoader
 {
     public:
@@ -295,227 +294,6 @@ class spell_baltharus_summon_clone : public SpellScriptLoader
         }
 };
 
-/*
-ServerToClient: SMSG_SPELL_START (0x0131) Length: 38 Time: 06/30/2010 21:34:46
-Caster GUID: Full: 0xF130009B4700C1DF Flags: Flag01, Flag10, Flag20, Flag40, Flag80 Type: Unit Entry: 39751 Low: 1191231967
-Caster Unit GUID: Full: 0xF130009B4700C1DF Flags: Flag01, Flag10, Flag20, Flag40, Flag80 Type: Unit Entry: 39751 Low: 1191231967
-Cast Count: 0
-Spell ID: 76221
-Cast Flags: Unknown1, Unknown3
-Time: 0
-Target Flags: Unit
-Target GUID: Full: 0xF13000685800A51B Flags: Flag01, Flag10, Flag20, Flag40, Flag80 Type: Unit Entry: 26712 Low: 1476437275
-
-ServerToClient: SMSG_SPELL_START (0x0131) Length: 38 Time: 06/30/2010 21:34:53
-Caster GUID: Full: 0xF130009B4700C1DF Flags: Flag01, Flag10, Flag20, Flag40, Flag80 Type: Unit Entry: 39751 Low: 1191231967
-Caster Unit GUID: Full: 0xF130009B4700C1DF Flags: Flag01, Flag10, Flag20, Flag40, Flag80 Type: Unit Entry: 39751 Low: 1191231967
-Cast Count: 0
-Spell ID: 76221
-Cast Flags: Unknown1, Unknown3
-Time: 0
-Target Flags: Unit
-Target GUID: Full: 0xF13000685800A51B Flags: Flag01, Flag10, Flag20, Flag40, Flag80 Type: Unit Entry: 26712 Low: 1476437275
-
-Enter combat 21:36:13
-Update Type: Values
-GUID: Full: 0xF130009B4700C1DF Flags: Flag01, Flag10, Flag20, Flag40, Flag80 Type: Unit Entry: 39751 Low: 1191231967
-Block Count: 5
-Block Value 18: 43113058/2.143118E-37
-Block Value 19: 83886080/6.018531E-36
-Block Value 20: 0/0
-Block Value 21: 0/0
-Block Value 22: 0/0
-Block Value 59: 2112/2.959542E-42
-
-ServerToClient: SMSG_MESSAGECHAT (0x0096) Length: 91 Time: 06/30/2010 21:36:13
-Type: MonsterYell
-Language: Universal
-GUID: Full: 0xF130009B4700C1DF Flags: Flag01, Flag10, Flag20, Flag40, Flag80 Type: Unit Entry: 39751 Low: 1191231967
-Unk Int32: 0
-Name Length: 22
-Name: Baltharus the Warborn
-Receiver GUID: Full: 0xF130009B4700C1DF Flags: Flag01, Flag10, Flag20, Flag40, Flag80 Type: Unit Entry: 39751 Low: 1191231967
-Receiver Name Length: 35
-Receiver Name: Ah, the entertainment has arrived.
-
-ServerToClient: SMSG_SPELL_START (0x0131) Length: 37 Time: 06/30/2010 21:36:24
-Caster GUID: Full: 0xF130009B4700C1DF Flags: Flag01, Flag10, Flag20, Flag40, Flag80 Type: Unit Entry: 39751 Low: 1191231967
-Caster Unit GUID: Full: 0xF130009B4700C1DF Flags: Flag01, Flag10, Flag20, Flag40, Flag80 Type: Unit Entry: 39751 Low: 1191231967
-Cast Count: 0
-Spell ID: 40504
-Cast Flags: Unknown1
-Time: 0
-Target Flags: Unit
-Target GUID: Full: 0x50000000291DA62 Flags: Flag01, Flag04 Type: NoEntry1 Entry: 0 Low: 43113058
-
-ServerToClient: SMSG_SPELL_START (0x0131) Length: 37 Time: 06/30/2010 21:36:25
-Caster GUID: Full: 0xF130009B4700C1DF Flags: Flag01, Flag10, Flag20, Flag40, Flag80 Type: Unit Entry: 39751 Low: 1191231967
-Caster Unit GUID: Full: 0xF130009B4700C1DF Flags: Flag01, Flag10, Flag20, Flag40, Flag80 Type: Unit Entry: 39751 Low: 1191231967
-Cast Count: 0
-Spell ID: 74502
-Cast Flags: Unknown1
-Time: 0
-Target Flags: Unit
-Target GUID: Full: 0x500000001D34D74 Flags: Flag01, Flag04 Type: NoEntry1 Entry: 0 Low: 30625140
-
-ServerToClient: SMSG_SPELL_START (0x0131) Length: 31 Time: 06/30/2010 21:36:32
-Caster GUID: Full: 0xF130009B4700C1DF Flags: Flag01, Flag10, Flag20, Flag40, Flag80 Type: Unit Entry: 39751 Low: 1191231967
-Caster Unit GUID: Full: 0xF130009B4700C1DF Flags: Flag01, Flag10, Flag20, Flag40, Flag80 Type: Unit Entry: 39751 Low: 1191231967
-Cast Count: 0
-Spell ID: 75125
-Cast Flags: Unknown1
-Time: 0
-Target Flags: Self
-
-ServerToClient: SMSG_SPELL_START (0x0131) Length: 37 Time: 06/30/2010 21:36:48
-Caster GUID: Full: 0xF130009B4700C1DF Flags: Flag01, Flag10, Flag20, Flag40, Flag80 Type: Unit Entry: 39751 Low: 1191231967
-Caster Unit GUID: Full: 0xF130009B4700C1DF Flags: Flag01, Flag10, Flag20, Flag40, Flag80 Type: Unit Entry: 39751 Low: 1191231967
-Cast Count: 0
-Spell ID: 40504
-Cast Flags: Unknown1
-Time: 0
-Target Flags: Unit
-Target GUID: Full: 0x50000000291DA62 Flags: Flag01, Flag04 Type: NoEntry1 Entry: 0 Low: 43113058
-
-ServerToClient: SMSG_SPELL_START (0x0131) Length: 37 Time: 06/30/2010 21:36:51
-Caster GUID: Full: 0xF130009B4700C1DF Flags: Flag01, Flag10, Flag20, Flag40, Flag80 Type: Unit Entry: 39751 Low: 1191231967
-Caster Unit GUID: Full: 0xF130009B4700C1DF Flags: Flag01, Flag10, Flag20, Flag40, Flag80 Type: Unit Entry: 39751 Low: 1191231967
-Cast Count: 0
-Spell ID: 74502
-Cast Flags: Unknown1
-Time: 0
-Target Flags: Unit
-Target GUID: Full: 0x500000001D34D74 Flags: Flag01, Flag04 Type: NoEntry1 Entry: 0 Low: 30625140
-
-ServerToClient: SMSG_SPELL_START (0x0131) Length: 31 Time: 06/30/2010 21:36:56
-Caster GUID: Full: 0xF130009B4700C1DF Flags: Flag01, Flag10, Flag20, Flag40, Flag80 Type: Unit Entry: 39751 Low: 1191231967
-Caster Unit GUID: Full: 0xF130009B4700C1DF Flags: Flag01, Flag10, Flag20, Flag40, Flag80 Type: Unit Entry: 39751 Low: 1191231967
-Cast Count: 0
-Spell ID: 75125
-Cast Flags: Unknown1
-Time: 0
-Target Flags: Self
-
-ServerToClient: SMSG_SPELL_START (0x0131) Length: 31 Time: 06/30/2010 21:37:07
-Caster GUID: Full: 0xF130009B4700C1DF Flags: Flag01, Flag10, Flag20, Flag40, Flag80 Type: Unit Entry: 39751 Low: 1191231967
-Caster Unit GUID: Full: 0xF130009B4700C1DF Flags: Flag01, Flag10, Flag20, Flag40, Flag80 Type: Unit Entry: 39751 Low: 1191231967
-Cast Count: 0
-Spell ID: 74509
-Cast Flags: Unknown1, Unknown3
-Time: 1000
-Target Flags: Self
-
-ServerToClient: SMSG_SPELL_GO (0x0132) Length: 95 Time: 06/30/2010 21:37:08
-Caster GUID: Full: 0xF130009B4700C1DF Flags: Flag01, Flag10, Flag20, Flag40, Flag80 Type: Unit Entry: 39751 Low: 1191231967
-Caster Unit GUID: Full: 0xF130009B4700C1DF Flags: Flag01, Flag10, Flag20, Flag40, Flag80 Type: Unit Entry: 39751 Low: 1191231967
-Cast Count: 0
-Spell ID: 74509
-Cast Flags: Unknown3, Unknown7, Unknown12
-Time: -1966424103
-Hit Count: 6
-Hit GUID 0: Full: 0x50000000291DA62 Flags: Flag01, Flag04 Type: NoEntry1 Entry: 0 Low: 43113058
-Hit GUID 1: Full: 0x50000000002499E Flags: Flag01, Flag04 Type: NoEntry1 Entry: 0 Low: 149918
-Hit GUID 2: Full: 0xF1404803B1000755 Flags: Flag01, Flag10, Flag20, Flag40, Flag80 Type: Pet Entry: 4719537 Low: 2969569109
-Hit GUID 3: Full: 0xF1404B5E3D000758 Flags: Flag01, Flag10, Flag20, Flag40, Flag80 Type: Pet Entry: 4939325 Low: 1023412056
-Hit GUID 4: Full: 0x500000002E8E6E0 Flags: Flag01, Flag04 Type: NoEntry1 Entry: 0 Low: 48817888
-Hit GUID 5: Full: 0x500000002F344FE Flags: Flag01, Flag04 Type: NoEntry1 Entry: 0 Low: 49497342
-
-ServerToClient: SMSG_PLAY_SOUND (0x02D2) Length: 4 Time: 06/30/2010 21:37:08
-Sound ID: 17524
-
-ServerToClient: SMSG_SPELL_START (0x0131) Length: 31 Time: 06/30/2010 21:37:08
-Caster GUID: Full: 0xF130009B4700C1DF Flags: Flag01, Flag10, Flag20, Flag40, Flag80 Type: Unit Entry: 39751 Low: 1191231967
-Caster Unit GUID: Full: 0xF130009B4700C1DF Flags: Flag01, Flag10, Flag20, Flag40, Flag80 Type: Unit Entry: 39751 Low: 1191231967
-Cast Count: 0
-Spell ID: 74511
-Cast Flags: Unknown1
-Time: 0
-Target Flags: Self
-
-ServerToClient: SMSG_SPELL_GO (0x0132) Length: 47 Time: 06/30/2010 21:37:08
-Caster GUID: Full: 0xF130009B4700C1DF Flags: Flag01, Flag10, Flag20, Flag40, Flag80 Type: Unit Entry: 39751 Low: 1191231967
-Caster Unit GUID: Full: 0xF130009B4700C1DF Flags: Flag01, Flag10, Flag20, Flag40, Flag80 Type: Unit Entry: 39751 Low: 1191231967
-Cast Count: 0
-Spell ID: 74511
-Cast Flags: Unknown7, Unknown8
-Time: -1966422898
-Hit Count: 0
-Miss Count: 0
-Target Flags: DestinationLocation
-Target GUID: Full: 0x00000000 Flags: None Type: NoEntry1 Entry: 0 Low: 0
-Position: X: 3153.091 Y: 387.059 Z: 86.36932
-Unk Byte 2: 1
-
-ServerToClient: SMSG_SPELL_START (0x0131) Length: 31 Time: 06/30/2010 21:37:08
-Caster GUID: Full: 0xF130009B4700C1DF Flags: Flag01, Flag10, Flag20, Flag40, Flag80 Type: Unit Entry: 39751 Low: 1191231967
-Caster Unit GUID: Full: 0xF130009B4700C1DF Flags: Flag01, Flag10, Flag20, Flag40, Flag80 Type: Unit Entry: 39751 Low: 1191231967
-Cast Count: 0
-Spell ID: 34098
-Cast Flags: Unknown1
-Time: 0
-Target Flags: Self
-
-ServerToClient: SMSG_MESSAGECHAT (0x0096) Length: 89 Time: 06/30/2010 21:37:08
-Type: MonsterYell
-Language: Universal
-GUID: Full: 0xF130009B4700C1DF Flags: Flag01, Flag10, Flag20, Flag40, Flag80 Type: Unit Entry: 39751 Low: 1191231967
-Unk Int32: 0
-Name Length: 22
-Name: Baltharus the Warborn
-Receiver GUID: Full: 0xF130009B4700C1DF Flags: Flag01, Flag10, Flag20, Flag40, Flag80 Type: Unit Entry: 39751 Low: 1191231967
-Text Length: 33
-Text: Twice the pain and half the fun.
-Chat Tag: None
-
-ServerToClient: SMSG_SPELL_START (0x0131) Length: 37 Time: 06/30/2010 21:37:12
-Caster GUID: Full: 0xF130009B4700C1DF Flags: Flag01, Flag10, Flag20, Flag40, Flag80 Type: Unit Entry: 39751 Low: 1191231967
-Caster Unit GUID: Full: 0xF130009B4700C1DF Flags: Flag01, Flag10, Flag20, Flag40, Flag80 Type: Unit Entry: 39751 Low: 1191231967
-Cast Count: 0
-Spell ID: 40504
-Cast Flags: Unknown1
-Time: 0
-Target Flags: Unit
-Target GUID: Full: 0x50000000291DA62 Flags: Flag01, Flag04 Type: NoEntry1 Entry: 0 Low: 43113058
-
-ServerToClient: SMSG_PLAY_SOUND (0x02D2) Length: 4 Time: 06/30/2010 21:38:55
-Sound ID: 17521
-
-ServerToClient: SMSG_MESSAGECHAT (0x0096) Length: 87 Time: 06/30/2010 21:38:55
-Type: MonsterYell
-Language: Universal
-GUID: Full: 0xF130009B4700C1DF Flags: Flag01, Flag10, Flag20, Flag40, Flag80 Type: Unit Entry: 39751 Low: 1191231967
-Unk Int32: 0
-Name Length: 22
-Name: Baltharus the Warborn
-Receiver GUID: Full: 0xF130009B4700C1DF Flags: Flag01, Flag10, Flag20, Flag40, Flag80 Type: Unit Entry: 39751 Low: 1191231967
-Receiver Name Length: 31
-Receiver Name: Baltharus leaves no survivors!
-
-Eller     This world has enough heroes. (soundid 17522)
-
-ServerToClient: SMSG_PLAY_SOUND (0x02D2) Length: 4 Time: 06/30/2010 21:38:57
-Sound ID: 17523
-
-ServerToClient: SMSG_MESSAGECHAT (0x0096) Length: 88 Time: 06/30/2010 21:38:57
-Type: MonsterYell
-Language: Universal
-GUID: Full: 0xF130009B4700C1DF Flags: Flag01, Flag10, Flag20, Flag40, Flag80 Type: Unit Entry: 39751 Low: 1191231967
-Unk Int32: 0
-Name Length: 22
-Name: Baltharus the Warborn
-Receiver GUID: Full: 0xF130009B4700C1DF Flags: Flag01, Flag10, Flag20, Flag40, Flag80 Type: Unit Entry: 39751 Low: 1191231967
-Receiver Name Length: 32
-Receiver Name: I... didn't see that coming....
-
-ServerToClient: SMSG_DESTROY_OBJECT (0x00AA) Length: 9 Time: 06/30/2010 21:40:03
-GUID: Full: 0xF130009B4700C1DF Flags: Flag01, Flag10, Flag20, Flag40, Flag80 Type: Unit Entry: 39751 Low: 1191231967
-Despawn Animation: True
-
-*/
-
-/*
-SAI?
-
 class npc_baltarhus_the_warborn_clone : public CreatureScript
 {
     public:
@@ -527,7 +305,7 @@ class npc_baltarhus_the_warborn_clone : public CreatureScript
             {
             }
 
-            void EnterCombat(Unit* who)
+            void EnterCombat(Unit* /*who*/)
             {
                 _EnterCombat();
                 _events.ScheduleEvent(EVENT_CLEAVE, urand(5000, 10000));
@@ -573,12 +351,10 @@ class npc_baltarhus_the_warborn_clone : public CreatureScript
         }
 };
 
-*/
-
 void AddSC_boss_baltharus_the_warborn()
 {
     new boss_baltharus_the_warborn();
-    //new npc_baltarhus_the_warborn_clone();
+    new npc_baltarhus_the_warborn_clone();
     new spell_baltharus_enervating_brand();
     new spell_baltharus_summon_clone();
 }
