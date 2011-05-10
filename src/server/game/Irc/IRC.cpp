@@ -43,11 +43,11 @@ void IrcBot::run()
             sLog->outString("<IrcBot> - Connected.");
             sLog->outString("<IrcBot> - Logging in to the IRC server...");
 
-            if (SendData(USER, IRC_USER))
+            if (SendData(NICK, IRC_NICK))
             {
                 sLog->outString("<IrcBot> - SendData(USER, IRC_USER) Sucessful");
                 ACE_Based::Thread::Sleep(1000);
-                if (SendData(NICK, IRC_NICK))
+                if (SendData(NICK, IRC_USER))
                 {
                     sLog->outString("<IrcBot> - SendData(NICK, IRC_NICK) Sucessful");
                     ACE_Based::Thread::Sleep(1000);
