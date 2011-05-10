@@ -255,9 +255,9 @@ void IrcBot::SockRecv()
                 // PING/PONG
                 if (!strcmp(args[0], "PING"))
                 {
-                    char const* pong;
-                    sprintf(pong, "PONG %s", args[1]);
-                    SendData(NONE, pong);
+                    char pongBuffer[20];
+                    sprintf(pongBuffer, "PONG %s", args[1]);
+                    SendData(NONE, pongBuffer);
                     return;
                 }
 
