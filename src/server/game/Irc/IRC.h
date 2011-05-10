@@ -16,11 +16,12 @@ uint16 const IRC_PORT = 6667;
 
 enum MessageType
 {
-    PRIVMSG = 0,
-    USER    = 1,
-    NICK    = 2,
-    IDENTIFY = 3,
-    JOIN    = 4
+    NONE        = 0,
+    PRIVMSG     = 1,
+    USER        = 2,
+    NICK        = 3,
+    IDENTIFY    = 4,
+    JOIN        = 5,
 };
 
 class IrcBot : public ACE_Based::Runnable

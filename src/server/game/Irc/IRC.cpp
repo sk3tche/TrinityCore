@@ -257,7 +257,7 @@ void IrcBot::SockRecv()
 				{
 					char* pong;
 					sprintf(pong, "PONG %s", args[1]);
-					SendData((MessageType)NULL, pong);
+					SendData(NONE, pong);
 					return;
 				}
 
