@@ -255,9 +255,9 @@ void IrcBot::SockRecv()
                 // PING/PONG
                 if (!strcmp(args[0], "PING"))
                 {
-                    char* pong;
+                    char const* pong;
                     sprintf(pong, "PONG %s", args[1]);
-                    SendData((MessageType)NULL, pong);
+                    SendData(NONE, pong);
                     return;
                 }
 
@@ -289,9 +289,9 @@ void IrcBot::SockRecv()
     }
 }
 
-void IrcBot::SplitArgs(char const* s, std::vector<char const*> & elems)
+void IrcBot::SplitArgs(char const* arg, std::vector<char const*> & elems)
 {
-    std::stringstream ss(s);
+    std::stringstream ss(arg);
     std::string item;
 
     while (std::getline(ss, item, ' '))

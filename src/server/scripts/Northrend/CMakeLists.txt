@@ -184,6 +184,13 @@ set(scripts_STAT_SRCS
   Northrend/DraktharonKeep/drak_tharon_keep.h
   Northrend/DraktharonKeep/boss_tharon_ja.cpp
   Northrend/DraktharonKeep/boss_dred.cpp
+  Northrend/RubySanctum/instance_ruby_sanctum.cpp
+  Northrend/RubySanctum/ruby_sanctum.h
+  Northrend/RubySanctum/ruby_sanctum.cpp
+  Northrend/RubySanctum/boss_baltharus_the_warborn.cpp
+  #Northrend/RubySanctum/boss_general_zarithrian.cpp
+  #Northrend/RubySanctum/boss_saviana_ragefire.cpp
+  #Northrend/RubySanctum/boss_halion.cpp
 )
 
 message("  -> Prepared: Northrend")

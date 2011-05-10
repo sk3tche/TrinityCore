@@ -27,6 +27,7 @@ enum MessageType
 class IrcBot : public ACE_Based::Runnable
 {
     friend class ACE_Singleton<IrcBot, ACE_Null_Mutex>;
+
     public:
         IrcBot();
         ~IrcBot();
@@ -49,14 +50,14 @@ class IrcBot : public ACE_Based::Runnable
         void SayToIRC(char const* channel, Player* player, char const* msg);
         bool SendData(MessageType type, char const* data);
 
-        void SplitArgs(char const* s, std::vector<char const*> & elems);
-    protected:
-        int _socket;
+        void SplitArgs(char const* arg, std::vector<char const*> & elems);
+
     private:
         std::vector<char const*> _hookedChannels;
         std::string error_msg;
         std::vector<char const*>::iterator _itr;
         bool _connected;
+        int _socket;
 };
 
 #define sIrc ACE_Singleton<IrcBot, ACE_Null_Mutex>::instance()
