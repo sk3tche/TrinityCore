@@ -253,6 +253,7 @@ void IrcBot::SockRecv()
                 SplitArgs(reply.c_str(), args);
 
                 // PING/PONG
+<<<<<<< HEAD
 				if (!strcmp(args[0], "PING"))
 				{
 					char* pong;
@@ -260,6 +261,15 @@ void IrcBot::SockRecv()
 					SendData(NONE, pong);
 					return;
 				}
+=======
+                if (!strcmp(args[0], "PING"))
+                {
+                    char* pong;
+                    sprintf(pong, "PONG %s", args[1]);
+                    SendData((MessageType)NULL, pong);
+                    return;
+                }
+>>>>>>> d3683db7378479ac2775aeb8a9a3e01928b6639d
 
                 if (args.size() < 4)
                     return;
