@@ -58,9 +58,9 @@ void IrcBot::run()
 
 bool IrcBot::Login()
 {
-    if (SendData(NICK, IRC_NICK))
+    if (SendData(USER, IRC_USER))
     {
-        if (SendData(USER, IRC_USER))
+        if (SendData(NICK, IRC_NICK))
         {
             if (SendData(IDENTIFY, IRC_PASS))
             {
@@ -73,10 +73,10 @@ bool IrcBot::Login()
                 sLog->outString("<IrcBot> - There was an error in SendData(IDENTIFY, IRC_PASS)");
         }
         else
-            sLog->outString("<IrcBot> - There was an error in SendData(USER, IRC_USER)");
+            sLog->outString("<IrcBot> - There was an error in SendData(NICK, IRC_NICK)");
     }
     else
-        sLog->outString("<IrcBot> - There was an error in SendData(NICK, IRC_NICK)");
+        sLog->outString("<IrcBot> - There was an error in SendData(USER, IRC_USER)");
 
     return false;
 }
