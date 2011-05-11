@@ -33,6 +33,30 @@ INSERT INTO `creature_text` (`entry`,`groupid`,`id`,`text`,`type`,`language`,`pr
 (40429,8,0, 'Help! I am trapped within this tree!  I require aid!',1,0,100,5,0,17490, 'Sanctum Guardian Xerestrasza');
 */
 
+enum Texts
+{
+    SAY_XERESTRASZA_EVENT       = 0,
+    SAY_XERESTRASZA_EVENT_1     = 1,
+    SAY_XERESTRASZA_EVENT_2     = 2,
+    SAY_XERESTRASZA_EVENT_3     = 3,
+    SAY_XERESTRASZA_EVENT_4     = 4,
+    SAY_XERESTRASZA_EVENT_5     = 5,
+    SAY_XERESTRASZA_EVENT_6     = 6,
+    SAY_XERESTRASZA_EVENT_7     = 7,
+    SAY_XERESTRASZA_INTRO       = 8,
+};
+
+enum Events
+{
+    EVENT_XERESTRASZA_EVENT_1   = 1,
+    EVENT_XERESTRASZA_EVENT_2   = 2,
+    EVENT_XERESTRASZA_EVENT_3   = 3,
+    EVENT_XERESTRASZA_EVENT_4   = 4,
+    EVENT_XERESTRASZA_EVENT_5   = 5,
+    EVENT_XERESTRASZA_EVENT_6   = 6,
+    EVENT_XERESTRASZA_EVENT_7   = 7,
+};
+
 class npc_xerestrasza : public CreatureScript
 {
     public:
@@ -59,7 +83,7 @@ class npc_xerestrasza : public CreatureScript
                 {
                     me->setActive(true);
                     _isIntro = true;
-                    Talk(SAY_XERESTRASZA_EVENT_0);
+                    Talk(SAY_XERESTRASZA_EVENT);
                     me->GetMotionMaster()->MovePoint(0, 3151.236f, 379.8733f, 86.31996f);
 
                     // Timers from sniff
@@ -114,6 +138,7 @@ class npc_xerestrasza : public CreatureScript
 
         private:
             EventMap _events;
+            bool _isIntro;
         };
 
         CreatureAI* GetAI(Creature* creature) const

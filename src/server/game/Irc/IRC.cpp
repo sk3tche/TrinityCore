@@ -225,12 +225,17 @@ void IrcBot::SockRecv()
         {
             std::string reply;
             std::istringstream iss(sizebuffer);
+
+            std::string temp = iss.str();
+            char const* message = temp.c_str();
+            sLog->outString("<IrcBot> - Received Data: %s", message);
+
             while (getline(iss, reply))
             {
+                sLog->outString("<IrcBot> - getline Data %s", reply.c_str());
+
                 std::vector<char const*> args;
                 SplitArgs(reply.c_str(), args);
-
-                sLog->outString("<IrcBot> - Received Data %s", reply.c_str());
 
                 // PING/PONG
                 if (!strcmp(args[0], "PING"))

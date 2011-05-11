@@ -307,7 +307,7 @@ class npc_baltarhus_the_warborn_clone : public CreatureScript
 
             void EnterCombat(Unit* /*who*/)
             {
-                _EnterCombat();
+                DoZoneInCombat();
                 _events.ScheduleEvent(EVENT_CLEAVE, urand(5000, 10000));
                 _events.ScheduleEvent(EVENT_BLADE_TEMPEST, urand(18000, 25000));
             }
