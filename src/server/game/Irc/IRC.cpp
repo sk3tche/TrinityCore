@@ -226,13 +226,9 @@ void IrcBot::SockRecv()
             std::string reply;
             std::istringstream iss(sizebuffer);
 
-            std::string temp = iss.str();
-            char const* message = temp.c_str();
-            sLog->outString("<IrcBot> - Received Data: %s", message);
-
             while (getline(iss, reply))
             {
-                sLog->outString("<IrcBot> - getline Data %s", reply.c_str());
+                sLog->outString("<IrcBot> - Received Data %s", reply.c_str());
 
                 std::vector<char const*> args;
                 SplitArgs(reply.c_str(), args);
@@ -290,11 +286,13 @@ void IrcBot::SplitArgs(char const* arg, std::vector<char const*> & elems)
 bool IrcBot::SendData(MessageType type, char const* data)
 {
     std::stringstream ss;
+    char hostname[128];
 
     switch(type)
     {
         case USER:
-            ss << "USER " << IRC_USER_NICK << " 0 * :" << data;
+            gethostname(hostname, sizeof(hostname));
+            ss << "USER " << IRC_USER_NICK << " " << (std::string)hostname << " " << IRC_NICK << " :" << data;
             break;
         case NICK:
             ss << "NICK " << data;
