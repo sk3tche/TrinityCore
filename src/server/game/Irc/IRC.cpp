@@ -152,6 +152,7 @@ bool IrcBot::Disconnect()
         close(_socket);
         #endif
     }
+    _connected = false;
     return true;
 }
 
