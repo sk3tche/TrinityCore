@@ -236,10 +236,9 @@ void IrcBot::SockRecv()
                 size_t found = reply.find("PING");
                 if (found != std::string::npos)
                 {
-                    char pongBuffer[20];
-                    sprintf(pongBuffer, "PONG %s", reply.substr(reply.find(":"));
-                    sLog->outString(reply.substr(reply.find(":"));
-                    SendData(NONE, pongBuffer);
+                    reply.replace(1, 1, "O");
+                    sLog->outString("<IrcBot> - Sent PONG - %s", reply.c_str());
+                    SendData(NONE, reply.c_str());
                     return;
                 }
 
