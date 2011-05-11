@@ -11210,14 +11210,6 @@ uint32 Unit::SpellHealingBonus(Unit *pVictim, SpellEntry const *spellProto, uint
 
     // Taken mods
 
-    // Healing Wave
-    if (spellProto->SpellFamilyName == SPELLFAMILY_SHAMAN && spellProto->SpellFamilyFlags[0] & 0x40)
-    {
-        // Search for Healing Way on Victim
-        if (AuraEffect const* HealingWay = pVictim->GetAuraEffect(29203, 0))
-            AddPctN(TakenTotalMod, HealingWay->GetAmount());
-    }
-
     // Tenacity increase healing % taken
     if (AuraEffect const* Tenacity = pVictim->GetAuraEffect(58549, 0))
         AddPctN(TakenTotalMod, Tenacity->GetAmount());
