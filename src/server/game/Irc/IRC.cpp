@@ -230,6 +230,8 @@ void IrcBot::SockRecv()
                 std::vector<char const*> args;
                 SplitArgs(reply.c_str(), args);
 
+                sLog->outString("<IrcBot> - Received Data %s", reply.c_str());
+
                 // PING/PONG
                 if (!strcmp(args[0], "PING"))
                 {
@@ -287,7 +289,7 @@ bool IrcBot::SendData(MessageType type, char const* data)
     switch(type)
     {
         case USER:
-            ss << "USER " << IRC_NICK << " 0 * :" << data;
+            ss << "USER " << IRC_USER_NICK << " 0 * :" << data;
             break;
         case NICK:
             ss << "NICK " << data;

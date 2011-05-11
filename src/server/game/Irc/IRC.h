@@ -11,6 +11,7 @@
 uint16 const IRC_PORT = 6667;
 #define IRC_CHANNEL "#ADMIN"
 #define IRC_NICK    "TrinIRC"
+#define IRC_USER_NICK   "tib"   // Trinity IRC Bot (TIB)
 #define IRC_USER    "Coded by SJGR"
 #define IRC_PASS    "ircbot1"
 
