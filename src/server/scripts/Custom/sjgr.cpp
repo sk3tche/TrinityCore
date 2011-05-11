@@ -8,7 +8,7 @@ class player_script_sjgr : public PlayerScript
         void OnPlayerDuelEnd(Player* winner, Player* loser, DuelCompleteType type)
         {
             // Check that duel have ended properly (fled or won)
-            if (type != DUEL_INTERUPTED)
+            if (type != DUEL_INTERRUPTED)
             {
                 winner->HandleEmoteCommand(EMOTE_ONESHOT_CHEER);
                 loser->HandleEmoteCommand(EMOTE_ONESHOT_BEG);
