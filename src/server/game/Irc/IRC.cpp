@@ -236,8 +236,8 @@ void IrcBot::SockRecv()
                 if (found != std::string::npos)
                 {
                     char pongBuffer[20];
-                    sprintf(pongBuffer, "PONG %s", reply.substr(reply.find(":"));
-                    sLog->outString(reply.substr(reply.find(":"));
+                    sprintf(pongBuffer, "PONG %s", reply.substr(reply.find(":")));
+                    sLog->outString(reply.substr(reply.find(":")).c_str());
                     SendData(NONE, pongBuffer);
                     return;
                 }
