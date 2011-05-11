@@ -421,7 +421,7 @@ enum SpellAttr4
     SPELL_ATTR4_UNK11                            = 0x00000800, // 11
     SPELL_ATTR4_UNK12                            = 0x00001000, // 12
     SPELL_ATTR4_UNK13                            = 0x00002000, // 13
-    SPELL_ATTR4_UNK14                            = 0x00004000, // 14
+    SPELL_ATTR4_DAMAGE_DOESNT_BREAK_AURAS        = 0x00004000, // 14 doesn't break auras by damage from these spells
     SPELL_ATTR4_UNK15                            = 0x00008000, // 15
     SPELL_ATTR4_NOT_USABLE_IN_ARENA              = 0x00010000, // 16 not usable in arena
     SPELL_ATTR4_USABLE_IN_ARENA                  = 0x00020000, // 17 usable in arena
@@ -542,6 +542,11 @@ enum SpellAttr7
     SPELL_ATTR7_UNK24                            = 0x20000000, // 24
     SPELL_ATTR7_UNK25                            = 0x40000000, // 25 Prayer of Mending, Earth Shield, Burning Determination and Divine Sacrifice
     SPELL_ATTR7_UNK26                            = 0x80000000, // 26 Divine Storm cooldown reset (70769)
+    SPELL_ATTR7_UNK27                            = 0x08000000, // 27
+    SPELL_ATTR7_UNK28                            = 0x10000000, // 28
+    SPELL_ATTR7_UNK29                            = 0x20000000, // 29
+    SPELL_ATTR7_UNK30                            = 0x40000000, // 30
+    SPELL_ATTR7_UNK31                            = 0x80000000  // 31
 };
 
 #define MIN_TALENT_SPEC         0
@@ -1181,7 +1186,7 @@ enum Mechanics
     MECHANIC_FEAR             = 5,
     MECHANIC_GRIP             = 6,
     MECHANIC_ROOT             = 7,
-    MECHANIC_PACIFY           = 8,                          //0 spells use this mechanic
+    MECHANIC_SLOW_ATTACK      = 8,
     MECHANIC_SILENCE          = 9,
     MECHANIC_SLEEP            = 10,
     MECHANIC_SNARE            = 11,
@@ -1207,14 +1212,14 @@ enum Mechanics
     MECHANIC_ENRAGED          = 31
 };
 
-// Used for spell 42292 Immune Movement Impairment and Loss of Control (0x49967da6)
+// Used for spell 42292 Immune Movement Impairment and Loss of Control (0x49967ca6)
 #define IMMUNE_TO_MOVEMENT_IMPAIRMENT_AND_LOSS_CONTROL_MASK (\
     (1<<MECHANIC_CHARM)|(1<<MECHANIC_DISORIENTED)|(1<<MECHANIC_FEAR)| \
-    (1<<MECHANIC_ROOT)|(1<<MECHANIC_PACIFY)|(1<<MECHANIC_SLEEP)| \
-    (1<<MECHANIC_SNARE)|(1<<MECHANIC_STUN)|(1<<MECHANIC_FREEZE)| \
-    (1<<MECHANIC_KNOCKOUT)|(1<<MECHANIC_POLYMORPH)|(1<<MECHANIC_BANISH)| \
-    (1<<MECHANIC_SHACKLE)|(1<<MECHANIC_TURN)|(1<<MECHANIC_HORROR)| \
-    (1<<MECHANIC_DAZE)|(1<<MECHANIC_SAPPED))
+    (1<<MECHANIC_ROOT)|(1<<MECHANIC_SLEEP)|(1<<MECHANIC_SNARE)| \
+    (1<<MECHANIC_STUN)|(1<<MECHANIC_FREEZE)|(1<<MECHANIC_KNOCKOUT)| \
+    (1<<MECHANIC_POLYMORPH)|(1<<MECHANIC_BANISH)|(1<<MECHANIC_SHACKLE)| \
+    (1<<MECHANIC_TURN)|(1<<MECHANIC_HORROR)|(1<<MECHANIC_DAZE)| \
+    (1<<MECHANIC_SAPPED))
 
 // Spell dispell type
 enum DispelType
