@@ -62,6 +62,7 @@ bool IrcBot::Login()
     {
         if (SendData(NICK, IRC_NICK))
         {
+            SockRecv();
             if (SendData(IDENTIFY, IRC_PASS))
             {
                 if (SendData(JOIN, IRC_CHANNEL))
@@ -230,18 +231,19 @@ void IrcBot::SockRecv()
             {
                 sLog->outString("<IrcBot> - Received Data %s", reply.c_str());
 
-                std::vector<char const*> args;
-                SplitArgs(reply.c_str(), args);
-
                 // PING/PONG
-                if (!strcmp(args[0], "PING"))
+                size_t found = reply.find("PING");
+                if (found != std::string::npos)
                 {
                     char pongBuffer[20];
-                    sprintf(pongBuffer, "PONG %s", args[1]);
-                    sLog->outString("PONG %s", args[1]);
+                    sprintf(pongBuffer, "PONG %s", reply.substr(reply.find(":"));
+                    sLog->outString(reply.substr(reply.find(":"));
                     SendData(NONE, pongBuffer);
                     return;
                 }
+
+                std::vector<char const*> args;
+                SplitArgs(reply.c_str(), args);
 
                 if (args.size() < 4)
                 {
@@ -292,7 +294,7 @@ bool IrcBot::SendData(MessageType type, char const* data)
     {
         case USER:
             gethostname(hostname, sizeof(hostname));
-            ss << "USER " << IRC_USER_NICK << " " << (std::string)hostname << " " << IRC_NICK << " :" << data;
+            ss << "USER " << IRC_USER_NICK << " 0 * :" << data;
             break;
         case NICK:
             ss << "NICK " << data;
