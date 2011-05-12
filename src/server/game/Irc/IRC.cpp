@@ -67,6 +67,7 @@ bool IrcBot::Login()
             // No need to check for errors here
             SendData(IDENTIFY, IRC_PASS);
             SendData(JOIN, IRC_CHANNEL);
+            return true;
         }
         else
             sLog->outString("<IrcBot> - There was an error in SendData(NICK, IRC_NICK)");
