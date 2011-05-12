@@ -61,7 +61,13 @@ bool IrcBot::Login()
     if (SendData(USER, IRC_USER))
     {
         if (SendData(NICK, IRC_NICK))
+        {
             SockRecv();
+            ACE_Based::Thread::Sleep(500);
+            // No need to check for errors here
+            SendData(IDENTIFY, IRC_PASS);
+            SendData(JOIN, IRC_CHANNEL);
+        }
         else
             sLog->outString("<IrcBot> - There was an error in SendData(NICK, IRC_NICK)");
     }
@@ -230,13 +236,6 @@ void IrcBot::SockRecv()
 
                 std::vector<char const*> args;
                 SplitArgs(reply.c_str(), args);
-
-                if(!stricmp(args[1], "422")) // MOTD file missing (Not the correct one, but it works for now)
-                {
-                    SendData(IDENTIFY, IRC_PASS);
-                    SendData(JOIN, IRC_CHANNEL);
-                    return;
-                }
 
                 if (!stricmp(args[1], "PRIVMSG") && !stricmp(args[2], IRC_CHANNEL) && args[3][1] == '!')
                 {
