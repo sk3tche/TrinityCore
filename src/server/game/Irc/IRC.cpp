@@ -226,9 +226,7 @@ void IrcBot::SockRecv()
 
             while (getline(iss, reply))
             {
-                // PING/PONG
-                size_t found = reply.find("PING");
-                if (found != std::string::npos)
+                if (!strcmp(reply.substr(0, 4).c_str(), "PING"))
                 {
                     reply.replace(1, 1, "O");
                     SendData(NONE, reply.c_str());
