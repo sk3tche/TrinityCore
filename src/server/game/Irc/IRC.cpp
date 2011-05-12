@@ -238,9 +238,6 @@ void IrcBot::SockRecv()
                     return;
                 }
 
-                if (args.size() < 4)
-                    return;
-
                 if (!stricmp(args[1], "PRIVMSG") && !stricmp(args[2], IRC_CHANNEL) && args[3][1] == '!')
                 {
                     std::string command = args[3];
