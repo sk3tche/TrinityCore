@@ -61,18 +61,7 @@ bool IrcBot::Login()
     if (SendData(USER, IRC_USER))
     {
         if (SendData(NICK, IRC_NICK))
-        {
             SockRecv();
-            if (SendData(IDENTIFY, IRC_PASS))
-            {
-                if (SendData(JOIN, IRC_CHANNEL))
-                    return true;
-                else
-                    sLog->outString("<IrcBot> - There was an error in SendData(JOIN, IRC_CHANNEL)");
-            }
-            else
-                sLog->outString("<IrcBot> - There was an error in SendData(IDENTIFY, IRC_PASS)");
-        }
         else
             sLog->outString("<IrcBot> - There was an error in SendData(NICK, IRC_NICK)");
     }
@@ -230,14 +219,11 @@ void IrcBot::SockRecv()
 
             while (getline(iss, reply))
             {
-                sLog->outString("<IrcBot> - Received Data %s", reply.c_str());
-
                 // PING/PONG
                 size_t found = reply.find("PING");
                 if (found != std::string::npos)
                 {
                     reply.replace(1, 1, "O");
-                    sLog->outString("<IrcBot> - Sent PONG - %s", reply.c_str());
                     SendData(NONE, reply.c_str());
                     return;
                 }
@@ -245,11 +231,15 @@ void IrcBot::SockRecv()
                 std::vector<char const*> args;
                 SplitArgs(reply.c_str(), args);
 
-                if (args.size() < 4)
+                if(!stricmp(args[1], "422")) // MOTD file missing (Not the correct one, but it works for now)
                 {
-                    sLog->outString("args.size() < 4");
+                    SendData(IDENTIFY, IRC_PASS);
+                    SendData(JOIN, IRC_CHANNEL);
                     return;
                 }
+
+                if (args.size() < 4)
+                    return;
 
                 if (!stricmp(args[1], "PRIVMSG") && !stricmp(args[2], IRC_CHANNEL) && args[3][1] == '!')
                 {
@@ -315,6 +305,7 @@ bool IrcBot::SendData(MessageType type, char const* data)
 
     if (IsConnected())
     {
+        ss << "\r\n"; // Add IRC line terminator
         std::string temp = ss.str();
         char const* message = temp.c_str();
         sLog->outString("<IrcBot> - Sending data: %s", message);
