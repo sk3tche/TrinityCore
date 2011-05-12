@@ -2259,8 +2259,12 @@ bool Unit::isSpellBlocked(Unit *pVictim, SpellEntry const * spellProto, WeaponAt
     {
         // Check creatures flags_extra for disable block
         if (pVictim->GetTypeId() == TYPEID_UNIT &&
-           pVictim->ToCreature()->GetCreatureInfo()->flags_extra & CREATURE_FLAG_EXTRA_NO_BLOCK)
+            pVictim->ToCreature()->GetCreatureInfo()->flags_extra & CREATURE_FLAG_EXTRA_NO_BLOCK)
                 return false;
+
+        // These spells shouldn't be blocked
+        if (spellProto && spellProto->Attributes & SPELL_ATTR0_IMPOSSIBLE_DODGE_PARRY_BLOCK)
+            return false;
 
         float blockChance = pVictim->GetUnitBlockChance();
         blockChance += (int32(GetWeaponSkillValue(attackType)) - int32(pVictim->GetMaxSkillValueForLevel()))*0.04f;
@@ -5718,15 +5722,15 @@ bool Unit::HandleDummyAuraProc(Unit *pVictim, uint32 damage, AuraEffect* trigger
                     if (GetTypeId() != TYPEID_PLAYER)
                         return false;
 
-                    SpellCooldowns const SpellCDs = this->ToPlayer()->GetSpellCooldowns();
+                    SpellCooldowns const cooldowns = this->ToPlayer()->GetSpellCooldowns();
                     // remove cooldowns on all ranks of Frost Nova
-                    for (SpellCooldowns::const_iterator itr = SpellCDs.begin(); itr != SpellCDs.end(); itr++)
+                    for (SpellCooldowns::const_iterator itr = cooldowns.begin(); itr != cooldowns.end(); ++itr)
                     {
-                        SpellEntry const* SpellCDs_entry = sSpellStore.LookupEntry(itr->first);
+                        SpellEntry const* cdSpell = sSpellStore.LookupEntry(itr->first);
                         // Frost Nova
-                        if (SpellCDs_entry && SpellCDs_entry->SpellFamilyName == SPELLFAMILY_MAGE
-                           && SpellCDs_entry->SpellFamilyFlags[0] & 0x00000040)
-                            this->ToPlayer()->RemoveSpellCooldown(SpellCDs_entry->Id, true);
+                        if (cdSpell && cdSpell->SpellFamilyName == SPELLFAMILY_MAGE
+                           && cdSpell->SpellFamilyFlags[0] & 0x00000040)
+                            this->ToPlayer()->RemoveSpellCooldown(cdSpell->Id, true);
                     }
                     break;
                 }
@@ -6801,26 +6805,6 @@ bool Unit::HandleDummyAuraProc(Unit *pVictim, uint32 damage, AuraEffect* trigger
 
                     break;
                 }
-                // Glyph of Divinity
-                case 54939:
-                {
-                    // Lookup base amount mana restore
-                    for (uint8 i=0; i<MAX_SPELL_EFFECTS; i++)
-                        if (procSpell->Effect[i] == SPELL_EFFECT_ENERGIZE)
-                        {
-                            int32 mana = SpellMgr::CalculateSpellEffectAmount(procSpell, i);
-                            CastCustomSpell(this, 54986, 0, &mana, 0, true, castItem, triggeredByAura);
-                            break;
-                        }
-                    return true;
-                }
-                // Glyph of Flash of Light
-                case 54936:
-                {
-                    triggered_spell_id = 54957;
-                    basepoints0 = CalculatePctN(int32(damage), triggerAmount);
-                    break;
-                }
                 // Glyph of Holy Light
                 case 54937:
                 {
@@ -7830,7 +7814,7 @@ bool Unit::HandleModDamagePctTakenAuraProc(Unit *pVictim, uint32 /*damage*/, Aur
 
 // Used in case when access to whole aura is needed
 // All procs should be handled like this...
-bool Unit::HandleAuraProc(Unit * pVictim, uint32 damage, Aura * triggeredByAura, SpellEntry const * procSpell, uint32 /*procFlag*/, uint32 procEx, uint32 /*cooldown*/, bool * handled)
+bool Unit::HandleAuraProc(Unit * pVictim, uint32 damage, Aura * triggeredByAura, SpellEntry const * procSpell, uint32 /*procFlag*/, uint32 procEx, uint32 cooldown, bool * handled)
 {
     SpellEntry const *dummySpell = triggeredByAura->GetSpellProto();
 
@@ -7898,6 +7882,25 @@ bool Unit::HandleAuraProc(Unit * pVictim, uint32 damage, Aura * triggeredByAura,
                     CastSpell(pVictim, 68055, true);
                     return true;
                 }
+            }
+            // Glyph of Divinity
+            else if (dummySpell->Id == 54939)
+            {
+                *handled = true;
+                // Check if we are the target and prevent mana gain
+                if (triggeredByAura->GetCasterGUID() == pVictim->GetGUID())
+                    return false;
+                // Lookup base amount mana restore
+                for (uint8 i=0; i<MAX_SPELL_EFFECTS; i++)
+                {
+                    if (procSpell->Effect[i] == SPELL_EFFECT_ENERGIZE)
+                    {
+                        // value multiplied by 2 because you should get twice amount
+                        int32 mana = SpellMgr::CalculateSpellEffectAmount(procSpell, i) * 2;
+                        CastCustomSpell(this, 54986, 0, &mana, NULL, true);
+                    }
+                }
+                return true;
             }
             break;
         }
@@ -7996,6 +7999,18 @@ bool Unit::HandleAuraProc(Unit * pVictim, uint32 damage, Aura * triggeredByAura,
 
             switch(dummySpell->Id)
             {
+                // Bone Shield cooldown
+                case 49222:
+                {
+                    *handled = true;
+                    if (cooldown && GetTypeId() == TYPEID_PLAYER)
+                    {
+                        if (ToPlayer()->HasSpellCooldown(100000))
+                            return false;
+                        ToPlayer()->AddSpellCooldown(100000, 0, time(NULL) + cooldown);
+                    }
+                    return true;
+                }
                 // Hungering Cold aura drop
                 case 51209:
                     *handled = true;
@@ -10431,6 +10446,10 @@ uint32 Unit::SpellDamageBonus(Unit *pVictim, SpellEntry const *spellProto, uint3
             if (spellProto->SpellFamilyFlags[0] & 0x00004000)
                 if (HasAura(200000))
                     DoneTotalMod *= 4;
+            // Shadow Bite (15% increase from each dot)
+            if (spellProto->SpellFamilyFlags[1] & 0x00400000 && isPet())
+                if (uint8 count = pVictim->GetDoTsByCaster(GetOwnerGUID()))
+                    AddPctN(DoneTotalMod, 15 * count);
         break;
         case SPELLFAMILY_HUNTER:
             // Steady Shot
@@ -12098,6 +12117,9 @@ bool Unit::canAttack(Unit const* target, bool force) const
     if (m_vehicle)
         if (IsOnVehicle(target) || m_vehicle->GetBase()->IsOnVehicle(target))
             return false;
+
+    if (!canSeeOrDetect(target))
+        return false;
 
     return true;
 }
@@ -15740,7 +15762,7 @@ void Unit::RemoveCharmedBy(Unit *charmer)
     CharmType type;
     if (HasUnitState(UNIT_STAT_POSSESSED))
         type = CHARM_TYPE_POSSESS;
-    else if (charmer->IsOnVehicle(this))
+    else if (charmer && charmer->IsOnVehicle(this))
         type = CHARM_TYPE_VEHICLE;
     else
         type = CHARM_TYPE_CHARM;
