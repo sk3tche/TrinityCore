@@ -63,10 +63,6 @@ bool IrcBot::Login()
         if (SendData(NICK, IRC_NICK))
         {
             SockRecv();
-            ACE_Based::Thread::Sleep(500);
-            // No need to check for errors here
-            SendData(IDENTIFY, IRC_PASS);
-            SendData(JOIN, IRC_CHANNEL);
             return true;
         }
         else
@@ -226,12 +222,25 @@ void IrcBot::SockRecv()
 
             while (getline(iss, reply))
             {
+                // PING/PONG
                 if (!strcmp(reply.substr(0, 4).c_str(), "PING"))
                 {
                     reply.replace(1, 1, "O");
                     SendData(NONE, reply.c_str());
                     return;
                 }
+
+                // Join Channel
+                //  - SJGR has no MOTD, so we need to look for MOTD File is Missing
+                //  - Also make sure that it is not a PRIVMSG
+                if(reply.find("MOTD File is missing") != std::string::npos &&
+                    reply.find("PRIVMSG") == std::string::npos)
+                {
+                    SendData(IDENTIFY, IRC_PASS);
+                    SendData(JOIN, IRC_CHANNEL);
+                    return;
+                }
+                    
 
                 std::vector<char const*> args;
                 SplitArgs(reply.c_str(), args);
