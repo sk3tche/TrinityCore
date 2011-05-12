@@ -302,10 +302,10 @@ bool IrcBot::SendData(MessageType type, char const* data)
 
     if (IsConnected())
     {
-        ss << "\r\n"; // Add IRC line terminator
         std::string temp = ss.str();
+        sLog->outString("<IrcBot> - Sending data: %s", temp.c_str());
+        temp += "\r\n";
         char const* message = temp.c_str();
-        sLog->outString("<IrcBot> - Sending data: %s", message);
         if (send(_socket, message, strlen(message), 0) == -1)
             return false;
     }
