@@ -16,7 +16,6 @@ IrcBot::~IrcBot()
 {
 }
 
-// Master
 void IrcBot::run()
 {
     // Let core breath out 500 ms after core startup :)
@@ -240,7 +239,6 @@ void IrcBot::SockRecv()
                     SendData(JOIN, IRC_CHANNEL);
                     return;
                 }
-                    
 
                 std::vector<char const*> args;
                 SplitArgs(reply.c_str(), args);
