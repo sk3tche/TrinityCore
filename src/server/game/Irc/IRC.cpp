@@ -343,5 +343,31 @@ void IrcBot::ParseCommand(std::string nickName, std::vector<char const*> args)
                     chn->SayFromIRC(nickName.c_str(), temp.c_str());
             }
        }
-    }          
+    } 
+    else if (!stricmp(args[0], "hook"))
+    {
+        if (args.size() < 2)
+            SendData(PRIVMSG, "Not enough arguments! !hook CHANNEL_TO_HOOK");
+        else if (IsChannelHooked(args[1]))
+            SendData(PRIVMSG, "Channel is already hooked!");
+        else
+        {
+            if(HookChannel(args[1]))
+                SendData(PRIVMSG, "Channel successfully hooked!");
+            else
+                SendData(PRIVMSG, error_msg.c_str());
+        }
+    }
+    else if (!stricmp(args[0], "unhook"))
+    {
+        if (args.size() < 2)
+            SendData(PRIVMSG, "Not enough arguments! !unhook CHANNEL_TO_UNHOOK");
+        else
+        {
+            if (UnhookChannel(args[1]))
+                SendData(PRIVMSG, "Channel successfully unhooked!");
+            else
+                SendData(PRIVMSG, error_msg.c_str());
+        }
+    }
 }
