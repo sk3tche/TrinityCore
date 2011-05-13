@@ -43,13 +43,13 @@ void IrcBot::run()
                 }
             }
 
-            sLog->outString("<IrcBot> - Connection has been lost. Disconnecting");
+            sLog->outError("<IrcBot> - Connection has been lost. Disconnecting");
             Disconnect();
             ACE_Based::Thread::Sleep(30 * IN_MILLISECONDS);
         }
         else
         {
-            sLog->outString("<IrcBot> - Couldn't initialize socket.");
+            sLog->outError("<IrcBot> - Couldn't initialize socket.");
             ACE_Based::Thread::Sleep(10 * IN_MILLISECONDS);
         }
     }
@@ -65,10 +65,10 @@ bool IrcBot::Login()
             return true;
         }
         else
-            sLog->outString("<IrcBot> - There was an error in SendData(NICK, IRC_NICK)");
+            sLog->outError("<IrcBot> - There was an error in SendData(NICK, IRC_NICK)");
     }
     else
-        sLog->outString("<IrcBot> - There was an error in SendData(USER, IRC_USER)");
+        sLog->outError("<IrcBot> - There was an error in SendData(USER, IRC_USER)");
 
     return false;
 }
@@ -82,7 +82,7 @@ bool IrcBot::Connect()
     hostent * record = gethostbyname(IRC_SERVER);
     if (record == NULL)
     {
-        sLog->outString("<IrcBot> - Could not resolve host irc.projectsjgr.com");
+        sLog->outError("<IrcBot> - Could not resolve host irc.projectsjgr.com");
         return false;
     }
     in_addr * addressptr = (in_addr *) record->h_addr;
@@ -95,7 +95,7 @@ bool IrcBot::Connect()
 
     if (connect(_socket, (sockaddr *) &serverInfo, sizeof(sockaddr)) == -1)
     {
-        sLog->outString("<IrcBot> - Cannot connect to irc.projectsjgr.com");
+        sLog->outError("<IrcBot> - Cannot connect to irc.projectsjgr.com");
         return false;
     }
     _connected = true;
@@ -108,19 +108,19 @@ bool IrcBot::InitSocket()
     WSADATA wsaData;
     if (WSAStartup(MAKEWORD(2,0), &wsaData) != 0)
     {
-        sLog->outString("<IrcBot> - Winsock initialization error");
+        sLog->outError("<IrcBot> - Winsock initialization error");
         return false;
     }
     #endif
     if ((_socket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) == -1)
     {
-        sLog->outString("<IrcBot> - Socket can't be created");
+        sLog->outError("<IrcBot> - Socket can't be created");
         return false;
     }
     int on = 1;
     if (setsockopt(_socket, SOL_SOCKET, SO_REUSEADDR, (char const*) &on, sizeof (on)) == -1)
     {
-        sLog->outString("<IrcBot> - Invalid Socket");
+        sLog->outError("<IrcBot> - Invalid Socket");
         return false;
     }
     #ifdef _WIN32
@@ -206,13 +206,13 @@ void IrcBot::SockRecv()
     int recievedBytes = recv(_socket, sizebuffer, MAXDATASIZE - 1, 0);
     if (recievedBytes == -1)
     {
-        sLog->outString("<IrcBot> - Connection lost");
+        sLog->outError("<IrcBot> - Connection lost");
         Disconnect();
     }
     else
     {
         if (-1 == recievedBytes)
-            sLog->outString("<IrcBot> - Error while receiving from socket");
+            sLog->outError("<IrcBot> - Error while receiving from socket");
         else
         {
             std::string reply;
@@ -279,12 +279,10 @@ void IrcBot::SplitArgs(char const* arg, std::vector<char const*> & elems)
 bool IrcBot::SendData(MessageType type, char const* data)
 {
     std::stringstream ss;
-    char hostname[128];
 
     switch(type)
     {
         case USER:
-            gethostname(hostname, sizeof(hostname));
             ss << "USER " << IRC_USER_NICK << " 0 * :" << data;
             break;
         case NICK:
@@ -349,7 +347,7 @@ void IrcBot::ParseCommand(std::string nickName, std::vector<char const*> args)
             SendData(PRIVMSG, "Channel is already hooked!");
         else
         {
-            if(HookChannel(args[1]))
+            if (HookChannel(args[1]))
                 SendData(PRIVMSG, "Channel successfully hooked!");
             else
                 SendData(PRIVMSG, error_msg.c_str());
