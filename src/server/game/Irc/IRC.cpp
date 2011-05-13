@@ -133,7 +133,7 @@ bool IrcBot::InitSocket()
     return true;
 }
 
-bool IrcBot::Disconnect()
+void IrcBot::Disconnect()
 {
     if (_socket)
     {
@@ -144,7 +144,6 @@ bool IrcBot::Disconnect()
         #endif
     }
     _connected = false;
-    return true;
 }
 
 bool IrcBot::HookChannel(char const* channel)

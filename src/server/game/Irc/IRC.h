@@ -40,7 +40,7 @@ class IrcBot : public ACE_Based::Runnable
         bool Connect();
         bool Login();
         bool InitSocket();
-        bool Disconnect();
+        void Disconnect();
         bool IsConnected() { return _connected; }
 
         void ParseCommand(std::string nickName, std::vector<char const*> args);
