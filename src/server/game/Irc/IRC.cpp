@@ -369,4 +369,21 @@ void IrcBot::ParseCommand(std::string nickName, std::vector<char const*> args)
                 SendData(PRIVMSG, error_msg.c_str());
         }
     }
+    else if (!stricmp(args[0], "hooked"))
+    {
+        if (hookedChannels.size() <= 0)
+            SendData(PRIVMSG, "No channels are hooked!");
+        else
+        {
+            std::stringstream ss;
+            ss << "The following channels are hooked:\n";
+            for (_itr = hookedChannels.begin(); _itr != hookedChannels.end(); _itr++)
+            {
+                ss << " - " << *_itr << "\n";
+            }
+            ss << "End of List";
+            std::string temp = ss.str();
+            SendData(PRIVMSG, temp.c_str());
+        }
+    }
 }
