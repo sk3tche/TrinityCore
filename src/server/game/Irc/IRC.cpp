@@ -145,7 +145,7 @@ void IrcBot::Disconnect()
     }
 
     // Remove all hooked channels
-    hookedChannels.clear();
+    _hookedChannels.clear();
 
     _connected = false;
 }
@@ -371,13 +371,13 @@ void IrcBot::ParseCommand(std::string nickName, std::vector<char const*> args)
     }
     else if (!stricmp(args[0], "hooked"))
     {
-        if (hookedChannels.size() <= 0)
+        if (_hookedChannels.size() <= 0)
             SendData(PRIVMSG, "No channels are hooked!");
         else
         {
             std::stringstream ss;
             ss << "The following channels are hooked:\n";
-            for (_itr = hookedChannels.begin(); _itr != hookedChannels.end(); _itr++)
+            for (_itr = _hookedChannels.begin(); _itr != _hookedChannels.end(); _itr++)
             {
                 ss << " - " << *_itr << "\n";
             }
