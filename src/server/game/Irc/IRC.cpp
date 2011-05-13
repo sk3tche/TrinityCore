@@ -143,6 +143,10 @@ void IrcBot::Disconnect()
         close(_socket);
         #endif
     }
+
+    // Remove all hooked channels
+    hookedChannels.clear();
+
     _connected = false;
 }
 
