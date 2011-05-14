@@ -20,6 +20,7 @@
 
 /*
 -- NPC talk text insert from sniff 
+UPDATE `creature_template` SET `npc_flags`=0,`ScriptName`= 'npc_xerestrasza' WHERE `entry`=40429;
 DELETE FROM `creature_text` WHERE `entry`=40429; 
 INSERT INTO `creature_text` (`entry`,`groupid`,`id`,`text`,`type`,`language`,`probability`,`emote`,`duration`,`sound`,`comment`) VALUES 
 (40429,0,0, 'Thank you! I could not have held out for much longer.... A terrible thing has happened here.',1,0,100,5,0,17491, 'Sanctum Guardian Xerestrasza'),

@@ -22,7 +22,7 @@ enum Texts
 {
     SAY_BALTHARUS_INTRO         = 0,    // Your power wanes, ancient one.... Soon you will join your friends.
     SAY_AGGRO                   = 1,    // Ah, the entertainment has arrived.
-    SAY_SLAY                    = 2,    // Baltharus leaves no survivors! - This world has enough heroes.
+    SAY_KILL                    = 2,    // Baltharus leaves no survivors! - This world has enough heroes.
     SAY_CLONE                   = 3,    // Twice the pain and half the fun.
     SAY_DEATH                   = 4,    // I... didn't see that coming....
 };
@@ -67,7 +67,8 @@ class boss_baltharus_the_warborn : public CreatureScript
 
             void Reset()
             {
-                _Reset();
+                BossAI::Reset();
+                me->SetReactState(REACT_DEFENSIVE);
                 _isOutOfCombat = true;
                 _events.ScheduleEvent(EVENT_OOC_CHANNEL, 0);
                 _cloneCount = RAID_MODE<uint8>(1, 2, 2, 3);
@@ -94,9 +95,9 @@ class boss_baltharus_the_warborn : public CreatureScript
                 }
             }
 
-            void EnterCombat(Unit* /*who*/)
+            void EnterCombat(Unit* victim)
             {
-                _EnterCombat();
+                BossAI::EnterCombat(victim);
                 _isOutOfCombat = false;
                 _events.ScheduleEvent(EVENT_CLEAVE, 11000);
                 _events.ScheduleEvent(EVENT_ENERVATING_BRAND, 13000);
@@ -104,12 +105,18 @@ class boss_baltharus_the_warborn : public CreatureScript
                 Talk(SAY_AGGRO);
             }
 
-            void JustDied(Unit* /*killer*/)
+            void JustDied(Unit* killer)
             {
-                _JustDied();
+                BossAI::JustDied(killer);
                 Talk(SAY_DEATH);
                 if (Creature* xerestrasza = Unit::GetCreature(*me, instance->GetData64(DATA_XERESTRASZA)))
                     xerestrasza->AI()->DoAction(ACTION_BALTHARUS_DEATH);
+            }
+
+            void KilledUnit(Unit* victim)
+            {
+                if (victim->GetTypeId() == TYPEID_PLAYER)
+                    Talk(SAY_KILL);
             }
 
             void JustSummoned(Creature* summon)
