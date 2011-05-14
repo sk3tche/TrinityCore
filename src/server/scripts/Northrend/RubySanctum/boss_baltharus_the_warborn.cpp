@@ -68,7 +68,6 @@ class boss_baltharus_the_warborn : public CreatureScript
             void Reset()
             {
                 BossAI::Reset();
-                me->SetReactState(REACT_DEFENSIVE);
                 _isOutOfCombat = true;
                 _events.ScheduleEvent(EVENT_OOC_CHANNEL, 0);
                 _cloneCount = RAID_MODE<uint8>(1, 2, 2, 3);

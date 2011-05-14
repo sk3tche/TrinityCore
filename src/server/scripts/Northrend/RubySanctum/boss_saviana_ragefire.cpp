@@ -18,6 +18,25 @@
 #include "ScriptPCH.h"
 #include "ruby_sanctum.h"
 
+/*
+UPDATE `creature_template` SET `ScriptName`= 'boss_saviana_ragefire' WHERE `entry`=39747;
+DELETE FROM `spell_script_names` WHERE `ScriptName`='spell_saviana_conflagration_init';
+DELETE FROM `spell_script_names` WHERE `ScriptName`='spell_saviana_conflagration_trigger';
+DELETE FROM `spell_script_names` WHERE `ScriptName`='spell_saviana_conflagration_throwback';
+INSERT INTO `spell_script_names` (`spell_id`,`ScriptName`) VALUES
+(74452, 'spell_saviana_conflagration_init'),
+(74453, 'spell_saviana_conflagration_trigger'),
+(74455, 'spell_saviana_conflagration_throwback');
+
+DELETE FROM `creature_text` WHERE `entry`=39747; 
+INSERT INTO `creature_text` (`entry`,`groupid`,`id`,`text`,`type`,`language`,`probability`,`emote`,`duration`,`sound`,`comment`) VALUES 
+(39747,0,0, 'You will sssuffer for this intrusion!',1,0,100,0,0,17528, 'Saviana Ragefire'),
+(39747,1,0, 'Burn in the master's flame!',1,0,100,0,0,17532, 'Saviana Ragefire'),
+(39747,2,0, '%s becomes enraged!',2,0,100,0,0,0, 'Saviana Ragefire'),
+(39747,3,0, 'Halion will be pleased.',1,0,100,0,0,17530, 'Saviana Ragefire'),
+(39747,3,1, 'As it should be....',1,0,100,0,0,17529, 'Saviana Ragefire');
+*/
+
 enum Texts
 {
     SAY_AGGRO                           = 0, // You will sssuffer for this intrusion! (17528)
@@ -191,7 +210,6 @@ class ConflagrationTargetSelector
         }
 };
 
-// 74452
 class spell_saviana_conflagration_init : public SpellScriptLoader
 {
     public:
@@ -229,7 +247,6 @@ class spell_saviana_conflagration_init : public SpellScriptLoader
         }
 };
 
-// 74453
 class spell_saviana_conflagration_trigger : public SpellScriptLoader
 {
     public:
@@ -261,7 +278,6 @@ class spell_saviana_conflagration_trigger : public SpellScriptLoader
         }
 };
 
-// 74455
 class spell_saviana_conflagration_throwback : public SpellScriptLoader
 {
     public:
