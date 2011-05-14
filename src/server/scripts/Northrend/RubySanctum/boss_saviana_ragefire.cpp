@@ -54,8 +54,6 @@ enum Misc
     SOUND_ID_DEATH          = 17531,
 };
 
-#define MAX_TARGETS_FLAME_BEACON     RAID_MODE<uint32>(3, 6, 3, 6)
-
 Position const SavianaRagefireFlyPos  = {3156.324f, 643.1251f, 88.5247f, 4.69f};
 Position const SavianaRagefireLandPos = {3155.510f, 683.8440f, 95.5070f, 4.69f};
 
@@ -182,32 +180,6 @@ class boss_saviana_ragefire : public CreatureScript
         }
 };
 
-/*
-You will sssuffer for this intrusion!
-
-
-
-Enrage:
-Just casts enrage on self
-
-Flame Breath
-Casts on tank
-
-Conflagration:
-
-Bytes1 = 50331648
-
-
-
-Cast 74452 on self 00:38:48
-Burn in the master's flame! 00:38:48
-
-Dummy 74452:
-    3/6 (10,25) targets are hit with 74453 and 74454
-Efter 5 sekunder -> så triggar den 74455 (kastas av player på 39747). 39747 kastar tillbaka 74456 på playern.
-
-*/
-
 class ConflagrationTargetSelector
 {
     public:
@@ -232,7 +204,7 @@ class spell_saviana_conflagration_init : public SpellScriptLoader
             void FilterTargets(std::list<Unit*>& unitList)
             {
                 unitList.remove_if(ConflagrationTargetSelector());
-                uint32 maxSize = 3; // MAX_TARGETS_FLAME_BEACON cant be used here, why?
+                uint8 maxSize = uint8(GetCaster()->GetMap()->GetSpawnMode() & 1 ? 6 : 3);
                 if (unitList.size() > maxSize)
                     Trinity::RandomResizeList(unitList, maxSize);
             }
