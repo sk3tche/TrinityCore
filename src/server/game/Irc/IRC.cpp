@@ -243,8 +243,9 @@ void IrcBot::SockRecv()
                     return;
                 }
 
-                std::vector<char const*> args;
-                SplitArgs(reply.c_str(), args);
+                sLog->outString("<IrcBot> - Received Data: %s", reply.c_str());
+
+                std::vector<char const*> args = SplitArgs(reply.c_str());
 
                 if (!stricmp(args[1], "PRIVMSG") && !stricmp(args[2], IRC_CHANNEL) && args[3][1] == '!')
                 {
@@ -271,13 +272,15 @@ void IrcBot::SockRecv()
     }
 }
 
-void IrcBot::SplitArgs(char const* arg, std::vector<char const*> & elems)
+std::vector<char const *> IrcBot::SplitArgs(char const* arg)
 {
     std::stringstream ss(arg);
     std::string item;
+    std::vector<char const *> elems;
 
     while (std::getline(ss, item, ' '))
         elems.push_back(item.c_str());
+    return elems;
 }
 
 bool IrcBot::SendData(MessageType type, char const* data)
@@ -385,5 +388,26 @@ void IrcBot::ParseCommand(std::string nickName, std::vector<char const*> args)
             std::string temp = ss.str();
             SendData(PRIVMSG, temp.c_str());
         }
+    }
+    else if (!stricmp(args[0], "restart"))
+    {
+        if(args.size() < 2)
+            SendData(PRIVMSG, "Not enough arguments! !restart [irc | core]");
+        else if (!stricmp(args[1], "irc"))
+        {
+            // Just disconnect, the master function will automatically
+            // restart the irc once it disconnects
+            Disconnect();
+        }
+        else if (!stricmp(args[1], "core"))
+        {
+            int restartTime = 10; // Default time 10 seconds if not supplied.
+            if(args.size() < 3)
+                sWorld->ShutdownServ(restartTime, SHUTDOWN_MASK_RESTART, RESTART_EXIT_CODE);
+            else
+                sWorld->ShutdownServ((int)args[2], SHUTDOWN_MASK_RESTART, RESTART_EXIT_CODE);
+        }
+        else
+            SendData(PRIVMSG, "Invalid argument! !restart [irc | core]");
     }
 }
