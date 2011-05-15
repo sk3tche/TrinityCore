@@ -245,7 +245,8 @@ void IrcBot::SockRecv()
 
                 sLog->outString("<IrcBot> - Received Data: %s", reply.c_str());
 
-                std::vector<char const*> args = SplitArgs(reply.c_str());
+                std::vector<char const*> args;
+                SplitArgs(reply.c_str(), args);
 
                 if (!stricmp(args[1], "PRIVMSG") && !stricmp(args[2], IRC_CHANNEL) && args[3][1] == '!')
                 {
@@ -272,15 +273,15 @@ void IrcBot::SockRecv()
     }
 }
 
-std::vector<char const *> IrcBot::SplitArgs(char const* arg)
+void IrcBot::SplitArgs(char const* arg, std::vector<char const*> & elems)
 {
-    std::stringstream ss(arg);
-    std::string item;
-    std::vector<char const *> elems;
-
-    while (std::getline(ss, item, ' '))
-        elems.push_back(item.c_str());
-    return elems;
+    char * pch;
+    pch = strtok ((char *)arg," ");
+    while (pch != NULL)
+    {
+        elems.push_back(pch);
+        pch = strtok (NULL, " ");
+    }
 }
 
 bool IrcBot::SendData(MessageType type, char const* data)
