@@ -630,7 +630,12 @@ int32 ArenaTeam::GetRatingMod(uint32 ownRating, uint32 opponentRating, bool won,
             mod = 24.0f * (won_mod - chance);
     }
     else
-        mod = 24.0f * (won_mod - chance);
+    {
+        if (ownRating < 1000)
+            mod = 0.0f;
+        else
+            mod = 24.0f * (won_mod - chance);
+    }
 
     return (int32)ceil(mod);
 }

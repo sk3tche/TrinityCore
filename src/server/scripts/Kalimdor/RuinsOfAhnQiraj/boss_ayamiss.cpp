@@ -1,6 +1,5 @@
 /*
  * Copyright (C) 2008-2011 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -15,28 +14,24 @@
  * You should have received a copy of the GNU General Public License along
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-
-/* ScriptData
-SDName: Boss_Ayamiss
-SD%Complete: 50
-SDComment: VERIFY SCRIPT
-SDCategory: Ruins of Ahn'Qiraj
-EndScriptData */
-
-#include "ScriptPCH.h"
+ 
+#include "ObjectMgr.h"
+#include "ScriptMgr.h"
+#include "ScriptedCreature.h"
 #include "ruins_of_ahnqiraj.h"
 
-/*
-To do:
-make him fly from 70-100%
-*/
-
-enum Spells
+enum eAyamiss
 {
-    SPELL_STINGERSPRAY                 = 25749,
-    SPELL_POISONSTINGER                = 25748,  //only used in phase1
-    SPELL_SUMMONSWARMER                = 25844,  //might be 25708
-    SPELL_PARALYZE                     = 23414   //doesnt work correct (core)
+    SPELL_STINGERSPRAY          =  25749,
+    SPELL_POISONSTINGER         =  25748,                          //only used in phase1
+    SPELL_PARALYZE              =  25725,
+    SPELL_TRASH                 =  3391,
+    SPELL_FRENZY                =  8269,
+    SPELL_LASH                  =  25852,
+
+    EMOTE_FRENZY                =  -1000002,
+
+    SPELL_FEED                  =  25721,
 };
 
 class boss_ayamiss : public CreatureScript
@@ -70,20 +65,6 @@ public:
             SUMMONSWARMER_Timer = 60000;
             phase=1;
 
-            if (pInstance)
-                pInstance->SetData(DATA_AYAMISS_EVENT, NOT_STARTED);
-        }
-
-        void EnterCombat(Unit * /*who*/)
-        {
-            if (pInstance)
-                pInstance->SetData(DATA_AYAMISS_EVENT, IN_PROGRESS);
-        }
-
-        void JustDied(Unit * /*killer*/)
-        {
-            if (pInstance)
-                pInstance->SetData(DATA_AYAMISS_EVENT, DONE);
         }
 
         void UpdateAI(const uint32 diff)
@@ -110,13 +91,6 @@ public:
                 DoCast(me->getVictim(), SPELL_POISONSTINGER);
                 POISONSTINGER_Timer = 30000;
             } else POISONSTINGER_Timer -= diff;
-
-            //SUMMONSWARMER_Timer (only in phase1)
-            if (SUMMONSWARMER_Timer <= diff)
-            {
-                DoCast(me->getVictim(), SPELL_SUMMONSWARMER);
-                SUMMONSWARMER_Timer = 60000;
-            } else SUMMONSWARMER_Timer -= diff;
 
             DoMeleeAttackIfReady();
         }

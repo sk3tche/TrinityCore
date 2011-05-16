@@ -17,210 +17,105 @@
  */
 
 /* ScriptData
-SDName: Boss_Sartura
-SD%Complete: 95
-SDComment:
+SDName: Boss_Skeram
+SD%Complete: 75
+SDComment: Mind Control buggy.
 SDCategory: Temple of Ahn'Qiraj
 EndScriptData */
 
 #include "ScriptPCH.h"
+#include "temple_of_ahnqiraj.h"
+#include "Group.h"
 
-#define SAY_AGGRO                   -1531008
-#define SAY_SLAY                    -1531009
-#define SAY_DEATH                   -1531010
+#define SAY_AGGRO1                  -1531000
+#define SAY_AGGRO2                  -1531001
+#define SAY_AGGRO3                  -1531002
+#define SAY_SLAY1                   -1531003
+#define SAY_SLAY2                   -1531004
+#define SAY_SLAY3                   -1531005
+#define SAY_SPLIT                   -1531006
+#define SAY_DEATH                   -1531007
 
-#define SPELL_WHIRLWIND                              26083
-#define SPELL_ENRAGE                                 28747            //Not sure if right ID.
-#define SPELL_ENRAGEHARD                             28798
+#define SPELL_ARCANE_EXPLOSION      25679
+#define SPELL_EARTH_SHOCK           26194
+#define SPELL_TRUE_FULFILLMENT4     26526
+#define SPELL_BLINK                 28391
 
-//Guard Spell
-#define SPELL_WHIRLWINDADD                           26038
-#define SPELL_KNOCKBACK                              26027
-
-class boss_sartura : public CreatureScript
+class ov_mycoordinates
 {
-public:
-    boss_sartura() : CreatureScript("boss_sartura") { }
-
-    CreatureAI* GetAI(Creature* pCreature) const
-    {
-        return new boss_sarturaAI (pCreature);
-    }
-
-    struct boss_sarturaAI : public ScriptedAI
-    {
-        boss_sarturaAI(Creature *c) : ScriptedAI(c) {}
-
-        uint32 WhirlWind_Timer;
-        uint32 WhirlWindRandom_Timer;
-        uint32 WhirlWindEnd_Timer;
-        uint32 AggroReset_Timer;
-        uint32 AggroResetEnd_Timer;
-        uint32 EnrageHard_Timer;
-
-        bool Enraged;
-        bool EnragedHard;
-        bool WhirlWind;
-        bool AggroReset;
-
-        void Reset()
+    public:
+        float x, y, z, r;
+        ov_mycoordinates(float cx, float cy, float cz, float cr)
         {
-            WhirlWind_Timer = 30000;
-            WhirlWindRandom_Timer = 3000 + rand()%4000;
-            WhirlWindEnd_Timer = 15000;
-            AggroReset_Timer = 45000 + rand()%10000;
-            AggroResetEnd_Timer = 5000;
-            EnrageHard_Timer = 10*60000;
-
-            WhirlWind = false;
-            AggroReset = false;
-            Enraged = false;
-            EnragedHard = false;
-
+            x = cx; y = cy; z = cz; r = cr;
         }
-
-        void EnterCombat(Unit * /*who*/)
-        {
-            DoScriptText(SAY_AGGRO, me);
-        }
-
-         void JustDied(Unit* /*Killer*/)
-         {
-             DoScriptText(SAY_DEATH, me);
-         }
-
-         void KilledUnit(Unit* /*victim*/)
-         {
-             DoScriptText(SAY_SLAY, me);
-         }
-
-        void UpdateAI(const uint32 diff)
-        {
-            //Return since we have no target
-            if (!UpdateVictim())
-                return;
-
-            if (WhirlWind)
-            {
-                if (WhirlWindRandom_Timer <= diff)
-                {
-                    //Attack random Gamers
-                    Unit *pTarget = NULL;
-                    pTarget = SelectTarget(SELECT_TARGET_RANDOM, 1);
-                    if (pTarget)
-                    me->AddThreat(pTarget, 1.0f);
-                    me->TauntApply(pTarget);
-                    AttackStart(pTarget);
-
-                    WhirlWindRandom_Timer = 3000 + rand()%4000;
-                } else WhirlWindRandom_Timer -= diff;
-
-                if (WhirlWindEnd_Timer <= diff)
-                {
-                    WhirlWind = false;
-                    WhirlWind_Timer = 25000 + rand()%15000;
-                } else WhirlWindEnd_Timer -= diff;
-            }
-
-            if (!WhirlWind)
-            {
-                if (WhirlWind_Timer <= diff)
-                {
-                    DoCast(me, SPELL_WHIRLWIND);
-                    WhirlWind = true;
-                    WhirlWindEnd_Timer = 15000;
-                } else WhirlWind_Timer -= diff;
-
-                if (AggroReset_Timer <= diff)
-                {
-                    //Attack random Gamers
-                    Unit *pTarget = NULL;
-                    pTarget = SelectTarget(SELECT_TARGET_RANDOM, 1);
-                    if (pTarget)
-                    me->AddThreat(pTarget, 1.0f);
-                    me->TauntApply(pTarget);
-                    AttackStart(pTarget);
-
-                        AggroReset = true;
-                        AggroReset_Timer = 2000 + rand()%3000;
-                } else AggroReset_Timer -= diff;
-
-                if (AggroReset)
-                {
-                    if (AggroResetEnd_Timer <= diff)
-                    {
-                        AggroReset = false;
-                        AggroResetEnd_Timer = 5000;
-                        AggroReset_Timer = 35000 + rand()%10000;
-                    } else AggroResetEnd_Timer -= diff;
-                }
-
-                //If she is 20% enrage
-                if (!Enraged)
-                {
-                    if (!HealthAbovePct(20) && !me->IsNonMeleeSpellCasted(false))
-                    {
-                        DoCast(me, SPELL_ENRAGE);
-                        Enraged = true;
-                    }
-                }
-
-                //After 10 minutes hard enrage
-                if (!EnragedHard)
-                {
-                    if (EnrageHard_Timer <= diff)
-                    {
-                        DoCast(me, SPELL_ENRAGEHARD);
-                        EnragedHard = true;
-                    } else EnrageHard_Timer -= diff;
-                }
-
-                DoMeleeAttackIfReady();
-            }
-        }
-    };
-
 };
 
-class mob_sartura_royal_guard : public CreatureScript
+class boss_skeram : public CreatureScript
 {
 public:
-    mob_sartura_royal_guard() : CreatureScript("mob_sartura_royal_guard") { }
+    boss_skeram() : CreatureScript("boss_skeram") { }
 
     CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new mob_sartura_royal_guardAI (pCreature);
+        return new boss_skeramAI (pCreature);
     }
 
-    struct mob_sartura_royal_guardAI : public ScriptedAI
+    struct boss_skeramAI : public ScriptedAI
     {
-        mob_sartura_royal_guardAI(Creature *c) : ScriptedAI(c) {}
+        boss_skeramAI(Creature *c) : ScriptedAI(c)
+        {
+            IsImage = false;
+        }
 
-        uint32 WhirlWind_Timer;
-        uint32 WhirlWindRandom_Timer;
-        uint32 WhirlWindEnd_Timer;
-        uint32 AggroReset_Timer;
-        uint32 AggroResetEnd_Timer;
-        uint32 KnockBack_Timer;
+        uint32 ArcaneExplosion_Timer;
+        uint32 EarthShock_Timer;
+        uint32 FullFillment_Timer;
+        uint32 Blink_Timer;
+        uint32 Invisible_Timer;
 
-        bool WhirlWind;
-        bool AggroReset;
+        bool Images75;
+        bool Images50;
+        bool Images25;
+        bool IsImage;
+        bool Invisible;
 
         void Reset()
         {
-            WhirlWind_Timer = 30000;
-            WhirlWindRandom_Timer = 3000 + rand()%4000;
-            WhirlWindEnd_Timer = 15000;
-            AggroReset_Timer = 45000 + rand()%10000;
-            AggroResetEnd_Timer = 5000;
-            KnockBack_Timer = 10000;
+            ArcaneExplosion_Timer = 6000 + rand()%6000;
+            EarthShock_Timer = 2000;
+            FullFillment_Timer = 15000;
+            Blink_Timer = 8000 + rand()%12000;
+            Invisible_Timer = 500;
 
-            WhirlWind = false;
-            AggroReset = false;
+            Images75 = false;
+            Images50 = false;
+            Images25 = false;
+            Invisible = false;
+
+            me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+            me->SetVisible(true);
+
+            if (IsImage)
+                me->setDeathState(JUST_DIED);
+        }
+
+        void KilledUnit(Unit* /*victim*/)
+        {
+            DoScriptText(RAND(SAY_SLAY1, SAY_SLAY2, SAY_SLAY3), me);
+        }
+
+        void JustDied(Unit* /*Killer*/)
+        {
+            if (!IsImage)
+                DoScriptText(SAY_DEATH, me);
         }
 
         void EnterCombat(Unit * /*who*/)
         {
+            if (IsImage || Images75)
+                return;
+            DoScriptText(RAND(SAY_AGGRO1, SAY_AGGRO2, SAY_AGGRO3), me);
         }
 
         void UpdateAI(const uint32 diff)
@@ -229,76 +124,218 @@ public:
             if (!UpdateVictim())
                 return;
 
-            if (!WhirlWind && WhirlWind_Timer <= diff)
+            //ArcaneExplosion_Timer
+            if (ArcaneExplosion_Timer <= diff)
             {
-                DoCast(me, SPELL_WHIRLWINDADD);
-                WhirlWind = true;
-                WhirlWind_Timer = 25000 + rand()%15000;
-                WhirlWindEnd_Timer = 15000;
-            } else WhirlWind_Timer -= diff;
+                DoCast(me->getVictim(), SPELL_ARCANE_EXPLOSION);
+                ArcaneExplosion_Timer = 8000 + rand()%10000;
+            } else ArcaneExplosion_Timer -= diff;
 
-            if (WhirlWind)
+            //If we are within range melee the target
+            if (me->IsWithinMeleeRange(me->getVictim()))
             {
-                if (WhirlWindRandom_Timer <= diff)
+                //Make sure our attack is ready and we arn't currently casting
+                if (me->isAttackReady() && !me->IsNonMeleeSpellCasted(false))
                 {
-                    //Attack random Gamers
-                    Unit *pTarget = NULL;
-                    pTarget = SelectTarget(SELECT_TARGET_RANDOM, 1);
-                    if (pTarget)
-                    me->AddThreat(pTarget, 1.0f);
-                    me->TauntApply(pTarget);
-                    AttackStart(pTarget);
-
-                    WhirlWindRandom_Timer = 3000 + rand()%4000;
-                } else WhirlWindRandom_Timer -= diff;
-
-                if (WhirlWindEnd_Timer <= diff)
+                    me->AttackerStateUpdate(me->getVictim());
+                    me->resetAttackTimer();
+                }
+            }else
+            {
+                //EarthShock_Timer
+                if (EarthShock_Timer <= diff)
                 {
-                    WhirlWind = false;
-                } else WhirlWindEnd_Timer -= diff;
+                    DoCast(me->getVictim(), SPELL_EARTH_SHOCK);
+                    EarthShock_Timer = 1000;
+                } else EarthShock_Timer -= diff;
             }
 
-            if (!WhirlWind)
+            //Blink_Timer
+            if (Blink_Timer <= diff)
             {
-                if (AggroReset_Timer <= diff)
+                //DoCast(me, SPELL_BLINK);
+                switch (urand(0, 2))
                 {
-                    //Attack random Gamers
-                    Unit *pTarget = NULL;
-                    pTarget = SelectTarget(SELECT_TARGET_RANDOM, 1);
-                    if (pTarget)
-                    me->AddThreat(pTarget, 1.0f);
-                    me->TauntApply(pTarget);
-                    AttackStart(pTarget);
+                    case 0:
+                        me->GetMap()->CreatureRelocation(me, -8340.782227f, 2083.814453f, 125.648788f, 0.0f);
+                        DoResetThreat();
+                        break;
+                    case 1:
+                        me->GetMap()->CreatureRelocation(me, -8341.546875f, 2118.504639f, 133.058151f, 0.0f);
+                        DoResetThreat();
+                        break;
+                    case 2:
+                        me->GetMap()->CreatureRelocation(me, -8318.822266f, 2058.231201f, 133.058151f, 0.0f);
+                        DoResetThreat();
+                        break;
+                }
+                DoStopAttack();
 
-                    AggroReset = true;
-                    AggroReset_Timer = 2000 + rand()%3000;
-                } else AggroReset_Timer -= diff;
+                Blink_Timer= 20000 + rand()%20000;
+            } else Blink_Timer -= diff;
 
-                if (KnockBack_Timer <= diff)
-                {
-                    DoCast(me, SPELL_WHIRLWINDADD);
-                    KnockBack_Timer = 10000 + rand()%10000;
-                } else KnockBack_Timer -= diff;
-            }
+            int procent = (int) (me->GetHealthPct() + 0.5f);
 
-            if (AggroReset)
+            //Summoning 2 Images and teleporting to a random position on 75% health
+            if ((!Images75 && !IsImage) && (procent <= 75 && procent > 70))
+                DoSplit(75);
+
+            //Summoning 2 Images and teleporting to a random position on 50% health
+            if ((!Images50 && !IsImage) && (procent <= 50 && procent > 45))
+                DoSplit(50);
+
+            //Summoning 2 Images and teleporting to a random position on 25% health
+            if ((!Images25 && !IsImage) && (procent <= 25 && procent > 20))
+                DoSplit(25);
+
+            //Invisible_Timer
+            if (Invisible)
             {
-                if (AggroResetEnd_Timer <= diff)
+                if (Invisible_Timer <= diff)
                 {
-                    AggroReset = false;
-                    AggroResetEnd_Timer = 5000;
-                    AggroReset_Timer = 30000 + rand()%10000;
-                } else AggroResetEnd_Timer -= diff;
+                    //Making Skeram visible after telporting
+                    me->SetVisible(true);
+                    me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+
+                    Invisible_Timer = 2500;
+                    Invisible = false;
+                } else Invisible_Timer -= diff;
             }
 
             DoMeleeAttackIfReady();
         }
+
+        void DoSplit(int atPercent /* 75 50 25 */)
+        {
+            DoScriptText(SAY_SPLIT, me);
+
+            ov_mycoordinates *place1 = new ov_mycoordinates(-8340.782227f, 2083.814453f, 125.648788f, 0);
+            ov_mycoordinates *place2 = new ov_mycoordinates(-8341.546875f, 2118.504639f, 133.058151f, 0);
+            ov_mycoordinates *place3 = new ov_mycoordinates(-8318.822266f, 2058.231201f, 133.058151f, 0);
+
+            ov_mycoordinates *bossc=place1, *i1=place2, *i2=place3;
+
+            switch (urand(0, 2))
+            {
+                case 0:
+                    bossc=place1;
+                    i1=place2;
+                    i2=place3;
+                    break;
+                case 1:
+                    bossc=place2;
+                    i1=place1;
+                    i2=place3;
+                    break;
+                case 2:
+                    bossc=place3;
+                    i1=place1;
+                    i2=place2;
+                    break;
+            }
+
+            for (uint16 i = 0; i < 41; ++i)
+            {
+                if (Player *pTarget = CAST_PLR(SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true)))
+                {
+                    if (Group *pGrp = pTarget->GetGroup())
+                        for (uint8 ico = 0; ico < TARGETICONCOUNT; ++ico)
+                        {
+                            //if (grp->m_targetIcons[ico] == me->GetGUID()) -- private member :(
+                            pGrp->SetTargetIcon(ico, 0, 0);
+                        }
+
+                    break;
+                }
+            }
+
+            me->RemoveAllAuras();
+            me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+            me->SetVisible(false);
+            me->GetMap()->CreatureRelocation(me, bossc->x, bossc->y, bossc->z, bossc->r);
+            Invisible = true;
+            DoResetThreat();
+            DoStopAttack();
+
+            switch (atPercent)
+            {
+                case 75: Images75 = true; break;
+                case 50: Images50 = true; break;
+                case 25: Images25 = true; break;
+            }
+
+            Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0);
+
+            Creature *Image1 = me->SummonCreature(15263, i1->x, i1->y, i1->z, i1->r, TEMPSUMMON_CORPSE_DESPAWN, 30000);
+            if (Image1)
+            {
+                Image1->SetMaxHealth(me->GetMaxHealth() / 5);
+                Image1->SetHealth(me->GetHealth() / 5);
+                if (pTarget)
+                    Image1->AI()->AttackStart(pTarget);
+                CAST_AI(boss_skeram::boss_skeramAI, Image1->AI())->IsImage = true;
+            }
+
+            Creature *Image2 = me->SummonCreature(15263, i2->x, i2->y, i2->z, i2->r, TEMPSUMMON_CORPSE_DESPAWN, 30000);
+            if (Image2)
+            {
+                Image2->SetMaxHealth(me->GetMaxHealth() / 5);
+                Image2->SetHealth(me->GetHealth() / 5);
+                if (pTarget)
+                    Image2->AI()->AttackStart(pTarget);
+                CAST_AI(boss_skeram::boss_skeramAI, Image2->AI())->IsImage = true;
+            }
+            Invisible = true;
+            delete place1;
+            delete place2;
+            delete place3;
+        }
+
     };
 
 };
 
-void AddSC_boss_sartura()
+class spell_skeram_teleport : public SpellScriptLoader
 {
-    new boss_sartura();
-    new mob_sartura_royal_guard();
+    public:
+        spell_skeram_teleport() : SpellScriptLoader("spell_skeram_teleport") { }
+
+        class spell_skeram_teleport_SpellScript : public SpellScript
+        {
+            PrepareSpellScript(spell_skeram_teleport_SpellScript);
+
+            void HandleScript(SpellEffIndex effIndex)
+            {
+                PreventHitDefaultEffect(effIndex);
+
+                float targetX = GetHitUnit()->GetPositionX();
+                float targetY = GetHitUnit()->GetPositionY();
+                float targetZ = GetHitUnit()->GetPositionZ();
+                GetHitUnit()->DeleteThreatList();
+                GetCaster()->DeleteThreatList();
+
+                // Teleport target to casters current location
+                if (Creature* target = GetHitUnit()->ToCreature())
+                    target->GetMap()->CreatureRelocation(target, GetCaster()->GetPositionX(), GetCaster()->GetPositionY(), GetCaster()->GetPositionZ(), 0);
+                // Teleport caster to targets stored location
+                if (Creature* caster = GetCaster()->ToCreature())
+                    caster->GetMap()->CreatureRelocation(caster, targetX, targetY, targetZ, 0);
+            }
+
+            void Register()
+            {
+                OnEffect += SpellEffectFn(spell_skeram_teleport_SpellScript::HandleScript, EFFECT_0, SPELL_EFFECT_DUMMY);
+            }
+        };
+
+        SpellScript* GetSpellScript() const
+        {
+            return new spell_skeram_teleport_SpellScript();
+        }
+};
+
+void AddSC_boss_skeram()
+{
+    new boss_skeram();
+    new spell_skeram_teleport();
 }

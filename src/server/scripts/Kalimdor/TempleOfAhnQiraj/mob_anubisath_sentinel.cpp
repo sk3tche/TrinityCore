@@ -23,6 +23,8 @@ SDComment: Shadow storm is not properly implemented in core it should only pTarg
 SDCategory: Temple of Ahn'Qiraj
 EndScriptData */
 
+// THIS IS FUCKING HORRIBLE, PROBABLY THE WORST SCRIPT I HAVE EVER SEEN. OH MY GOD
+
 #include "ScriptPCH.h"
 #include "WorldPacket.h"
 
