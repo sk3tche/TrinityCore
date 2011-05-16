@@ -678,7 +678,6 @@ void ArenaTeam::FinishGame(int32 mod)
 
 int32 ArenaTeam::CalculateRatingChange(uint32 winningRating, uint32 lostRating, bool won)
 {
-    // Called when the team has won
     // Own team rating versus opponents matchmaker rating
     int32 mod = GetRatingMod(winningRating, lostRating, won);
 

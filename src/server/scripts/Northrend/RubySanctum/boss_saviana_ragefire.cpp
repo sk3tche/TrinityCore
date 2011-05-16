@@ -106,6 +106,13 @@ class boss_saviana_ragefire : public CreatureScript
             {
                 BossAI::JustDied(killer);
                 me->PlayDirectSound(SOUND_ID_DEATH); // Only plays sound, no text
+                /*
+                Update Type: Values
+                GUID: Full: 0xF1100318FE0018C9 Flags: Flag01, Flag10, Flag20, Flag40, Flag80 Type: GameObject Entry: 203006 Low: 6345
+                Block Count: 1
+                Block Value 9: 49/6.866362E-44
+                Block Value 17: -16777216/-1.701412E+38
+                */
             }
 
             void MovementInform(uint32 type, uint32 point)

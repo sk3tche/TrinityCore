@@ -36,7 +36,30 @@ class boss_general_zarithrian : public CreatureScript
         }
 };
 
+/*
+39794 casts 74398
+*/
+
+class npc_onyx_flamecaller : public CreatureScript
+{
+    public:
+        npc_onyx_flamecaller() : CreatureScript("npc_onyx_flamecaller") { }
+
+        struct npc_onyx_flamecallerAI : public ScriptedAI
+        {
+            npc_onyx_flamecallerAI(Creature* creature) : ScriptedAI(creature)
+            {
+            }
+        };
+
+        CreatureAI* GetAI(Creature* creature) const
+        {
+            return new npc_onyx_flamecallerAI(creature);
+        }
+};
+
 void AddSC_boss_general_zarithrian()
 {
     new boss_general_zarithrian();
+    new npc_onyx_flamecaller();
 }
