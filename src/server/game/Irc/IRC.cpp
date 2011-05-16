@@ -159,15 +159,14 @@ bool IrcBot::HookChannel(char const* channel)
             _hookedChannels.push_back(channel);
             return true;
         }
-        else
-            error_msg = "Channel does not exist!";
     }
+    error_msg = "Channel does not exist!";
     return false;
 }
 
 bool IrcBot::UnhookChannel(char const* channel)
 {
-    bool found;
+    bool found = false;
     for (_itr = _hookedChannels.begin(); _itr != _hookedChannels.end(); _itr++)
     {
         if (!stricmp(channel, *_itr))
@@ -235,7 +234,7 @@ void IrcBot::SockRecv()
                 // Join Channel
                 //  - SJGR has no MOTD, so we need to look for MOTD File is Missing
                 //  - Also make sure that it is not a PRIVMSG
-                if(reply.find("MOTD File is missing") != std::string::npos &&
+                if(reply.find("252") != std::string::npos &&
                     reply.find("PRIVMSG") == std::string::npos)
                 {
                     SendData(IDENTIFY, IRC_PASS);
@@ -246,13 +245,19 @@ void IrcBot::SockRecv()
                 sLog->outString("<IrcBot> - Received Data: %s", reply.c_str());
 
                 std::vector<char const*> args;
-                SplitArgs(reply.c_str(), args);
+                if(reply.find("PRIVMSG") != std::string::npos)
+                    SplitArgs(reply.c_str(), args);
+
+                if(args.size() < 1)
+                    return;
+
+                for(_itr = args.begin(); _itr != args.end(); _itr++)
+                    sLog->outString("<IrcBot> - Args: %s", *_itr);
 
                 if (!stricmp(args[1], "PRIVMSG") && !stricmp(args[2], IRC_CHANNEL) && args[3][1] == '!')
                 {
                     std::string command = args[3];
                     command.erase(0, 2); // erase : and ! from the commands
-                    
                     std::vector<char const*> params;
                     params.push_back(command.c_str());
 
@@ -275,12 +280,11 @@ void IrcBot::SockRecv()
 
 void IrcBot::SplitArgs(char const* arg, std::vector<char const*> & elems)
 {
-    char * pch;
-    pch = strtok ((char *)arg," ");
+    char * pch = strtok((char *)arg, " ");
     while (pch != NULL)
     {
         elems.push_back(pch);
-        pch = strtok (NULL, " ");
+        pch = strtok(NULL, " ");
     }
 }
 
@@ -325,8 +329,8 @@ bool IrcBot::SendData(MessageType type, char const* data)
 
 void IrcBot::ParseCommand(std::string nickName, std::vector<char const*> args)
 {
-    if (!args.size())
-        return;
+    for(_itr = args.begin(); _itr != args.end(); _itr++)
+        sLog->outString(*_itr);
 
     if (!stricmp(args[0], "channel"))
     {
