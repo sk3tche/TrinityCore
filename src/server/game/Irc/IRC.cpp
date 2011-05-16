@@ -242,8 +242,6 @@ void IrcBot::SockRecv()
                     return;
                 }
 
-                sLog->outString("<IrcBot> - Received Data: %s", reply.c_str());
-
                 std::vector<char const*> args;
                 if(reply.find("PRIVMSG") != std::string::npos)
                     SplitArgs(reply.c_str(), args);
@@ -251,19 +249,19 @@ void IrcBot::SockRecv()
                 if(args.size() < 1)
                     return;
 
-                for(_itr = args.begin(); _itr != args.end(); _itr++)
-                    sLog->outString("<IrcBot> - Args: %s", *_itr);
-
                 if (!stricmp(args[1], "PRIVMSG") && !stricmp(args[2], IRC_CHANNEL) && args[3][1] == '!')
                 {
                     std::string command = args[3];
                     command.erase(0, 2); // erase : and ! from the commands
 
+                    if(command[command.length()-1] == '\r')
+                        command.erase(command.length()-1); // remove the trailing newline
+
                     std::vector<char const*> params;
                     for (_itr = args.begin() + 4; _itr != args.end(); _itr++)
                         params.push_back(*_itr);
 
-                    // Get nick (In between first : and first !
+                    // Get nick (Inbetween first : and first !)
                     std::string nick = args[0];
                     nick.erase(0, 1);
                     std::stringstream nstream;
@@ -316,7 +314,6 @@ bool IrcBot::SendData(MessageType type, char const* data)
     if (IsConnected())
     {
         std::string temp = ss.str();
-        sLog->outString("<IrcBot> - Sending data: %s", temp.c_str());
         temp += "\r\n";
         char const* message = temp.c_str();
         if (send(_socket, message, strlen(message), 0) == -1)
