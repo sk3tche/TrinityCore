@@ -258,9 +258,8 @@ void IrcBot::SockRecv()
                 {
                     std::string command = args[3];
                     command.erase(0, 2); // erase : and ! from the commands
-                    std::vector<char const*> params;
-                    params.push_back(command.c_str());
 
+                    std::vector<char const*> params;
                     for (_itr = args.begin() + 4; _itr != args.end(); _itr++)
                         params.push_back(*_itr);
 
@@ -271,7 +270,7 @@ void IrcBot::SockRecv()
                     for (uint32 i = 0; nick[i] != '!'; i++)
                         nstream << nick[i];
                     std::string ntemp = nstream.str();
-                    ParseCommand(ntemp.c_str(), params);
+                    ParseCommand(ntemp.c_str(), command.c_str(), params);
                 }
             }
         }
@@ -327,57 +326,54 @@ bool IrcBot::SendData(MessageType type, char const* data)
     return true;
 }
 
-void IrcBot::ParseCommand(std::string nickName, std::vector<char const*> args)
+void IrcBot::ParseCommand(std::string nickName, char const* cmd, std::vector<char const*> args)
 {
-    for(_itr = args.begin(); _itr != args.end(); _itr++)
-        sLog->outString(*_itr);
-
-    if (!stricmp(args[0], "channel"))
+    if (!stricmp(cmd, "channel"))
     {
-        if (args.size() < 3)
+        if (args.size() < 2)
             SendData(PRIVMSG, "Not enough arguments! !channel HOOKED_CHANNEL message");
-        else if (!IsChannelHooked(args[1]))
+        else if (!IsChannelHooked(args[0]))
             SendData(PRIVMSG, "Channel is not hooked!");
         else
         {
             std::stringstream ss;
-            for (_itr = args.begin()+2; _itr != args.end(); _itr++)
+            for (_itr = args.begin()+1; _itr != args.end(); _itr++)
                 ss << *_itr << " ";
             std::string temp = ss.str();
             if (ChannelMgr* cMgr = channelMgr(0))
             {
-                if (Channel* chn = cMgr->GetChannel(args[1], 0, false))
+                if (Channel* chn = cMgr->GetChannel(args[0], 0, false))
                     chn->SayFromIRC(nickName.c_str(), temp.c_str());
             }
        }
     } 
-    else if (!stricmp(args[0], "hook"))
+    else if (!stricmp(cmd, "hook"))
     {
-        if (args.size() < 2)
+        if (args.size() < 1)
             SendData(PRIVMSG, "Not enough arguments! !hook CHANNEL_TO_HOOK");
-        else if (IsChannelHooked(args[1]))
+        else if (IsChannelHooked(args[0]))
             SendData(PRIVMSG, "Channel is already hooked!");
         else
         {
-            if (HookChannel(args[1]))
+            if (HookChannel(args[0]))
                 SendData(PRIVMSG, "Channel successfully hooked!");
             else
                 SendData(PRIVMSG, error_msg.c_str());
         }
     }
-    else if (!stricmp(args[0], "unhook"))
+    else if (!stricmp(cmd, "unhook"))
     {
-        if (args.size() < 2)
+        if (args.size() < 1)
             SendData(PRIVMSG, "Not enough arguments! !unhook CHANNEL_TO_UNHOOK");
         else
         {
-            if (UnhookChannel(args[1]))
+            if (UnhookChannel(args[0]))
                 SendData(PRIVMSG, "Channel successfully unhooked!");
             else
                 SendData(PRIVMSG, error_msg.c_str());
         }
     }
-    else if (!stricmp(args[0], "hooked"))
+    else if (!stricmp(cmd, "hooked"))
     {
         if (_hookedChannels.size() <= 0)
             SendData(PRIVMSG, "No channels are hooked!");
@@ -394,23 +390,23 @@ void IrcBot::ParseCommand(std::string nickName, std::vector<char const*> args)
             SendData(PRIVMSG, temp.c_str());
         }
     }
-    else if (!stricmp(args[0], "restart"))
+    else if (!stricmp(cmd, "restart"))
     {
-        if(args.size() < 2)
+        if(args.size() < 1)
             SendData(PRIVMSG, "Not enough arguments! !restart [irc | core]");
-        else if (!stricmp(args[1], "irc"))
+        else if (!stricmp(args[0], "irc"))
         {
             // Just disconnect, the master function will automatically
             // restart the irc once it disconnects
             Disconnect();
         }
-        else if (!stricmp(args[1], "core"))
+        else if (!stricmp(args[0], "core"))
         {
             int restartTime = 10; // Default time 10 seconds if not supplied.
-            if(args.size() < 3)
+            if(args.size() < 2)
                 sWorld->ShutdownServ(restartTime, SHUTDOWN_MASK_RESTART, RESTART_EXIT_CODE);
             else
-                sWorld->ShutdownServ((int)args[2], SHUTDOWN_MASK_RESTART, RESTART_EXIT_CODE);
+                sWorld->ShutdownServ((int)args[1], SHUTDOWN_MASK_RESTART, RESTART_EXIT_CODE);
         }
         else
             SendData(PRIVMSG, "Invalid argument! !restart [irc | core]");
