@@ -5,6 +5,8 @@
 #include <ace/Activation_Queue.h>
 #include <ace/Method_Request.h>
 
+#define FLUSH_TIMEOUT 5
+
 class DelayExecutor : protected ACE_Task_Base
 {
     public:
