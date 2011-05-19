@@ -220,7 +220,8 @@ void Player::UpdateArmor()
 
     SetArmor(int32(value));
 
-    if (Pet* pet = GetPet())
+    Pet *pet = GetPet();
+    if (pet)
         pet->UpdateArmor();
 
     UpdateAttackPowerAndDamage();                           // armor dependent auras update for SPELL_AURA_MOD_ATTACK_POWER_OF_ARMOR
@@ -307,79 +308,104 @@ void Player::UpdateAttackPowerAndDamage(bool ranged)
                 val2 = level + GetStat(STAT_AGILITY) - 10.0f;
                 break;
             case CLASS_DRUID:
-            {
                 switch (GetShapeshiftForm())
                 {
                     case FORM_CAT:
                     case FORM_BEAR:
                     case FORM_DIREBEAR:
-                        val2 = 0.0f;
-                        break;
+                        val2 = 0.0f; break;
                     default:
-                        val2 = GetStat(STAT_AGILITY) - 10.0f;
-                        break;
+                        val2 = GetStat(STAT_AGILITY) - 10.0f; break;
                 }
                 break;
-            }
-            default:
-                val2 = GetStat(STAT_AGILITY) - 10.0f;
-                break;
+            default: val2 = GetStat(STAT_AGILITY) - 10.0f; break;
         }
     }
     else
     {
         switch (getClass())
         {
-            case CLASS_WARRIOR:      val2 = level * 3.0f + GetStat(STAT_STRENGTH) * 2.0f                  - 20.0f; break;
-            case CLASS_PALADIN:      val2 = level * 3.0f + GetStat(STAT_STRENGTH) * 2.0f                  - 20.0f; break;
-            case CLASS_DEATH_KNIGHT: val2 = level * 3.0f + GetStat(STAT_STRENGTH) * 2.0f                  - 20.0f; break;
-            case CLASS_ROGUE:        val2 = level * 2.0f + GetStat(STAT_STRENGTH) + GetStat(STAT_AGILITY) - 20.0f; break;
-            case CLASS_HUNTER:       val2 = level * 2.0f + GetStat(STAT_STRENGTH) + GetStat(STAT_AGILITY) - 20.0f; break;
-            case CLASS_SHAMAN:       val2 = level * 2.0f + GetStat(STAT_STRENGTH) + GetStat(STAT_AGILITY) - 20.0f; break;
+            case CLASS_WARRIOR:
+                val2 = level * 3.0f + GetStat(STAT_STRENGTH) * 2.0f - 20.0f;
+                break;
+            case CLASS_PALADIN:
+                val2 = level * 3.0f + GetStat(STAT_STRENGTH) * 2.0f - 20.0f;
+                break;
+            case CLASS_DEATH_KNIGHT:
+                val2 = level * 3.0f + GetStat(STAT_STRENGTH) * 2.0f - 20.0f;
+                break;
+            case CLASS_ROGUE:
+                val2 = level * 2.0f + GetStat(STAT_STRENGTH) + GetStat(STAT_AGILITY) - 20.0f;
+                break;
+            case CLASS_HUNTER:
+                val2 = level * 2.0f + GetStat(STAT_STRENGTH) + GetStat(STAT_AGILITY) - 20.0f;
+                break;
+            case CLASS_SHAMAN:
+                val2 = level * 2.0f + GetStat(STAT_STRENGTH) + GetStat(STAT_AGILITY) - 20.0f;
+                break;
             case CLASS_DRUID:
             {
-                ShapeshiftForm form = GetShapeshiftForm();
                 // Check if Predatory Strikes is skilled
                 float mLevelMult = 0.0f;
-                switch (form)
+                float weapon_bonus = 0.0f;
+                if (IsInFeralForm())
                 {
-                    case FORM_CAT:
-                    case FORM_BEAR:
-                    case FORM_DIREBEAR:
-                    case FORM_MOONKIN:
+                    Unit::AuraEffectList const& mDummy = GetAuraEffectsByType(SPELL_AURA_DUMMY);
+                    for (Unit::AuraEffectList::const_iterator itr = mDummy.begin(); itr != mDummy.end(); ++itr)
                     {
-                        Unit::AuraEffectList const& mDummy = GetAuraEffectsByType(SPELL_AURA_DUMMY);
-                        for (Unit::AuraEffectList::const_iterator itr = mDummy.begin(); itr != mDummy.end(); ++itr)
+                        AuraEffect* aurEff = *itr;
+                        if (aurEff->GetSpellProto()->SpellIconID == 1563)
                         {
-                            // Predatory Strikes (effect 0)
-                            if ((*itr)->GetEffIndex() == 0 && (*itr)->GetSpellProto()->SpellIconID == 1563)
+                            switch (aurEff->GetEffIndex())
                             {
-                                mLevelMult = CalculatePctN(1.0f, (*itr)->GetAmount());
-                                break;
+                                case 0: // Predatory Strikes (effect 0)
+                                    mLevelMult = CalculatePctN(1.0f, aurEff->GetAmount());
+                                    break;
+                                case 1: // Predatory Strikes (effect 1)
+                                    if (Item* mainHand = m_items[EQUIPMENT_SLOT_MAINHAND])
+                                    {
+                                        // also gains % attack power from equipped weapon
+                                        ItemTemplate const *proto = mainHand->GetTemplate();
+                                        if (!proto)
+                                            continue;
+
+                                        weapon_bonus = CalculatePctN(float(proto->getFeralBonus()), aurEff->GetAmount());
+                                    }
+                                    break;
+                                default:
+                                    break;
                             }
                         }
-                        break;
                     }
-                    default: break;
                 }
 
-                switch (form)
+                switch (GetShapeshiftForm())
                 {
                     case FORM_CAT:
-                        val2 = getLevel() * (mLevelMult + 2.0f) + GetStat(STAT_STRENGTH) * 2.0f + GetStat(STAT_AGILITY) - 20.0f + m_baseFeralAP; break;
+                        val2 = getLevel() * (mLevelMult + 2.0f) + GetStat(STAT_STRENGTH) * 2.0f + GetStat(STAT_AGILITY) - 20.0f + weapon_bonus + m_baseFeralAP;
+                        break;
                     case FORM_BEAR:
                     case FORM_DIREBEAR:
-                        val2 = getLevel() * (mLevelMult + 3.0f) + GetStat(STAT_STRENGTH) * 2.0f - 20.0f + m_baseFeralAP; break;
+                        val2 = getLevel() * (mLevelMult + 3.0f) + GetStat(STAT_STRENGTH) * 2.0f - 20.0f + weapon_bonus + m_baseFeralAP;
+                        break;
                     case FORM_MOONKIN:
-                        val2 = getLevel() * (mLevelMult + 1.5f) + GetStat(STAT_STRENGTH) * 2.0f - 20.0f + m_baseFeralAP; break;
+                        val2 = getLevel() * (mLevelMult + 1.5f) + GetStat(STAT_STRENGTH) * 2.0f - 20.0f + m_baseFeralAP;
+                        break;
                     default:
-                        val2 = GetStat(STAT_STRENGTH) * 2.0f - 20.0f; break;
+                        val2 = GetStat(STAT_STRENGTH) * 2.0f - 20.0f;
+                        break;
                 }
                 break;
             }
-            case CLASS_MAGE:    val2 = GetStat(STAT_STRENGTH) - 10.0f; break;
-            case CLASS_PRIEST:  val2 = GetStat(STAT_STRENGTH) - 10.0f; break;
-            case CLASS_WARLOCK: val2 = GetStat(STAT_STRENGTH) - 10.0f; break;
+            case CLASS_MAGE:
+                val2 =  GetStat(STAT_STRENGTH) - 10.0f;
+                break;
+            case CLASS_PRIEST:
+                val2 = GetStat(STAT_STRENGTH) - 10.0f;
+                break;
+            case CLASS_WARLOCK:
+                val2 = GetStat(STAT_STRENGTH) - 10.0f;
+                break;
         }
     }
 
@@ -602,25 +628,16 @@ void Player::UpdateParryPercentage()
 {
     // No parry
     float value = 0.0f;
-    uint32 pclass = getClass()-1;
-    float dr_cap = PlayerAvoidanceDiminsihingData[pclass].parry_cap;
-    float dr_k = PlayerAvoidanceDiminsihingData[pclass].k_value;
-
-    if (CanParry() && dr_cap > 0.0f)
+    if (CanParry())
     {
         // Base parry
-        float nondiminishing  = 5.0f;
-
-        // Parry from rating
-        float diminishing = GetRatingBonusValue(CR_PARRY);
-
-        // Modify value from defense skill (only bonus from defense rating diminishes)
-        nondiminishing += (GetSkillValue(SKILL_DEFENSE) - GetMaxSkillValueForLevel()) * 0.04f;
-        diminishing += (int32(GetRatingBonusValue(CR_DEFENSE_SKILL))) * 0.04f;
+        value  = 5.0f;
+        // Modify value from defense skill
+        value += (int32(GetDefenseSkillValue()) - int32(GetMaxSkillValueForLevel())) * 0.04f;
         // Parry from SPELL_AURA_MOD_PARRY_PERCENT aura
-        nondiminishing += GetTotalAuraModifier(SPELL_AURA_MOD_PARRY_PERCENT);
-        // apply diminishing formula to diminishing parry chance
-        value = nondiminishing + diminishing * dr_cap / (diminishing + dr_cap * dr_k);
+        value += GetTotalAuraModifier(SPELL_AURA_MOD_PARRY_PERCENT);
+        // Parry from rating
+        value += GetRatingBonusValue(CR_PARRY);
         value = value < 0.0f ? 0.0f : value;
     }
     SetStatFloatValue(PLAYER_PARRY_PERCENTAGE, value);
@@ -628,29 +645,15 @@ void Player::UpdateParryPercentage()
 
 void Player::UpdateDodgePercentage()
 {
-    uint32 pclass = getClass()-1;
-    float diminishing = 0.0f, nondiminishing = 0.0f;
-    float dr_k = PlayerAvoidanceDiminsihingData[pclass].k_value;
-    float dr_cap = PlayerAvoidanceDiminsihingData[pclass].dodge_cap;
-
     // Dodge from agility
-    GetDodgeFromAgility(diminishing, nondiminishing);
-
-    // Modify value from defense skill (only bonus from defense rating diminishes)
-    nondiminishing += (GetSkillValue(SKILL_DEFENSE) - GetMaxSkillValueForLevel()) * 0.04f;
-    diminishing += (int32(GetRatingBonusValue(CR_DEFENSE_SKILL))) * 0.04f;
-
+    float value = GetDodgeFromAgility();
+    // Modify value from defense skill
+    value += (int32(GetDefenseSkillValue()) - int32(GetMaxSkillValueForLevel())) * 0.04f;
     // Dodge from SPELL_AURA_MOD_DODGE_PERCENT aura
-    nondiminishing += GetTotalAuraModifier(SPELL_AURA_MOD_DODGE_PERCENT);
-
+    value += GetTotalAuraModifier(SPELL_AURA_MOD_DODGE_PERCENT);
     // Dodge from rating
-    diminishing += GetRatingBonusValue(CR_DODGE);
-
-    // apply diminishing formula to diminishing dodge chance
-    float value = nondiminishing + (diminishing * dr_cap / (diminishing + dr_cap * dr_k));
-
+    value += GetRatingBonusValue(CR_DODGE);
     value = value < 0.0f ? 0.0f : value;
-
     SetStatFloatValue(PLAYER_DODGE_PERCENTAGE, value);
 }
 

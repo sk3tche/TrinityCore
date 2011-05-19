@@ -811,7 +811,7 @@ void Spell::EffectDummy(SpellEffIndex effIndex)
                     };
 
                     // get remaining damage of old Deep Wound aura
-                    AuraEffect* deepWound = unitTarget->GetAuraEffect(12721, 0);
+                    AuraEffect* deepWound = unitTarget->GetAuraEffect(12721, 0, m_caster->GetGUID());
                     if (deepWound)
                     {
                         int32 remainingTicks = deepWound->GetBase()->GetDuration() / deepWound->GetAmplitude();
@@ -1390,11 +1390,12 @@ void Spell::EffectDummy(SpellEffIndex effIndex)
                     Unit::AttackerSet attackers = unitTarget->getAttackers();
 
                     // selected from list 3
-                    for (uint32 i = 0; i < std::min(size_t(3), attackers.size()); ++i)
+                    uint32 maxTargets = std::min<uint32>(3, attackers.size());
+                    for (uint32 i = 0; i < maxTargets; ++i)
                     {
                         Unit::AttackerSet::iterator aItr = attackers.begin();
-                        std::advance(aItr, rand() % attackers.size());
-                        AddUnitTarget((*aItr), 1);
+                        std::advance(aItr, urand(0, attackers.size() - 1));
+                        AddUnitTarget(*aItr, 1);
                         attackers.erase(aItr);
                     }
 
@@ -3013,14 +3014,17 @@ void Spell::EffectSummonType(SpellEffIndex effIndex)
                 // Summons a vehicle, but doesn't force anyone to enter it (see SUMMON_CATEGORY_VEHICLE)
                 case SUMMON_TYPE_VEHICLE:
                 case SUMMON_TYPE_VEHICLE2:
-                    if (m_originalCaster)
-                        summon = m_caster->GetMap()->SummonCreature(entry, pos, properties, duration, m_originalCaster);
+                    summon = m_caster->GetMap()->SummonCreature(entry, pos, properties, duration, m_originalCaster);
                     break;
                 case SUMMON_TYPE_TOTEM:
                 {
                     summon = m_caster->GetMap()->SummonCreature(entry, pos, properties, duration, m_originalCaster);
                     if (!summon || !summon->isTotem())
                         return;
+
+                    // Mana Tide Totem
+                    if (m_spellInfo->Id == 16190)
+                        damage = m_caster->CountPctFromMaxHealth(10);
 
                     if (damage)                                            // if not spell info, DB values used
                     {

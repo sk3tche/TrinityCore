@@ -127,7 +127,7 @@ bool ArenaTeam::AddMember(const uint64& playerGuid)
     }
 
     // Check if player is already in a similar arena team
-    if (player && player->GetArenaTeamId(GetSlot()) || Player::GetArenaTeamIdFromDB(playerGuid, GetType()) != ARENA_TYPE_NONE)
+    if ((player && player->GetArenaTeamId(GetSlot())) || Player::GetArenaTeamIdFromDB(playerGuid, GetType()) != ARENA_TYPE_NONE)
     {
         sLog->outError("Arena: Player %s (guid: %u) already has an arena team of type %u", playerName.c_str(), GUID_LOPART(playerGuid), GetType());
         return false;

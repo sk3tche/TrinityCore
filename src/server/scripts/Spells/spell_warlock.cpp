@@ -224,7 +224,7 @@ class spell_warl_seed_of_corruption : public SpellScriptLoader
             }
         };
 
-        SpellScript* GetSpellScript() const
+        SpellScript *GetSpellScript() const
         {
             return new spell_warl_seed_of_corruption_SpellScript();
         }
@@ -241,7 +241,7 @@ class spell_warl_banish : public SpellScriptLoader
 
             bool Load()
             {
-                removed = false;
+                _removed = false;
                 return true;
             }
 
@@ -251,18 +251,18 @@ class spell_warl_banish : public SpellScriptLoader
                 {
                     if (target->GetAuraEffect(SPELL_AURA_SCHOOL_IMMUNITY, SPELLFAMILY_WARLOCK, 0, 0x08000000, 0))
                     {
-                        // No need to remove old aura since its removed due to not stack by current Banish aura
+                        //No need to remove old aura since its removed due to not stack by current Banish aura
                         PreventHitDefaultEffect(EFFECT_0);
                         PreventHitDefaultEffect(EFFECT_1);
                         PreventHitDefaultEffect(EFFECT_2);
-                        removed = true;
+                        _removed = true;
                     }
                 }
             }
 
             void RemoveAura()
             {
-                if (removed)
+                if (_removed)
                     PreventHitAura();
             }
 
@@ -272,10 +272,10 @@ class spell_warl_banish : public SpellScriptLoader
                 AfterHit += SpellHitFn(spell_warl_banish_SpellScript::RemoveAura);
             }
 
-            bool removed;
+            bool _removed;
         };
 
-        SpellScript *GetSpellScript() const
+        SpellScript* GetSpellScript() const
         {
             return new spell_warl_banish_SpellScript();
         }

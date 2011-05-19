@@ -962,12 +962,12 @@ void Aura::HandleAuraSpecificMods(AuraApplication const * aurApp, Unit * caster,
                 if (GetSpellProto()->SpellFamilyFlags[0] & 0x10 && GetEffect(EFFECT_0))
                 {
                     // Druid T8 Restoration 4P Bonus
-                    if (AuraEffect const* aurEff = caster->GetAuraEffect(64760, EFFECT_0))
+                    if (caster->HasAura(64760))
                     {
                         int32 heal = GetEffect(EFFECT_0)->GetAmount();
                         caster->CastCustomSpell(target, 64801, &heal, NULL, NULL, true, NULL, GetEffect(EFFECT_0));
                     }
-                } 
+                }
                 break;
             case SPELLFAMILY_MAGE:
                 if (!caster)
@@ -1056,7 +1056,9 @@ void Aura::HandleAuraSpecificMods(AuraApplication const * aurApp, Unit * caster,
                     if (AuraEffect const * aurEff = caster->GetDummyAuraEffect(SPELLFAMILY_PRIEST, 3790, 1))
                     {
                         int32 basepoints0 = aurEff->GetAmount() * GetEffect(0)->GetTotalTicks() * caster->SpellDamageBonus(target, GetSpellProto(), GetEffect(0)->GetAmount(), DOT) / 100;
+                        int32 heal = int32(CalculatePctN(basepoints0, 15));
                         caster->CastCustomSpell(target, 63675, &basepoints0, NULL, NULL, true, NULL, GetEffect(0));
+                        caster->CastCustomSpell(caster, 75999, &heal, NULL, NULL, true, NULL, GetEffect(0));
                     }
                 }
                 // Renew
@@ -1625,14 +1627,14 @@ void Aura::HandleAuraSpecificMods(AuraApplication const * aurApp, Unit * caster,
                 if (apply)
                 {
                     if (target != caster && !target->HealthAbovePct(25))
-                        caster->CastSpell(caster, 200000, true);
+                        caster->CastSpell(caster, 100001, true);
                 }
                 else
                 {
                     if (target != caster)
                         caster->RemoveAurasDueToSpell(GetId());
                     else
-                        caster->RemoveAurasDueToSpell(200000);
+                        caster->RemoveAurasDueToSpell(100001);
                 }
             }
             break;
