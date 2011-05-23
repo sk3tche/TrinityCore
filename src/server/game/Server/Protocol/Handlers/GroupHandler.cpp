@@ -110,11 +110,11 @@ void WorldSession::HandleGroupInviteOpcode(WorldPacket & recv_data)
         return;
     }
 
-    Group *group = GetPlayer()->GetGroup();
+    Group* group = GetPlayer()->GetGroup();
     if (group && group->isBGGroup())
         group = GetPlayer()->GetOriginalGroup();
 
-    Group *group2 = player->GetGroup();
+    Group* group2 = player->GetGroup();
     if (group2 && group2->isBGGroup())
         group2 = player->GetOriginalGroup();
     // player already in another group or invited
@@ -197,7 +197,7 @@ void WorldSession::HandleGroupAcceptOpcode(WorldPacket& recv_data)
     sLog->outDebug(LOG_FILTER_NETWORKIO, "WORLD: Received CMSG_GROUP_ACCEPT");
 
     recv_data.read_skip<uint32>();
-    Group *group = GetPlayer()->GetGroupInvite();
+    Group* group = GetPlayer()->GetGroupInvite();
 
     if (!group)
         return;
@@ -363,7 +363,7 @@ void WorldSession::HandleGroupSetLeaderOpcode(WorldPacket & recv_data)
 {
     sLog->outDebug(LOG_FILTER_NETWORKIO, "WORLD: Received CMSG_GROUP_SET_LEADER");
 
-    Group *group = GetPlayer()->GetGroup();
+    Group* group = GetPlayer()->GetGroup();
     if (!group)
         return;
 
@@ -387,7 +387,7 @@ void WorldSession::HandleGroupDisbandOpcode(WorldPacket & /*recv_data*/)
 {
     sLog->outDebug(LOG_FILTER_NETWORKIO, "WORLD: Received CMSG_GROUP_DISBAND");
 
-    Group *grp = GetPlayer()->GetGroup();
+    Group* grp = GetPlayer()->GetGroup();
     if (!grp)
         return;
 
@@ -410,7 +410,7 @@ void WorldSession::HandleLootMethodOpcode(WorldPacket & recv_data)
 {
     sLog->outDebug(LOG_FILTER_NETWORKIO, "WORLD: Received CMSG_LOOT_METHOD");
 
-    Group *group = GetPlayer()->GetGroup();
+    Group* group = GetPlayer()->GetGroup();
     if (!group)
         return;
 
@@ -520,7 +520,7 @@ void WorldSession::HandleRaidTargetUpdateOpcode(WorldPacket & recv_data)
 {
     sLog->outDebug(LOG_FILTER_NETWORKIO, "WORLD: Received MSG_RAID_TARGET_UPDATE");
 
-    Group *group = GetPlayer()->GetGroup();
+    Group* group = GetPlayer()->GetGroup();
     if (!group)
         return;
 
@@ -550,7 +550,7 @@ void WorldSession::HandleGroupRaidConvertOpcode(WorldPacket & /*recv_data*/)
 {
     sLog->outDebug(LOG_FILTER_NETWORKIO, "WORLD: Received CMSG_GROUP_RAID_CONVERT");
 
-    Group *group = GetPlayer()->GetGroup();
+    Group* group = GetPlayer()->GetGroup();
     if (!group)
         return;
 
@@ -572,7 +572,7 @@ void WorldSession::HandleGroupChangeSubGroupOpcode(WorldPacket & recv_data)
     sLog->outDebug(LOG_FILTER_NETWORKIO, "WORLD: Received CMSG_GROUP_CHANGE_SUB_GROUP");
 
     // we will get correct pointer for group here, so we don't have to check if group is BG raid
-    Group *group = GetPlayer()->GetGroup();
+    Group* group = GetPlayer()->GetGroup();
     if (!group)
         return;
 
@@ -610,7 +610,7 @@ void WorldSession::HandleGroupAssistantLeaderOpcode(WorldPacket & recv_data)
 {
     sLog->outDebug(LOG_FILTER_NETWORKIO, "WORLD: Received CMSG_GROUP_ASSISTANT_LEADER");
 
-    Group *group = GetPlayer()->GetGroup();
+    Group* group = GetPlayer()->GetGroup();
     if (!group)
         return;
 
@@ -631,7 +631,7 @@ void WorldSession::HandlePartyAssignmentOpcode(WorldPacket & recv_data)
 {
     sLog->outDebug(LOG_FILTER_NETWORKIO, "WORLD: Received MSG_PARTY_ASSIGNMENT");
 
-    Group *group = GetPlayer()->GetGroup();
+    Group* group = GetPlayer()->GetGroup();
     if (!group)
         return;
 
@@ -665,7 +665,7 @@ void WorldSession::HandleRaidReadyCheckOpcode(WorldPacket & recv_data)
 {
     sLog->outDebug(LOG_FILTER_NETWORKIO, "WORLD: Received MSG_RAID_READY_CHECK");
 
-    Group *group = GetPlayer()->GetGroup();
+    Group* group = GetPlayer()->GetGroup();
     if (!group)
         return;
 

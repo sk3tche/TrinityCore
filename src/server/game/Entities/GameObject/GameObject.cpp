@@ -255,7 +255,7 @@ bool GameObject::Create(uint32 guidlow, uint32 name_id, Map* map, uint32 phaseMa
 
 void GameObject::Update(uint32 diff)
 {
-    if(!AI())
+    if (!AI())
     {
         if (!AIM_Initialize())
             sLog->outError("Could not initialize GameObjectAI");
@@ -1526,7 +1526,7 @@ void GameObject::Use(Unit* user)
                 Battleground *bg = player->GetBattleground();
                 if (!bg)
                     return;
-                if( player->GetVehicle())
+                if ( player->GetVehicle())
                     return;
                 // BG flag dropped
                 // WS:

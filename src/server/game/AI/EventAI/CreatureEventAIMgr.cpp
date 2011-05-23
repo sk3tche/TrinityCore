@@ -122,7 +122,7 @@ void CreatureEventAIMgr::LoadCreatureEventAI_Summons()
 
     do
     {
-        Field *fields = result->Fetch();
+        Field* fields = result->Fetch();
 
         CreatureEventAI_Summon temp;
 
@@ -176,7 +176,7 @@ void CreatureEventAIMgr::LoadCreatureEventAI_Scripts()
 
     do
     {
-        Field *fields = result->Fetch();
+        Field* fields = result->Fetch();
 
         CreatureEventAI_Event temp;
         temp.event_id = EventAI_Type(fields[0].GetUInt32());

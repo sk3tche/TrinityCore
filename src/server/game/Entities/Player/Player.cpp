@@ -299,7 +299,7 @@ Item* TradeData::GetItem(TradeSlots slot) const
 
 bool TradeData::HasItem(uint64 item_guid) const
 {
-    for(uint8 i = 0; i < TRADE_SLOT_COUNT; ++i)
+    for (uint8 i = 0; i < TRADE_SLOT_COUNT; ++i)
         if (m_items[i] == item_guid)
             return true;
 
@@ -1856,7 +1856,7 @@ bool Player::BuildEnumData(QueryResult result, WorldPacket* data)
     //    15                    16                   17                     18                   19               20                     21
     //    "characters.at_login, character_pet.entry, character_pet.modelid, character_pet.level, characters.data, character_banned.guid, character_declinedname.genitive "
 
-    Field *fields = result->Fetch();
+    Field* fields = result->Fetch();
 
     uint32 guid = fields[0].GetUInt32();
     uint8 plrRace = fields[2].GetUInt8();
@@ -4766,7 +4766,7 @@ void Player::DeleteFromDB(uint64 playerguid, uint32 accountId, bool updateRealmC
             {
                 do
                 {
-                    Field *fields = resultMail->Fetch();
+                    Field* fields = resultMail->Fetch();
 
                     uint32 mail_id       = fields[0].GetUInt32();
                     uint16 mailType      = fields[1].GetUInt16();
@@ -5104,7 +5104,7 @@ void Player::ResurrectPlayer(float restore_percent, bool applySickness)
         {
             int32 delta = (int32(getLevel()) - startLevel + 1)*MINUTE;
 
-            if (Aura * aur = GetAura(15007, GetGUID()))
+            if (Aura* aur = GetAura(15007, GetGUID()))
             {
                 aur->SetDuration(delta*IN_MILLISECONDS);
             }
@@ -7077,15 +7077,15 @@ void Player::UpdateHonorFields()
 ///Calculate the amount of honor gained based on the victim
 ///and the size of the group for which the honor is divided
 ///An exact honor value can also be given (overriding the calcs)
-bool Player::RewardHonor(Unit* uVictim, uint32 groupsize, int32 honor, bool pvptoken)
+bool Player::RewardHonor(Unit* victim, uint32 groupsize, int32 honor, bool pvptoken)
 {
     // do not reward honor in arenas, but enable onkill spellproc
     if (InArena())
     {
-        if (!uVictim || uVictim == this || uVictim->GetTypeId() != TYPEID_PLAYER)
+        if (!victim || victim == this || victim->GetTypeId() != TYPEID_PLAYER)
             return false;
 
-        if (GetBGTeam() == uVictim->ToPlayer()->GetBGTeam())
+        if (GetBGTeam() == victim->ToPlayer()->GetBGTeam())
             return false;
 
         return true;
@@ -7110,15 +7110,13 @@ bool Player::RewardHonor(Unit* uVictim, uint32 groupsize, int32 honor, bool pvpt
 
     if (honor_f <= 0)
     {
-        if (!uVictim || uVictim == this || uVictim->HasAuraType(SPELL_AURA_NO_PVP_CREDIT))
+        if (!victim || victim == this || victim->HasAuraType(SPELL_AURA_NO_PVP_CREDIT))
             return false;
 
-        victim_guid = uVictim->GetGUID();
+        victim_guid = victim->GetGUID();
 
-        if (uVictim->GetTypeId() == TYPEID_PLAYER)
+        if (Player* victim = victim->ToPlayer())
         {
-            Player* victim = uVictim->ToPlayer();
-
             if (GetTeam() == victim->GetTeam() && !sWorld->IsFFAPvPRealm())
                 return false;
 
@@ -7164,7 +7162,7 @@ bool Player::RewardHonor(Unit* uVictim, uint32 groupsize, int32 honor, bool pvpt
         }
         else
         {
-            if (!uVictim->ToCreature()->isRacialLeader())
+            if (!victim->ToCreature()->isRacialLeader())
                 return false;
 
             honor_f = 100.0f;                               // ??? need more info
@@ -7172,7 +7170,7 @@ bool Player::RewardHonor(Unit* uVictim, uint32 groupsize, int32 honor, bool pvpt
         }
     }
 
-    if (uVictim != NULL)
+    if (victim != NULL)
     {
         if (groupsize > 1)
             honor_f /= groupsize;
@@ -7211,10 +7209,10 @@ bool Player::RewardHonor(Unit* uVictim, uint32 groupsize, int32 honor, bool pvpt
 
     if (sWorld->getBoolConfig(CONFIG_PVP_TOKEN_ENABLE) && pvptoken)
     {
-        if (!uVictim || uVictim == this || uVictim->HasAuraType(SPELL_AURA_NO_PVP_CREDIT))
+        if (!victim || victim == this || victim->HasAuraType(SPELL_AURA_NO_PVP_CREDIT))
             return true;
 
-        if (uVictim->GetTypeId() == TYPEID_PLAYER)
+        if (victim->GetTypeId() == TYPEID_PLAYER)
         {
             // Check if allowed to receive it in current map
             uint8 MapType = sWorld->getIntConfig(CONFIG_PVP_TOKEN_MAP_TYPE);
@@ -7226,7 +7224,7 @@ bool Player::RewardHonor(Unit* uVictim, uint32 groupsize, int32 honor, bool pvpt
             uint32 itemId = sWorld->getIntConfig(CONFIG_PVP_TOKEN_ID);
             int32 count = sWorld->getIntConfig(CONFIG_PVP_TOKEN_COUNT);
 
-            if(AddItem(itemId, count))
+            if (AddItem(itemId, count))
                 ChatHandler(this).PSendSysMessage("You have been awarded a token for slaying another player.");
         }
     }
@@ -7918,7 +7916,7 @@ void Player::_ApplyItemBonuses(ItemTemplate const* proto, uint8 slot, bool apply
         attType = OFF_ATTACK;
     }
 
-    if(CanUseAttackType(attType))
+    if (CanUseAttackType(attType))
         _ApplyWeaponDamage(slot, proto, ssv, apply);
 
     int32 extraDPS = ssv->getDPSMod(proto->ScalingStatValue);
@@ -8805,7 +8803,7 @@ void Player::SendLoot(uint64 guid, LootType loot_type)
     }
     else
     {
-        Creature *creature = GetMap()->GetCreature(guid);
+        Creature* creature = GetMap()->GetCreature(guid);
 
         // must be in range and creature must be alive for pickpocket and must be dead for another loot
         if (!creature || creature->isAlive() != (loot_type == LOOT_PICKPOCKETING) || !creature->IsWithinDistInMap(this, INTERACTION_DISTANCE))
@@ -11183,7 +11181,7 @@ InventoryResult Player::CanStoreItems(Item** pItems, int count) const
             for (int t = KEYRING_SLOT_START; t < KEYRING_SLOT_END; ++t)
             {
                 pItem2 = GetItemByPos( INVENTORY_SLOT_BAG_0, t );
-                if( pItem2 && pItem2->CanBeMergedPartlyWith(pProto) == EQUIP_ERR_OK && inv_keys[t-KEYRING_SLOT_START] + pItem->GetCount() <= pProto->GetMaxStackSize())
+                if ( pItem2 && pItem2->CanBeMergedPartlyWith(pProto) == EQUIP_ERR_OK && inv_keys[t-KEYRING_SLOT_START] + pItem->GetCount() <= pProto->GetMaxStackSize())
                 {
                     inv_keys[t-KEYRING_SLOT_START] += pItem->GetCount();
                     b_found = true;
@@ -11195,7 +11193,7 @@ InventoryResult Player::CanStoreItems(Item** pItems, int count) const
             for (int t = CURRENCYTOKEN_SLOT_START; t < CURRENCYTOKEN_SLOT_END; ++t)
             {
                 pItem2 = GetItemByPos(INVENTORY_SLOT_BAG_0, t);
-                if( pItem2 && pItem2->CanBeMergedPartlyWith(pProto) == EQUIP_ERR_OK && inv_tokens[t-CURRENCYTOKEN_SLOT_START] + pItem->GetCount() <= pProto->GetMaxStackSize())
+                if ( pItem2 && pItem2->CanBeMergedPartlyWith(pProto) == EQUIP_ERR_OK && inv_tokens[t-CURRENCYTOKEN_SLOT_START] + pItem->GetCount() <= pProto->GetMaxStackSize())
                 {
                     inv_tokens[t-CURRENCYTOKEN_SLOT_START] += pItem->GetCount();
                     b_found = true;
@@ -11207,7 +11205,7 @@ InventoryResult Player::CanStoreItems(Item** pItems, int count) const
             for (int t = INVENTORY_SLOT_ITEM_START; t < INVENTORY_SLOT_ITEM_END; ++t)
             {
                 pItem2 = GetItemByPos(INVENTORY_SLOT_BAG_0, t);
-                if( pItem2 && pItem2->CanBeMergedPartlyWith(pProto) == EQUIP_ERR_OK && inv_slot_items[t-INVENTORY_SLOT_ITEM_START] + pItem->GetCount() <= pProto->GetMaxStackSize())
+                if ( pItem2 && pItem2->CanBeMergedPartlyWith(pProto) == EQUIP_ERR_OK && inv_slot_items[t-INVENTORY_SLOT_ITEM_START] + pItem->GetCount() <= pProto->GetMaxStackSize())
                 {
                     inv_slot_items[t-INVENTORY_SLOT_ITEM_START] += pItem->GetCount();
                     b_found = true;
@@ -11225,7 +11223,7 @@ InventoryResult Player::CanStoreItems(Item** pItems, int count) const
                         for (uint32 j = 0; j < bag->GetBagSize(); j++)
                         {
                             pItem2 = GetItemByPos(t, j);
-                            if( pItem2 && pItem2->CanBeMergedPartlyWith(pProto) == EQUIP_ERR_OK && inv_bags[t-INVENTORY_SLOT_BAG_START][j] + pItem->GetCount() <= pProto->GetMaxStackSize())
+                            if ( pItem2 && pItem2->CanBeMergedPartlyWith(pProto) == EQUIP_ERR_OK && inv_bags[t-INVENTORY_SLOT_BAG_START][j] + pItem->GetCount() <= pProto->GetMaxStackSize())
                             {
                                 inv_bags[t-INVENTORY_SLOT_BAG_START][j] += pItem->GetCount();
                                 b_found = true;
@@ -12364,7 +12362,7 @@ void Player::DestroyItem(uint8 bag, uint8 slot, bool update)
     {
         sLog->outDebug(LOG_FILTER_PLAYER_ITEMS, "STORAGE:  DestroyItem bag = %u, slot = %u, item = %u", bag, slot, pItem->GetEntry());
         // Also remove all contained items if the item is a bag.
-        // This if() prevents item saving crashes if the condition for a bag to be empty before being destroyed was bypassed somehow.
+        // This if () prevents item saving crashes if the condition for a bag to be empty before being destroyed was bypassed somehow.
         if (pItem->IsNotEmptyBag())
             for (uint8 i = 0; i < MAX_BAG_SIZE; ++i)
                 DestroyItem(slot, i, update);
@@ -13524,7 +13522,7 @@ void Player::ApplyEnchantment(Item *item, EnchantmentSlot slot, bool apply, bool
 
     // If we're dealing with a gem inside a prismatic socket we need to check the prismatic socket requirements
     // rather than the gem requirements itself. If the socket has no color it is a prismatic socket.
-    if((slot == SOCK_ENCHANTMENT_SLOT || slot == SOCK_ENCHANTMENT_SLOT_2 || slot == SOCK_ENCHANTMENT_SLOT_3)
+    if ((slot == SOCK_ENCHANTMENT_SLOT || slot == SOCK_ENCHANTMENT_SLOT_2 || slot == SOCK_ENCHANTMENT_SLOT_3)
         && !item->GetTemplate()->Socket[slot-SOCK_ENCHANTMENT_SLOT].Color)
     {
         // Check if the requirements for the prismatic socket are met before applying the gem stats
@@ -13975,7 +13973,7 @@ void Player::PrepareGossipMenu(WorldObject *pSource, uint32 menuId, bool showQue
         pMenuItemBounds = sObjectMgr->GetGossipMenuItemsMapBounds(0);
 
     uint32 npcflags = 0;
-    Creature *pCreature = NULL;
+    Creature* pCreature = NULL;
 
     if (pSource->GetTypeId() == TYPEID_UNIT)
     {
@@ -14331,7 +14329,7 @@ void Player::PrepareQuestMenu(uint64 guid)
     QuestRelationBounds pObjectQIR;
 
     // pets also can have quests
-    Creature *pCreature = ObjectAccessor::GetCreatureOrPetOrVehicle(*this, guid);
+    Creature* pCreature = ObjectAccessor::GetCreatureOrPetOrVehicle(*this, guid);
     if (pCreature)
     {
         pObjectQR  = sObjectMgr->GetCreatureQuestRelationBounds(pCreature->GetEntry());
@@ -14442,7 +14440,7 @@ void Player::SendPreparedQuest(uint64 guid)
         std::string title = "";
 
         // need pet case for some quests
-        Creature *pCreature = ObjectAccessor::GetCreatureOrPetOrVehicle(*this, guid);
+        Creature* pCreature = ObjectAccessor::GetCreatureOrPetOrVehicle(*this, guid);
         if (pCreature)
         {
             uint32 textid = GetGossipTextId(pCreature);
@@ -14490,7 +14488,7 @@ Quest const* Player::GetNextQuest(uint64 guid, Quest const* pQuest)
 {
     QuestRelationBounds pObjectQR;
 
-    Creature *pCreature = ObjectAccessor::GetCreatureOrPetOrVehicle(*this, guid);
+    Creature* pCreature = ObjectAccessor::GetCreatureOrPetOrVehicle(*this, guid);
     if (pCreature)
         pObjectQR  = sObjectMgr->GetCreatureQuestRelationBounds(pCreature->GetEntry());
     else
@@ -15620,7 +15618,7 @@ void Player::AreaExploredOrEventHappens(uint32 questId)
 //not used in Trinityd, function for external script library
 void Player::GroupEventHappens(uint32 questId, WorldObject const* pEventObject)
 {
-    if (Group *pGroup = GetGroup())
+    if (Group* pGroup = GetGroup())
     {
         for (GroupReference *itr = pGroup->GetFirstMember(); itr != NULL; itr = itr->next())
         {
@@ -15735,7 +15733,7 @@ void Player::KilledMonsterCredit(uint32 entry, uint64 guid)
     uint32 real_entry = entry;
     if (guid)
     {
-        Creature *killed = GetMap()->GetCreature(guid);
+        Creature* killed = GetMap()->GetCreature(guid);
         if (killed && killed->GetEntry())
             real_entry = killed->GetEntry();
     }
@@ -16330,7 +16328,7 @@ bool Player::LoadPositionFromDB(uint32& mapid, float& x, float& y, float& z, flo
     if (!result)
         return false;
 
-    Field *fields = result->Fetch();
+    Field* fields = result->Fetch();
 
     x = fields[0].GetFloat();
     y = fields[1].GetFloat();
@@ -17150,7 +17148,7 @@ void Player::_LoadAuras(PreparedQueryResult result, uint32 timediff)
             else
                 remaincharges = 0;
 
-            if (Aura * aura = Aura::TryCreate(spellproto, effmask, this, NULL, &baseDamage[0], NULL, caster_guid))
+            if (Aura* aura = Aura::TryCreate(spellproto, effmask, this, NULL, &baseDamage[0], NULL, caster_guid))
             {
                 if (!aura->CanBeSaved())
                 {
@@ -17494,7 +17492,7 @@ void Player::_LoadMail()
     {
         do
         {
-            Field *fields = result->Fetch();
+            Field* fields = result->Fetch();
             Mail *m = new Mail;
             m->messageID = fields[0].GetUInt32();
             m->messageType = fields[1].GetUInt8();
@@ -17771,7 +17769,7 @@ void Player::_LoadBoundInstances(PreparedQueryResult result)
     for (uint8 i = 0; i < MAX_DIFFICULTY; ++i)
         m_boundInstances[i].clear();
 
-    Group *group = GetGroup();
+    Group* group = GetGroup();
 
     //QueryResult *result = CharacterDatabase.PQuery("SELECT id, permanent, map, difficulty, resettime FROM character_instance LEFT JOIN instance ON instance = id WHERE guid = '%u'", GUID_LOPART(m_guid));
     if (result)
@@ -17847,7 +17845,7 @@ InstanceSave * Player::GetInstanceSave(uint32 mapid, bool raid)
     InstancePlayerBind *pBind = GetBoundInstance(mapid, GetDifficulty(raid));
     InstanceSave *pSave = pBind ? pBind->save : NULL;
     if (!pBind || !pBind->perm)
-        if (Group *group = GetGroup())
+        if (Group* group = GetGroup())
             if (InstanceGroupBind *groupBind = group->GetBoundInstance(this))
                 pSave = groupBind->save;
 
@@ -17988,7 +17986,7 @@ void Player::SendSavedInstances()
 }
 
 /// convert the player's binds to the group
-void Player::ConvertInstancesToGroup(Player* player, Group *group, bool switchLeader)
+void Player::ConvertInstancesToGroup(Player* player, Group* group, bool switchLeader)
 {
     // copy all binds to the group, when changing leader it's assumed the character
     // will not have any solo binds
@@ -18417,7 +18415,7 @@ void Player::_SaveAuras(SQLTransaction& trans)
         if (!itr->second->CanBeSaved())
             continue;
 
-        Aura * aura = itr->second;
+        Aura* aura = itr->second;
 
         int32 damage[MAX_SPELL_EFFECTS];
         int32 baseDamage[MAX_SPELL_EFFECTS];
@@ -19701,7 +19699,7 @@ void Player::RemovePetitionsAndSigns(uint64 guid, uint32 type)
     {
         do                                                  // this part effectively does nothing, since the deletion / modification only takes place _after_ the PetitionQuery. Though I don't know if the result remains intact if I execute the delete query beforehand.
         {                                                   // and SendPetitionQueryOpcode reads data from the DB
-            Field *fields = result->Fetch();
+            Field* fields = result->Fetch();
             uint64 ownerguid   = MAKE_NEW_GUID(fields[0].GetUInt32(), 0, HIGHGUID_PLAYER);
             uint64 petitionguid = MAKE_NEW_GUID(fields[1].GetUInt32(), 0, HIGHGUID_ITEM);
 
@@ -20173,7 +20171,7 @@ void Player::InitDisplayIds()
     }
 }
 
-inline bool Player::_StoreOrEquipNewItem(uint32 vendorslot, uint32 item, uint8 count, uint8 bag, uint8 slot, int32 price, ItemTemplate const* pProto, Creature *pVendor, VendorItem const* crItem, bool bStore)
+inline bool Player::_StoreOrEquipNewItem(uint32 vendorslot, uint32 item, uint8 count, uint8 bag, uint8 slot, int32 price, ItemTemplate const* pProto, Creature* pVendor, VendorItem const* crItem, bool bStore)
 {
     ItemPosCountVec vDest;
     uint16 uiDest = 0;
@@ -20255,7 +20253,7 @@ bool Player::BuyItemFromVendorSlot(uint64 vendorguid, uint32 vendorslot, uint32 
         return false;
     }
 
-    Creature *pCreature = GetNPCIfCanInteractWith(vendorguid, UNIT_NPC_FLAG_VENDOR);
+    Creature* pCreature = GetNPCIfCanInteractWith(vendorguid, UNIT_NPC_FLAG_VENDOR);
     if (!pCreature)
     {
         sLog->outDebug(LOG_FILTER_NETWORKIO, "WORLD: BuyItemFromVendor - Unit (GUID: %u) not found or you can't interact with him.", uint32(GUID_LOPART(vendorguid)));
@@ -21062,7 +21060,7 @@ void Player::UpdateTriggerVisibility()
     {
         if (IS_CREATURE_GUID(*itr))
         {
-            Creature *obj = IsInWorld() ? GetMap()->GetCreature(*itr) : NULL;
+            Creature* obj = IsInWorld() ? GetMap()->GetCreature(*itr) : NULL;
             if (!obj || !obj->isTrigger())
                 continue;
 
@@ -21271,7 +21269,7 @@ void Player::ClearComboPoints()
     m_comboTarget = 0;
 }
 
-void Player::SetGroup(Group *group, int8 subgroup)
+void Player::SetGroup(Group* group, int8 subgroup)
 {
     if (group == NULL)
         m_group.unlink();
@@ -21689,7 +21687,7 @@ void Player::SendAurasForTarget(Unit* target)
     for (Unit::VisibleAuraMap::const_iterator itr = visibleAuras->begin(); itr != visibleAuras->end(); ++itr)
     {
         AuraApplication * auraApp = itr->second;
-        Aura * aura = auraApp->GetBase();
+        Aura* aura = auraApp->GetBase();
         data << uint8(auraApp->GetSlot());
         data << uint32(aura->GetId());
 
@@ -21895,7 +21893,7 @@ void Player::UpdateForQuestWorldObjects()
         }
         else if (IS_CRE_OR_VEH_GUID(*itr))
         {
-            Creature *obj = ObjectAccessor::GetCreatureOrPetOrVehicle(*this, *itr);
+            Creature* obj = ObjectAccessor::GetCreatureOrPetOrVehicle(*this, *itr);
             if (!obj)
                 continue;
 
@@ -22072,7 +22070,7 @@ void Player::RemoveItemDependentAurasAndCasts(Item * pItem)
 {
     for (AuraMap::iterator itr = m_ownedAuras.begin(); itr != m_ownedAuras.end();)
     {
-        Aura * aura = itr->second;
+        Aura* aura = itr->second;
 
         // skip passive (passive item dependent spells work in another way) and not self applied auras
         SpellEntry const* spellInfo = aura->GetSpellProto();
@@ -22167,7 +22165,7 @@ bool Player::GetsRecruitAFriendBonus(bool forXP)
     bool recruitAFriend = false;
     if (getLevel() <= sWorld->getIntConfig(CONFIG_MAX_RECRUIT_A_FRIEND_BONUS_PLAYER_LEVEL) || !forXP)
     {
-        if (Group *group = this->GetGroup())
+        if (Group* group = this->GetGroup())
         {
             for (GroupReference *itr = group->GetFirstMember(); itr != NULL; itr = itr->next())
             {
@@ -22215,7 +22213,7 @@ void Player::RewardPlayerAndGroupAtEvent(uint32 creature_id, WorldObject* pRewar
     uint64 creature_guid = (pRewardSource->GetTypeId() == TYPEID_UNIT) ? pRewardSource->GetGUID() : uint64(0);
 
     // prepare data for near group iteration
-    if (Group *pGroup = GetGroup())
+    if (Group* pGroup = GetGroup())
     {
         for (GroupReference *itr = pGroup->GetFirstMember(); itr != NULL; itr = itr->next())
         {
@@ -22450,7 +22448,7 @@ void Player::SendCorpseReclaimDelay(bool load)
 
 Player* Player::GetNextRandomRaidMember(float radius)
 {
-    Group *pGroup = GetGroup();
+    Group* pGroup = GetGroup();
     if (!pGroup)
         return NULL;
 
@@ -22545,7 +22543,7 @@ void Player::RemoveFromBattlegroundRaid()
     SetOriginalGroup(NULL);
 }
 
-void Player::SetOriginalGroup(Group *group, int8 subgroup)
+void Player::SetOriginalGroup(Group* group, int8 subgroup)
 {
     if (group == NULL)
         m_originalGroup.unlink();
@@ -22859,7 +22857,7 @@ bool Player::isTotalImmunity()
 void Player::UpdateCharmedAI()
 {
     //This should only called in Player::Update
-  Creature *charmer = GetCharmer()->ToCreature();
+  Creature* charmer = GetCharmer()->ToCreature();
 
     //kill self if charm aura has infinite duration
     if (charmer->IsInEvadeMode())
@@ -24457,7 +24455,7 @@ bool Player::AddItem(uint32 itemId, uint32 count)
     }
 
     Item* item = StoreNewItem(dest, itemId, true, Item::GenerateItemRandomPropertyId(itemId));
-    if(item)
+    if (item)
         SendNewItem(item, count, true, false);
     else
         return false;

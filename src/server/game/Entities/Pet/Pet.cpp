@@ -138,7 +138,7 @@ bool Pet::LoadPetFromDB(Player* owner, uint32 petentry, uint32 petnumber, bool c
         return false;
     }
 
-    Field *fields = result->Fetch();
+    Field* fields = result->Fetch();
 
     // update for case of current pet "slot = 0"
     petentry = fields[1].GetUInt32();
@@ -328,7 +328,7 @@ bool Pet::LoadPetFromDB(Player* owner, uint32 petentry, uint32 petnumber, bool c
         {
             delete m_declinedname;
             m_declinedname = new DeclinedName;
-            Field *fields2 = result->Fetch();
+            Field* fields2 = result->Fetch();
             for (uint8 i = 0; i < MAX_DECLINED_NAME_CASES; ++i)
             {
                 m_declinedname->name[i] = fields2[i].GetString();
@@ -1095,7 +1095,7 @@ void Pet::_LoadSpellCooldowns()
 
         do
         {
-            Field *fields = result->Fetch();
+            Field* fields = result->Fetch();
 
             uint32 spell_id = fields[0].GetUInt32();
             time_t db_time  = time_t(fields[1].GetUInt32());
@@ -1151,7 +1151,7 @@ void Pet::_LoadSpells()
     {
         do
         {
-            Field *fields = result->Fetch();
+            Field* fields = result->Fetch();
 
             addSpell(fields[0].GetUInt32(), ActiveStates(fields[1].GetUInt8()), PETSPELL_UNCHANGED);
         }
@@ -1201,7 +1201,7 @@ void Pet::_LoadAuras(uint32 timediff)
         {
             int32 damage[3];
             int32 baseDamage[3];
-            Field *fields = result->Fetch();
+            Field* fields = result->Fetch();
             uint64 caster_guid = fields[0].GetUInt64();
             uint32 spellid = fields[1].GetUInt32();
             uint8 effmask = fields[2].GetUInt8();
@@ -1242,7 +1242,7 @@ void Pet::_LoadAuras(uint32 timediff)
             else
                 remaincharges = 0;
 
-            if (Aura * aura = Aura::TryCreate(spellproto, effmask, this, NULL, &baseDamage[0], NULL, caster_guid))
+            if (Aura* aura = Aura::TryCreate(spellproto, effmask, this, NULL, &baseDamage[0], NULL, caster_guid))
             {
                 if (!aura->CanBeSaved())
                 {
@@ -1268,7 +1268,7 @@ void Pet::_SaveAuras(SQLTransaction& trans)
         if (!itr->second->CanBeSaved() || IsPetAura(itr->second))
             continue;
 
-        Aura * aura = itr->second;
+        Aura* aura = itr->second;
 
         int32 damage[MAX_SPELL_EFFECTS];
         int32 baseDamage[MAX_SPELL_EFFECTS];
@@ -1698,7 +1698,7 @@ void Pet::resetTalentsForAllPetsOf(Player* owner, Pet* online_pet /*= NULL*/)
 
     do
     {
-        Field *fields = resultPets->Fetch();
+        Field* fields = resultPets->Fetch();
 
         uint32 id = fields[0].GetUInt32();
 
@@ -1716,7 +1716,7 @@ void Pet::resetTalentsForAllPetsOf(Player* owner, Pet* online_pet /*= NULL*/)
     bool need_execute = false;
     do
     {
-        Field *fields = result->Fetch();
+        Field* fields = result->Fetch();
 
         uint32 spell = fields[0].GetUInt32();
 

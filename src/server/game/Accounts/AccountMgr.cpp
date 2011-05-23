@@ -57,7 +57,7 @@ AccountOpResult AccountMgr::DeleteAccount(uint32 accid)
     {
         do
         {
-            Field *fields = result->Fetch();
+            Field* fields = result->Fetch();
             uint32 guidlo = fields[0].GetUInt32();
             uint64 guid = MAKE_NEW_GUID(guidlo, 0, HIGHGUID_PLAYER);
 
@@ -210,7 +210,7 @@ uint32 AccountMgr::GetCharactersCount(uint32 acc_id)
     QueryResult result = CharacterDatabase.PQuery("SELECT COUNT(guid) FROM characters WHERE account = '%d'", acc_id);
     if (result)
     {
-        Field *fields=result->Fetch();
+        Field* fields=result->Fetch();
         charcount = fields[0].GetUInt32();
     }
     return charcount;

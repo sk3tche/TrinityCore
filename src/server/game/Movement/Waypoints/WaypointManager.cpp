@@ -47,7 +47,7 @@ void WaypointStore::Load()
     }
 
     uint32 count = 0;
-    Field *fields;
+    Field* fields;
     uint32 last_id = 0;
     WaypointPath* path_data = NULL;
 
@@ -106,7 +106,7 @@ void WaypointStore::UpdatePath(uint32 id)
 
     WaypointPath* path_data;
     path_data = new WaypointPath;
-    Field *fields;
+    Field* fields;
 
     do
     {

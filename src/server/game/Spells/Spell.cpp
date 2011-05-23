@@ -297,10 +297,10 @@ void SpellCastTargets::read (ByteBuffer & data, Unit* caster)
     if (m_targetMask & (TARGET_FLAG_OBJECT))
         data.readPackGUID(m_GOTargetGUID);
 
-    if(m_targetMask & (TARGET_FLAG_ITEM | TARGET_FLAG_TRADE_ITEM))
+    if (m_targetMask & (TARGET_FLAG_ITEM | TARGET_FLAG_TRADE_ITEM))
         data.readPackGUID(m_itemTargetGUID);
 
-    if(m_targetMask & (TARGET_FLAG_CORPSE | TARGET_FLAG_PVP_CORPSE))
+    if (m_targetMask & (TARGET_FLAG_CORPSE | TARGET_FLAG_PVP_CORPSE))
         data.readPackGUID(m_CorpseTargetGUID);
 
     if (m_targetMask & TARGET_FLAG_SOURCE_LOCATION)
@@ -337,7 +337,7 @@ void SpellCastTargets::read (ByteBuffer & data, Unit* caster)
             m_dstPos.Relocate(caster);
     }
 
-    if(m_targetMask & TARGET_FLAG_STRING)
+    if (m_targetMask & TARGET_FLAG_STRING)
         data >> m_strTarget;
 
     Update(caster);
@@ -358,7 +358,7 @@ void SpellCastTargets::write (ByteBuffer & data)
         }
         else if (m_targetMask & TARGET_FLAG_OBJECT)
         {
-            if(m_GOTarget)
+            if (m_GOTarget)
                 data.append(m_GOTarget->GetPackGUID());
             else
                 data << uint8(0);
@@ -371,7 +371,7 @@ void SpellCastTargets::write (ByteBuffer & data)
 
     if (m_targetMask & ( TARGET_FLAG_ITEM | TARGET_FLAG_TRADE_ITEM))
     {
-        if(m_itemTarget)
+        if (m_itemTarget)
             data.append(m_itemTarget->GetPackGUID());
         else
             data << uint8(0);
@@ -1088,7 +1088,7 @@ void Spell::DoAllEffectOnTarget(TargetInfo *target)
 
         // do far effects on the unit
         // can't use default call because of threading, do stuff as fast as possible
-        for(uint8 i = 0; i < MAX_SPELL_EFFECTS; ++i)
+        for (uint8 i = 0; i < MAX_SPELL_EFFECTS; ++i)
             if (farMask & (1 << i))
                 HandleEffects(unit, NULL, NULL, i);
         return;
@@ -1176,16 +1176,19 @@ void Spell::DoAllEffectOnTarget(TargetInfo *target)
         else if (!m_healing)
         {
             for (uint8 i = 0; i< MAX_SPELL_EFFECTS; ++i)
+            {
                 // If at least one effect negative spell is negative hit
                 if (mask & (1<<i) && !IsPositiveEffect(m_spellInfo->Id, i))
                 {
                     positive = false;
                     break;
                 }
+            }
         }
         switch(m_spellInfo->DmgClass)
         {
             case SPELL_DAMAGE_CLASS_MAGIC:
+            {
                 if (positive)
                 {
                     procAttacker |= PROC_FLAG_DONE_SPELL_MAGIC_DMG_CLASS_POS;
@@ -1196,8 +1199,10 @@ void Spell::DoAllEffectOnTarget(TargetInfo *target)
                     procAttacker |= PROC_FLAG_DONE_SPELL_MAGIC_DMG_CLASS_NEG;
                     procVictim   |= PROC_FLAG_TAKEN_SPELL_MAGIC_DMG_CLASS_NEG;
                 }
-            break;
+                break;
+            }
             case SPELL_DAMAGE_CLASS_NONE:
+            {
                 if (positive)
                 {
                     procAttacker |= PROC_FLAG_DONE_SPELL_NONE_DMG_CLASS_POS;
@@ -1208,7 +1213,8 @@ void Spell::DoAllEffectOnTarget(TargetInfo *target)
                     procAttacker |= PROC_FLAG_DONE_SPELL_NONE_DMG_CLASS_NEG;
                     procVictim   |= PROC_FLAG_TAKEN_SPELL_NONE_DMG_CLASS_NEG;
                 }
-            break;
+                break;
+            }
         }
     }
     CallScriptOnHitHandlers();
@@ -1522,12 +1528,12 @@ void Spell::DoTriggersOnSpellHit(Unit* unit)
             }
             if (GetSpellDuration(i->first) == -1)
             {
-                if (Aura * triggeredAur = unit->GetAura(i->first->Id, m_caster->GetGUID()))
+                if (Aura* triggeredAur = unit->GetAura(i->first->Id, m_caster->GetGUID()))
                 {
                     // get duration from aura-only once
                     if (!_duration)
                     {
-                        Aura * aur = unit->GetAura(m_spellInfo->Id, m_caster->GetGUID());
+                        Aura* aur = unit->GetAura(m_spellInfo->Id, m_caster->GetGUID());
                         _duration = aur ? aur->GetDuration() : -1;
                     }
                     triggeredAur->SetDuration(_duration);
@@ -1841,6 +1847,7 @@ WorldObject* Spell::SearchNearbyTarget(float range, SpellTargets TargetType, Spe
                 switch((*i_spellST)->mConditionValue1)
                 {
                     case SPELL_TARGET_TYPE_CONTROLLED:
+                    {
                         for (Unit::ControlList::iterator itr = m_caster->m_Controlled.begin(); itr != m_caster->m_Controlled.end(); ++itr)
                             if ((*itr)->GetEntry() == (*i_spellST)->mConditionValue2 && (*itr)->IsWithinDistInMap(m_caster, range))
                             {
@@ -1849,7 +1856,9 @@ WorldObject* Spell::SearchNearbyTarget(float range, SpellTargets TargetType, Spe
                                 range = m_caster->GetDistance(creatureScriptTarget);
                             }
                         break;
+                    }
                     case SPELL_TARGET_TYPE_GAMEOBJECT:
+                    {
                         if ((*i_spellST)->mConditionValue2)
                         {
                             if (GameObject *go = m_caster->FindNearestGameObject((*i_spellST)->mConditionValue2, range))
@@ -1871,14 +1880,17 @@ WorldObject* Spell::SearchNearbyTarget(float range, SpellTargets TargetType, Spe
                             }
                         }
                         break;
+                    }
                     case SPELL_TARGET_TYPE_CREATURE:
+                    {
                         if (m_targets.getUnitTarget() && m_targets.getUnitTarget()->GetEntry() == (*i_spellST)->mConditionValue2)
                             return m_targets.getUnitTarget();
+                    }
                     case SPELL_TARGET_TYPE_DEAD:
                     default:
-                        if (Creature *cre = m_caster->FindNearestCreature((*i_spellST)->mConditionValue2, range, (*i_spellST)->mConditionValue1 != SPELL_TARGET_TYPE_DEAD))
+                        if (Creature* creature = m_caster->FindNearestCreature((*i_spellST)->mConditionValue2, range, (*i_spellST)->mConditionValue1 != SPELL_TARGET_TYPE_DEAD))
                         {
-                            creatureScriptTarget = cre;
+                            creatureScriptTarget = creature;
                             goScriptTarget = NULL;
                             range = m_caster->GetDistance(creatureScriptTarget);
                         }
@@ -4631,13 +4643,13 @@ SpellCastResult Spell::CheckCast(bool strict)
             if (bg->GetStatus() == STATUS_WAIT_LEAVE)
                 return SPELL_FAILED_DONT_REPORT;
 
-    if(m_caster->GetTypeId() == TYPEID_PLAYER && VMAP::VMapFactory::createOrGetVMapManager()->isLineOfSightCalcEnabled())
+    if (m_caster->GetTypeId() == TYPEID_PLAYER && VMAP::VMapFactory::createOrGetVMapManager()->isLineOfSightCalcEnabled())
     {
-        if(m_spellInfo->Attributes & SPELL_ATTR0_OUTDOORS_ONLY &&
+        if (m_spellInfo->Attributes & SPELL_ATTR0_OUTDOORS_ONLY &&
                 !m_caster->GetMap()->IsOutdoors(m_caster->GetPositionX(), m_caster->GetPositionY(), m_caster->GetPositionZ()))
             return SPELL_FAILED_ONLY_OUTDOORS;
 
-        if(m_spellInfo->Attributes & SPELL_ATTR0_INDOORS_ONLY &&
+        if (m_spellInfo->Attributes & SPELL_ATTR0_INDOORS_ONLY &&
                 m_caster->GetMap()->IsOutdoors(m_caster->GetPositionX(), m_caster->GetPositionY(), m_caster->GetPositionZ()))
             return SPELL_FAILED_ONLY_INDOORS;
     }
@@ -4752,7 +4764,7 @@ SpellCastResult Spell::CheckCast(bool strict)
             {
                 // Do not allow to banish target tapped by someone not in caster's group
                 if (m_spellInfo->Mechanic == MECHANIC_BANISH)
-                    if (Creature *targetCreature = target->ToCreature())
+                    if (Creature* targetCreature = target->ToCreature())
                         if (targetCreature->hasLootRecipient() && !targetCreature->isTappedBy(m_caster->ToPlayer()))
                             return SPELL_FAILED_CANT_CAST_ON_TAPPED;
 
@@ -5199,7 +5211,7 @@ SpellCastResult Spell::CheckCast(bool strict)
             }
             case SPELL_EFFECT_SUMMON_DEAD_PET:
             {
-                Creature *pet = m_caster->GetGuardianPet();
+                Creature* pet = m_caster->GetGuardianPet();
                 if (!pet)
                     return SPELL_FAILED_NO_PET;
 

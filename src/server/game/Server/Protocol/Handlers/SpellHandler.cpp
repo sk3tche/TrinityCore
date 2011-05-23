@@ -222,7 +222,7 @@ void WorldSession::HandleOpenItemOpcode(WorldPacket& recvPacket)
     }
 
     // Verify that the bag is an actual bag or wrapped item that can be used "normally"
-    if(!(proto->Flags & ITEM_PROTO_FLAG_OPENABLE) && !pItem->HasFlag(ITEM_FIELD_FLAGS, ITEM_FLAG_WRAPPED))
+    if (!(proto->Flags & ITEM_PROTO_FLAG_OPENABLE) && !pItem->HasFlag(ITEM_FIELD_FLAGS, ITEM_FLAG_WRAPPED))
     {
         pUser->SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW, pItem, NULL);
         sLog->outError("Possible hacking attempt: Player %s [guid: %u] tried to open item [guid: %u, entry: %u] which is not openable!",
@@ -256,7 +256,7 @@ void WorldSession::HandleOpenItemOpcode(WorldPacket& recvPacket)
         QueryResult result = CharacterDatabase.PQuery("SELECT entry, flags FROM character_gifts WHERE item_guid = '%u'", pItem->GetGUIDLow());
         if (result)
         {
-            Field *fields = result->Fetch();
+            Field* fields = result->Fetch();
             uint32 entry = fields[0].GetUInt32();
             uint32 flags = fields[1].GetUInt32();
 
@@ -550,7 +550,7 @@ void WorldSession::HandleSpellClick(WorldPacket& recv_data)
     recv_data >> guid;
 
     // this will get something not in world. crash
-    Creature *unit = ObjectAccessor::GetCreatureOrPetOrVehicle(*_player, guid);
+    Creature* unit = ObjectAccessor::GetCreatureOrPetOrVehicle(*_player, guid);
 
     if (!unit)
         return;

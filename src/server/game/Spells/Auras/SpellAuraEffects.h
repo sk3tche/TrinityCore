@@ -17,11 +17,11 @@ class AuraEffect
     friend Aura::~Aura();
     private:
         ~AuraEffect();
-        explicit AuraEffect(Aura * base, uint8 effIndex, int32 *baseAmount, Unit* caster);
+        explicit AuraEffect(Aura* base, uint8 effIndex, int32 *baseAmount, Unit* caster);
     public:
         Unit* GetCaster() const { return GetBase()->GetCaster(); }
         uint64 GetCasterGUID() const { return GetBase()->GetCasterGUID(); }
-        Aura * GetBase() const { return m_base; }
+        Aura* GetBase() const { return m_base; }
         void GetTargetList(std::list<Unit*> & targetList) const;
         void GetApplicationList(std::list<AuraApplication*> & applicationList) const;
 
@@ -75,7 +75,7 @@ class AuraEffect
         // add/remove SPELL_AURA_MOD_SHAPESHIFT (36) linked auras
         void HandleShapeshiftBoosts(Unit* target, bool apply) const;
     private:
-        Aura * const m_base;
+        Aura* const m_base;
 
         SpellEntry const* const m_spellProto;
         uint8 const m_effIndex;

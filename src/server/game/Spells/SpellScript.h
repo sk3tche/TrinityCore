@@ -447,12 +447,12 @@ class AuraScript : public _SpellScript
 
     public:
         bool _Validate(SpellEntry const* entry);
-        bool _Load(Aura * aura);
+        bool _Load(Aura* aura);
         void _PrepareScriptCall(AuraScriptHookType hookType, AuraApplication const* aurApp = NULL);
         void _FinishScriptCall();
         bool _IsDefaultActionPrevented();
     private:
-        Aura * m_aura;
+        Aura* m_aura;
         AuraApplication const* m_auraApplication;
         bool m_defaultActionPrevented;
     public:
@@ -550,7 +550,7 @@ class AuraScript : public _SpellScript
         // removes aura with remove mode (see AuraRemoveMode enum)
         void Remove(uint32 removeMode = 0);
         // returns aura object of script
-        Aura * GetAura() const;
+        Aura* GetAura() const;
 
         // returns type of the aura, may be dynobj owned aura or unit owned aura
         AuraObjectType GetType() const;

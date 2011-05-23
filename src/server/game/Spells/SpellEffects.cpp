@@ -443,7 +443,7 @@ void Spell::SpellDamageSchoolDmg(SpellEffIndex effIndex)
                     case 52942:
                     {
                         // don't damage self and only players
-                        if(unitTarget->GetGUID() == m_caster->GetGUID() || unitTarget->GetTypeId() != TYPEID_PLAYER)
+                        if (unitTarget->GetGUID() == m_caster->GetGUID() || unitTarget->GetTypeId() != TYPEID_PLAYER)
                             return;
 
                         float radius = GetSpellRadiusForHostile(sSpellRadiusStore.LookupEntry(m_spellInfo->EffectRadiusIndex[0]));
@@ -1005,7 +1005,7 @@ void Spell::EffectDummy(SpellEffIndex effIndex)
 
                     if (player && player->GetQuestStatus(11379) == QUEST_STATUS_INCOMPLETE)
                     {
-                        Creature *creature = player->FindNearestCreature(19973, 10, false);
+                        Creature* creature = player->FindNearestCreature(19973, 10, false);
                         if (!creature)
                         {
                             SendCastResult(SPELL_FAILED_NOT_HERE);
@@ -1190,7 +1190,7 @@ void Spell::EffectDummy(SpellEffIndex effIndex)
                 }
                 case 53808:                                 // Pygmy Oil
                 {
-                    Aura *pAura = m_caster->GetAura(53806);
+                    Aura* pAura = m_caster->GetAura(53806);
                     if (pAura)
                         pAura->RefreshDuration();
                     else
@@ -3133,7 +3133,7 @@ void Spell::EffectLearnSpell(SpellEffIndex effIndex)
 }
 
 typedef std::list< std::pair<uint32, uint64> > DispelList;
-typedef std::list< std::pair<Aura *, uint8> > DispelChargesList;
+typedef std::list< std::pair<Aura* , uint8> > DispelChargesList;
 void Spell::EffectDispel(SpellEffIndex effIndex)
 {
     if (!unitTarget)
@@ -3152,7 +3152,7 @@ void Spell::EffectDispel(SpellEffIndex effIndex)
     Unit::AuraMap const& auras = unitTarget->GetOwnedAuras();
     for (Unit::AuraMap::const_iterator itr = auras.begin(); itr != auras.end(); ++itr)
     {
-        Aura * aura = itr->second;
+        Aura* aura = itr->second;
         AuraApplication * aurApp = aura->GetApplicationOfTarget(unitTarget->GetGUID());
         if (!aurApp)
             continue;
@@ -3929,7 +3929,7 @@ void Spell::SpellDamageWeaponDmg(SpellEffIndex effIndex)
                 if (needCast)
                     m_caster->CastSpell(unitTarget, 58567, true);
 
-                if (Aura * aur = unitTarget->GetAura(58567, m_caster->GetGUID()))
+                if (Aura* aur = unitTarget->GetAura(58567, m_caster->GetGUID()))
                 {
                     // 58388 - Glyph of Devastate dummy aura.
                     if (int32 num = (needCast ? 0 : 1) + (m_caster->HasAura(58388) ? 1 : 0))
@@ -4483,7 +4483,7 @@ void Spell::EffectScriptEffect(SpellEffIndex effIndex)
                     if (!p_caster)
                         break;
                     p_caster->RewardPlayerAndGroupAtEvent(18388, unitTarget);
-                    Creature *cTarget = dynamic_cast<Creature*>(unitTarget);
+                    Creature* cTarget = dynamic_cast<Creature*>(unitTarget);
                     if (!cTarget)
                         break;
                     cTarget->setDeathState(CORPSE);
@@ -5074,7 +5074,7 @@ void Spell::EffectScriptEffect(SpellEffIndex effIndex)
                     {
                         if (Vehicle *seat = m_caster->GetVehicleKit())
                         {
-                            if (Creature *oldContainer = dynamic_cast<Creature*>(seat->GetPassenger(1)))
+                            if (Creature* oldContainer = dynamic_cast<Creature*>(seat->GetPassenger(1)))
                                 oldContainer->DisappearAndDie();
                             // TODO: a hack, range = 11, should after some time cast, otherwise too far
                             m_caster->CastSpell(seat->GetBase(), 62496, true);
@@ -5102,7 +5102,7 @@ void Spell::EffectScriptEffect(SpellEffIndex effIndex)
                             sLog->outError("Unknown Lightwell spell caster %u", m_caster->GetEntry());
                             return;
                     }
-                    Aura * chargesaura = m_caster->GetAura(59907);
+                    Aura* chargesaura = m_caster->GetAura(59907);
 
                     if (chargesaura && chargesaura->GetCharges() > 1)
                     {
@@ -5222,7 +5222,7 @@ void Spell::EffectScriptEffect(SpellEffIndex effIndex)
                 Unit::AuraApplicationMap & sealAuras = m_caster->GetAppliedAuras();
                 for (Unit::AuraApplicationMap::iterator iter = sealAuras.begin(); iter != sealAuras.end();)
                 {
-                    Aura * aura = iter->second->GetBase();
+                    Aura* aura = iter->second->GetBase();
                     if (IsSealSpell(aura->GetSpellProto()))
                     {
                         if (AuraEffect * aureff = aura->GetEffect(2))
@@ -6160,7 +6160,7 @@ void Spell::EffectDispelMechanic(SpellEffIndex effIndex)
     Unit::AuraMap const& auras = unitTarget->GetOwnedAuras();
     for (Unit::AuraMap::const_iterator itr = auras.begin(); itr != auras.end(); ++itr)
     {
-        Aura * aura = itr->second;
+        Aura* aura = itr->second;
         if (!aura->GetApplicationOfTarget(unitTarget->GetGUID()))
             continue;
         bool success = false;
@@ -6524,7 +6524,7 @@ void Spell::EffectStealBeneficialBuff(SpellEffIndex effIndex)
     Unit::AuraMap const& auras = unitTarget->GetOwnedAuras();
     for (Unit::AuraMap::const_iterator itr = auras.begin(); itr != auras.end(); ++itr)
     {
-        Aura * aura = itr->second;
+        Aura* aura = itr->second;
         AuraApplication * aurApp = aura->GetApplicationOfTarget(unitTarget->GetGUID());
         if (!aurApp)
             continue;

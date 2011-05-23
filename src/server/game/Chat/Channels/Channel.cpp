@@ -62,7 +62,7 @@ Channel::Channel(const std::string& name, uint32 channel_id, uint32 Team)
 
             if (result) //load
             {
-                Field *fields = result->Fetch();
+                Field* fields = result->Fetch();
                 m_announce = fields[0].GetBool();
                 m_ownership = fields[1].GetBool();
                 m_password  = fields[2].GetString();
@@ -206,7 +206,7 @@ void Channel::Join(uint64 p, const char *pass)
     if (!IsConstant())
     {
         // Update last_used timestamp in db
-        if(!players.empty())
+        if (!players.empty())
             UpdateChannelUseageInDB();
 
         // If the channel has no owner yet and ownership is allowed, set the new owner.

@@ -557,7 +557,7 @@ class Creature : public Unit, public GridObject<Creature>
         bool lootForPickPocketed;
         bool lootForBody;
         Player* GetLootRecipient() const;
-        Group *GetLootRecipientGroup() const;
+        Group* GetLootRecipientGroup() const;
         bool hasLootRecipient() const { return m_lootRecipient || m_lootRecipientGroup; }
         bool isTappedBy(Player* player) const;                          // return true if the creature is tapped by the player or a member of his party.
 
@@ -652,8 +652,8 @@ class Creature : public Unit, public GridObject<Creature>
         void UpdateWaypointID(uint32 wpID){m_waypointID = wpID;}
 
         void SearchFormation();
-        CreatureGroup *GetFormation() {return m_formation;}
-        void SetFormation(CreatureGroup *formation) {m_formation = formation;}
+        CreatureGroup* GetFormation() {return m_formation;}
+        void SetFormation(CreatureGroup* formation) {m_formation = formation;}
 
         Unit* SelectVictim();
         void SetDeadByDefault (bool death_state) {m_isDeadByDefault = death_state;}
@@ -736,7 +736,7 @@ class Creature : public Unit, public GridObject<Creature>
         uint32 m_path_id;
 
         //Formation var
-        CreatureGroup *m_formation;
+        CreatureGroup* m_formation;
         bool TriggerJustRespawned;
 };
 

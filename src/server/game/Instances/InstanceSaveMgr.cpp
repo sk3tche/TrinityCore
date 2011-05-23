@@ -313,7 +313,7 @@ void InstanceSaveManager::LoadResetTimes()
         {
             do
             {
-                Field *fields = result->Fetch();
+                Field* fields = result->Fetch();
                 uint32 instance = fields[1].GetUInt32();
                 time_t resettime = time_t(fields[0].GetUInt32() + 2 * HOUR);
                 InstResetTimeMapDiffType::iterator itr = instResetTime.find(instance);
@@ -339,7 +339,7 @@ void InstanceSaveManager::LoadResetTimes()
     {
         do
         {
-            Field *fields = result->Fetch();
+            Field* fields = result->Fetch();
             uint32 mapid = fields[0].GetUInt16();
             Difficulty difficulty = Difficulty(fields[1].GetUInt32());
             uint64 oldresettime = fields[2].GetUInt32();
@@ -498,7 +498,7 @@ void InstanceSaveManager::_ResetSave(InstanceSaveHashMap::iterator &itr)
     InstanceSave::GroupListType &gList = itr->second->m_groupList;
     while (!gList.empty())
     {
-        Group *group = *(gList.begin());
+        Group* group = *(gList.begin());
         group->UnbindInstance(itr->second->GetMapId(), itr->second->GetDifficulty(), true);
     }
 

@@ -391,7 +391,7 @@ void WorldSession::HandleCharCreateOpcode(WorldPacket & recv_data)
     QueryResult resultacct = LoginDatabase.PQuery("SELECT IFNULL(SUM(numchars), 0) FROM realmcharacters WHERE acctid = '%d'", GetAccountId());
     if (resultacct)
     {
-        Field *fields = resultacct->Fetch();
+        Field* fields = resultacct->Fetch();
         uint32 acctcharcount = fields[0].GetUInt32();
 
         if (acctcharcount >= sWorld->getIntConfig(CONFIG_CHARACTERS_PER_ACCOUNT))
@@ -406,7 +406,7 @@ void WorldSession::HandleCharCreateOpcode(WorldPacket & recv_data)
     uint8 charcount = 0;
     if (result)
     {
-        Field *fields=result->Fetch();
+        Field* fields=result->Fetch();
         charcount = fields[0].GetUInt8();
 
         if (charcount >= sWorld->getIntConfig(CONFIG_CHARACTERS_PER_REALM))
@@ -619,7 +619,7 @@ void WorldSession::HandleCharDeleteOpcode(WorldPacket & recv_data)
     QueryResult result = CharacterDatabase.PQuery("SELECT account, name FROM characters WHERE guid='%u'", GUID_LOPART(guid));
     if (result)
     {
-        Field *fields = result->Fetch();
+        Field* fields = result->Fetch();
         accountId = fields[0].GetUInt32();
         name = fields[1].GetString();
     }
@@ -828,7 +828,7 @@ void WorldSession::HandlePlayerLogin(LoginQueryHolder * holder)
     pCurrChar->SetInGameTime(getMSTime());
 
     // announce group about member online (must be after add to player list to receive announce to self)
-    if (Group *group = pCurrChar->GetGroup())
+    if (Group* group = pCurrChar->GetGroup())
     {
         //pCurrChar->groupInfo.group->SendInit(this); // useless
         group->SendUpdate();
@@ -1271,7 +1271,7 @@ void WorldSession::HandleCharCustomize(WorldPacket& recv_data)
         return;
     }
 
-    Field *fields = result->Fetch();
+    Field* fields = result->Fetch();
     uint32 at_loginFlags = fields[0].GetUInt16();
 
     if (!(at_loginFlags & AT_LOGIN_CUSTOMIZE))
@@ -1468,7 +1468,7 @@ void WorldSession::HandleCharFactionOrRaceChange(WorldPacket& recv_data)
         return;
     }
 
-    Field *fields = result->Fetch();
+    Field* fields = result->Fetch();
     uint32 playerClass = fields[0].GetUInt32();
     uint32 level = fields[1].GetUInt32();
     uint32 at_loginFlags = fields[2].GetUInt16();

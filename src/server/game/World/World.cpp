@@ -1824,7 +1824,7 @@ void World::LoadAutobroadcasts()
     do
     {
 
-        Field *fields = result->Fetch();
+        Field* fields = result->Fetch();
         std::string message = fields[0].GetString();
 
         m_Autobroadcasts.push_back(message);
@@ -2513,7 +2513,7 @@ void World::UpdateSessions(uint32 diff)
         WorldSession * pSession = itr->second;
         WorldSessionFilter updater(pSession);
 
-        if(!pSession->Update(diff, updater))    // As interval = 0
+        if (!pSession->Update(diff, updater))    // As interval = 0
         {
             if (!RemoveQueuedPlayer(itr->second) && itr->second && getIntConfig(CONFIG_INTERVAL_DISCONNECT_TOLERANCE))
                 m_disconnects[itr->second->GetAccountId()] = time(NULL);
@@ -2591,7 +2591,7 @@ void World::_UpdateRealmCharCount(PreparedQueryResult resultCharCount)
 {
     if (resultCharCount)
     {
-        Field *fields = resultCharCount->Fetch();
+        Field* fields = resultCharCount->Fetch();
         uint32 accountId = fields[0].GetUInt32();
         uint32 charCount = fields[1].GetUInt32();
 
@@ -2622,7 +2622,7 @@ void World::InitDailyQuestResetTime()
     QueryResult result = CharacterDatabase.Query("SELECT MAX(time) FROM character_queststatus_daily");
     if (result)
     {
-        Field *fields = result->Fetch();
+        Field* fields = result->Fetch();
         mostRecentQuestTime = time_t(fields[0].GetUInt32());
     }
     else
@@ -2722,7 +2722,7 @@ void World::ResetRandomBG()
 {
     sLog->outDetail("Random BG status reset for all characters.");
     CharacterDatabase.Execute("DELETE FROM character_battleground_random");
-    for(SessionMap::const_iterator itr = m_sessions.begin(); itr != m_sessions.end(); ++itr)
+    for (SessionMap::const_iterator itr = m_sessions.begin(); itr != m_sessions.end(); ++itr)
         if (itr->second->GetPlayer())
             itr->second->GetPlayer()->SetRandomWinner(false);
 
@@ -2794,7 +2794,7 @@ void World::LoadWorldStates()
 
     do
     {
-        Field *fields = result->Fetch();
+        Field* fields = result->Fetch();
         m_worldstates[fields[0].GetUInt32()] = fields[1].GetUInt32();
         ++count;
     }

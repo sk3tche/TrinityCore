@@ -80,7 +80,7 @@ void CharacterDatabaseCleaner::CheckUnique(const char* column, const char* table
     do
     {
 
-        Field *fields = result->Fetch();
+        Field* fields = result->Fetch();
 
         uint32 id = fields[0].GetUInt32();
 

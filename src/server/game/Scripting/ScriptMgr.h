@@ -929,8 +929,8 @@ class ScriptMgr
     public: /* PlayerScript */
 
         void OnPVPKill(Player* killer, Player* killed);
-        void OnCreatureKill(Player* killer, Creature *killed);
-        void OnPlayerKilledByCreature(Creature *killer, Player* killed);
+        void OnCreatureKill(Player* killer, Creature* killed);
+        void OnPlayerKilledByCreature(Creature* killer, Player* killed);
         void OnPlayerLevelChanged(Player* player, uint8 newLevel);
         void OnPlayerFreeTalentPointsChanged(Player* player, uint32 newPoints);
         void OnPlayerTalentsReset(Player* player, bool no_cost);

@@ -54,7 +54,7 @@ ObjectGridRespawnMover::Visit(CreatureMapType &m)
     // move to respawn point to prevent this case. For player view in respawn grid this will be normal respawn.
     for (CreatureMapType::iterator iter = m.begin(); iter != m.end();)
     {
-        Creature * c = iter->getSource();
+        Creature* c = iter->getSource();
         ++iter;
 
         ASSERT(!c->isPet() && "ObjectGridRespawnMover don't must be called for pets");
@@ -98,7 +98,7 @@ template<class T> void AddUnitState(T* /*obj*/, CellPair const& /*cell_pair*/)
 {
 }
 
-template<> void AddUnitState(Creature *obj, CellPair const& cell_pair)
+template<> void AddUnitState(Creature* obj, CellPair const& cell_pair)
 {
     Cell cell(cell_pair);
 

@@ -48,7 +48,7 @@ class SmartAI : public CreatureAI
 {
     public:
         ~SmartAI(){};
-        explicit SmartAI(Creature *c);
+        explicit SmartAI(Creature* c);
 
         // Start moving to the desired MovePoint
         void StartPath(bool run = false, uint32 path = 0, bool repeat = false, Unit* invoker = NULL);
@@ -163,7 +163,7 @@ class SmartAI : public CreatureAI
         uint64 GetGUID(int32 id = 0);
 
         //core related
-        static int Permissible(const Creature *);
+        static int Permissible(const Creature* );
 
         // Called at movepoint reached
         void MovepointReached(uint32 id);

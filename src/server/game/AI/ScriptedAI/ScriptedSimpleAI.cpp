@@ -26,7 +26,7 @@ EndScriptData */
 #include "ScriptPCH.h"
 #include "ScriptedSimpleAI.h"
 
-SimpleAI::SimpleAI(Creature *c) : ScriptedAI(c)
+SimpleAI::SimpleAI(Creature* c) : ScriptedAI(c)
 {
     //Clear all data
     Aggro_TextId[0] = 0;

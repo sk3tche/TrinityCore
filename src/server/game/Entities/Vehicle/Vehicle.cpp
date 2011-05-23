@@ -74,7 +74,7 @@ Vehicle::~Vehicle()
 
 void Vehicle::Install()
 {
-    if (Creature *pCreature = me->ToCreature())
+    if (Creature* pCreature = me->ToCreature())
     {
         switch (m_vehicleInfo->m_powerType)
         {

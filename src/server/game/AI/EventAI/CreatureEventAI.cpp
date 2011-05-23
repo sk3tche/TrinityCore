@@ -48,14 +48,14 @@ bool CreatureEventAIHolder::UpdateRepeatTimer(Creature* creature, uint32 repeatM
     return true;
 }
 
-int CreatureEventAI::Permissible(const Creature *creature)
+int CreatureEventAI::Permissible(const Creature* creature)
 {
     if (creature->GetAIName() == "EventAI")
         return PERMIT_BASE_SPECIAL;
     return PERMIT_BASE_NO;
 }
 
-CreatureEventAI::CreatureEventAI(Creature *c) : CreatureAI(c)
+CreatureEventAI::CreatureEventAI(Creature* c) : CreatureAI(c)
 {
     // Need make copy for filter unneeded steps and safe in case table reload
     CreatureEventAI_Event_Map::const_iterator CreatureEvents = sEventAIMgr->GetCreatureEventAIMap().find(me->GetEntry());

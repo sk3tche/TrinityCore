@@ -435,7 +435,7 @@ bool ChatHandler::HandleListItemCommand(const char *args)
     {
         do
         {
-            Field *fields = result->Fetch();
+            Field* fields = result->Fetch();
             uint32 item_guid = fields[0].GetUInt32();
             uint32 item_bag = fields[1].GetUInt32();
             uint32 item_slot = fields[2].GetUInt32();
@@ -490,7 +490,7 @@ bool ChatHandler::HandleListItemCommand(const char *args)
     {
         do
         {
-            Field *fields = result->Fetch();
+            Field* fields = result->Fetch();
             uint32 item_guid        = fields[0].GetUInt32();
             uint32 item_s           = fields[1].GetUInt32();
             uint32 item_r           = fields[2].GetUInt32();
@@ -535,7 +535,7 @@ bool ChatHandler::HandleListItemCommand(const char *args)
     {
         do
         {
-            Field *fields = result->Fetch();
+            Field* fields = result->Fetch();
             uint32 item_guid       = fields[0].GetUInt32();
             uint32 owner           = fields[1].GetUInt32();
             uint32 owner_acc       = fields[2].GetUInt32();
@@ -566,7 +566,7 @@ bool ChatHandler::HandleListItemCommand(const char *args)
     {
         do
         {
-            Field *fields = result->Fetch();
+            Field* fields = result->Fetch();
             uint32 item_guid = fields[0].GetUInt32();
             uint32 guild_guid = fields[1].GetUInt32();
             std::string guild_name = fields[2].GetString();
@@ -649,7 +649,7 @@ bool ChatHandler::HandleListObjectCommand(const char *args)
     {
         do
         {
-            Field *fields = result->Fetch();
+            Field* fields = result->Fetch();
             uint32 guid = fields[0].GetUInt32();
             float x = fields[1].GetFloat();
             float y = fields[2].GetFloat();
@@ -721,7 +721,7 @@ bool ChatHandler::HandleListCreatureCommand(const char *args)
     {
         do
         {
-            Field *fields = result->Fetch();
+            Field* fields = result->Fetch();
             uint32 guid = fields[0].GetUInt32();
             float x = fields[1].GetFloat();
             float y = fields[2].GetFloat();
@@ -3190,7 +3190,7 @@ bool ChatHandler::HandleBanInfoIPCommand(const char *args)
         return true;
     }
 
-    Field *fields = result->Fetch();
+    Field* fields = result->Fetch();
     bool permanent = !fields[6].GetUInt64();
     PSendSysMessage(LANG_BANINFO_IPENTRY,
         fields[0].GetCString(), fields[1].GetCString(), permanent ? GetTrinityString(LANG_BANINFO_NEVER) : fields[2].GetCString(),
@@ -3345,7 +3345,7 @@ bool ChatHandler::HandleBanListHelper(QueryResult result)
         do
         {
             SendSysMessage("-------------------------------------------------------------------------------");
-            Field *fields = result->Fetch();
+            Field* fields = result->Fetch();
             uint32 account_id = fields[0].GetUInt32 ();
 
             std::string account_name;
@@ -3361,7 +3361,7 @@ bool ChatHandler::HandleBanListHelper(QueryResult result)
             QueryResult banInfo = LoginDatabase.PQuery("SELECT bandate, unbandate, bannedby, banreason FROM account_banned WHERE id = %u ORDER BY unbandate", account_id);
             if (banInfo)
             {
-                Field *fields2 = banInfo->Fetch();
+                Field* fields2 = banInfo->Fetch();
                 do
                 {
                     time_t t_ban = fields2[0].GetUInt64();
@@ -3438,7 +3438,7 @@ bool ChatHandler::HandleBanListIPCommand(const char *args)
         do
         {
             SendSysMessage("-------------------------------------------------------------------------------");
-            Field *fields = result->Fetch();
+            Field* fields = result->Fetch();
             time_t t_ban = fields[1].GetUInt64();
             tm* aTm_ban = localtime(&t_ban);
             if (fields[1].GetUInt64() == fields[2].GetUInt64())
@@ -4067,7 +4067,7 @@ bool ChatHandler::HandleInstanceListBindsCommand(const char* /*args*/)
     }
     PSendSysMessage("player binds: %d", counter);
     counter = 0;
-    Group *group = player->GetGroup();
+    Group* group = player->GetGroup();
     if (group)
     {
         for (uint8 i = 0; i < MAX_DIFFICULTY; ++i)
@@ -4111,13 +4111,13 @@ bool ChatHandler::HandleInstanceUnbindCommand(const char *args)
             return false;
     }
 
-    for(uint8 i = 0; i < MAX_DIFFICULTY; ++i)
+    for (uint8 i = 0; i < MAX_DIFFICULTY; ++i)
     {
         Player::BoundInstancesMap &binds = player->GetBoundInstances(Difficulty(i));
-        for(Player::BoundInstancesMap::iterator itr = binds.begin(); itr != binds.end();)
+        for (Player::BoundInstancesMap::iterator itr = binds.begin(); itr != binds.end();)
         {
             InstanceSave *save = itr->second.save;
-            if(itr->first != player->GetMapId() && (!MapId || MapId == itr->first) && (diff == -1 || diff == save->GetDifficulty()))
+            if (itr->first != player->GetMapId() && (!MapId || MapId == itr->first) && (diff == -1 || diff == save->GetDifficulty()))
             {
                 std::string timeleft = GetTimeString(save->GetResetTime() - time(NULL));
                 PSendSysMessage("unbinding map: %d inst: %d perm: %s diff: %d canReset: %s TTR: %s", itr->first, save->GetInstanceId(), itr->second.perm ? "yes" : "no", save->GetDifficulty(), save->CanReset() ? "yes" : "no", timeleft.c_str());
@@ -4412,7 +4412,7 @@ bool ChatHandler::HandleChannelSetOwnership(const char *args)
 
     if (strcmp(argstr, "on") == 0)
     {
-        if(chn)
+        if (chn)
             chn->SetOwnership(true);
         PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_SET_CHANNEL_OWNERSHIP);
         stmt->setUInt8 (0, 1);
@@ -4422,7 +4422,7 @@ bool ChatHandler::HandleChannelSetOwnership(const char *args)
     }
     else if (strcmp(argstr, "off") == 0)
     {
-        if(chn)
+        if (chn)
             chn->SetOwnership(false);
         PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_SET_CHANNEL_OWNERSHIP);
         stmt->setUInt8 (0, 0);
@@ -4576,7 +4576,7 @@ bool ChatHandler::HandleUnFreezeCommand(const char *args)
                 return true;
             }
             //if player found: delete his freeze aura
-            Field *fields=result->Fetch();
+            Field* fields=result->Fetch();
             uint64 pguid = fields[0].GetUInt64();
 
             CharacterDatabase.PQuery("DELETE FROM character_aura WHERE character_aura.spell = 9454 AND character_aura.guid = '%u'", pguid);
@@ -4608,7 +4608,7 @@ bool ChatHandler::HandleListFreezeCommand(const char * /*args*/)
     //Output of the results
     do
     {
-        Field *fields = result->Fetch();
+        Field* fields = result->Fetch();
         std::string fplayers = fields[0].GetString();
         PSendSysMessage(LANG_COMMAND_FROZEN_PLAYERS, fplayers.c_str());
     } while (result->NextRow());

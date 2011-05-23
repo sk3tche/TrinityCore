@@ -292,7 +292,7 @@ void Map::SwitchGridContainers(T* obj, bool on)
     obj->m_isWorldObject = on;
 }
 
-template void Map::SwitchGridContainers(Creature *, bool);
+template void Map::SwitchGridContainers(Creature* , bool);
 //template void Map::SwitchGridContainers(DynamicObject *, bool);
 
 template<class T>
@@ -505,10 +505,10 @@ void Map::VisitNearbyCellsOf(WorldObject* obj, TypeContainerVisitor<Trinity::Obj
 void Map::Update(const uint32 &t_diff)
 {
     /// update worldsessions for existing players
-    for(m_mapRefIter = m_mapRefManager.begin(); m_mapRefIter != m_mapRefManager.end(); ++m_mapRefIter)
+    for (m_mapRefIter = m_mapRefManager.begin(); m_mapRefIter != m_mapRefManager.end(); ++m_mapRefIter)
     {
         Player* plr = m_mapRefIter->getSource();
-        if(plr && plr->IsInWorld())
+        if (plr && plr->IsInWorld())
         {
             //plr->Update(t_diff);
             WorldSession * pSession = plr->GetSession();
@@ -754,7 +754,7 @@ Map::PlayerRelocation(Player* player, float x, float y, float z, float orientati
 }
 
 void
-Map::CreatureRelocation(Creature *creature, float x, float y, float z, float ang, bool respawnRelocationOnFail)
+Map::CreatureRelocation(Creature* creature, float x, float y, float z, float ang, bool respawnRelocationOnFail)
 {
     ASSERT(CheckGridIntegrity(creature, false));
 
@@ -784,7 +784,7 @@ Map::CreatureRelocation(Creature *creature, float x, float y, float z, float ang
     ASSERT(CheckGridIntegrity(creature, true));
 }
 
-void Map::AddCreatureToMoveList(Creature *c, float x, float y, float z, float ang)
+void Map::AddCreatureToMoveList(Creature* c, float x, float y, float z, float ang)
 {
     if (!c)
         return;
@@ -830,7 +830,7 @@ void Map::MoveAllCreaturesInMoveList()
     }
 }
 
-bool Map::CreatureCellRelocation(Creature *c, Cell new_cell)
+bool Map::CreatureCellRelocation(Creature* c, Cell new_cell)
 {
     Cell const& old_cell = c->GetCurrentCell();
     if (!old_cell.DiffGrid(new_cell))                       // in same grid
@@ -891,7 +891,7 @@ bool Map::CreatureCellRelocation(Creature *c, Cell new_cell)
     return false;
 }
 
-bool Map::CreatureRespawnRelocation(Creature *c)
+bool Map::CreatureRespawnRelocation(Creature* c)
 {
     float resp_x, resp_y, resp_z, resp_o;
     c->GetRespawnCoord(resp_x, resp_y, resp_z, &resp_o);
@@ -1605,21 +1605,21 @@ inline bool IsOutdoorWMO(uint32 mogpFlags, int32 /*adtId*/, int32 /*rootId*/, in
 {
     bool outdoor = true;
 
-    if(wmoEntry && atEntry)
+    if (wmoEntry && atEntry)
     {
-        if(atEntry->flags & AREA_FLAG_OUTSIDE)
+        if (atEntry->flags & AREA_FLAG_OUTSIDE)
             return true;
-        if(atEntry->flags & AREA_FLAG_INSIDE)
+        if (atEntry->flags & AREA_FLAG_INSIDE)
             return false;
     }
 
     outdoor = mogpFlags&0x8;
 
-    if(wmoEntry)
+    if (wmoEntry)
     {
-        if(wmoEntry->Flags & 4)
+        if (wmoEntry->Flags & 4)
             return true;
-        if((wmoEntry->Flags & 2)!=0)
+        if ((wmoEntry->Flags & 2)!=0)
             outdoor = false;
     }
     return outdoor;
@@ -1631,12 +1631,12 @@ bool Map::IsOutdoors(float x, float y, float z) const
     int32 adtId, rootId, groupId;
 
     // no wmo found? -> outside by default
-    if(!GetAreaInfo(x, y, z, mogpFlags, adtId, rootId, groupId))
+    if (!GetAreaInfo(x, y, z, mogpFlags, adtId, rootId, groupId))
         return true;
 
     AreaTableEntry const* atEntry = 0;
     WMOAreaTableEntry const* wmoEntry= GetWMOAreaTableEntryByTripple(rootId, adtId, groupId);
-    if(wmoEntry)
+    if (wmoEntry)
     {
         sLog->outStaticDebug("Got WMOAreaTableEntry! flag %u, areaid %u", wmoEntry->Flags, wmoEntry->areaId);
         atEntry = GetAreaEntryByAreaID(wmoEntry->areaId);
@@ -1651,11 +1651,11 @@ bool Map::GetAreaInfo(float x, float y, float z, uint32 &flags, int32 &adtId, in
     if (vmgr->getAreaInfo(GetId(), x, y, vmap_z, flags, adtId, rootId, groupId))
     {
         // check if there's terrain between player height and object height
-        if(GridMap* gmap = const_cast<Map*>(this)->GetGrid(x, y))
+        if (GridMap* gmap = const_cast<Map*>(this)->GetGrid(x, y))
         {
             float _mapheight = gmap->getHeight(x, y);
             // z + 2.0f condition taken from GetHeight(), not sure if it's such a great choice...
-            if(z + 2.0f > _mapheight &&  _mapheight > vmap_z)
+            if (z + 2.0f > _mapheight &&  _mapheight > vmap_z)
                 return false;
         }
         return true;
@@ -1744,7 +1744,7 @@ ZLiquidStatus Map::getLiquidStatus(float x, float y, float z, uint8 ReqLiquidTyp
         }
     }
 
-    if(GridMap* gmap = const_cast<Map*>(this)->GetGrid(x, y))
+    if (GridMap* gmap = const_cast<Map*>(this)->GetGrid(x, y))
     {
         LiquidData map_data;
         ZLiquidStatus map_result = gmap->getLiquidStatus(x, y, z, ReqLiquidType, &map_data);
@@ -2158,12 +2158,12 @@ void Map::RemoveFromActive(Creature* c)
 }
 
 template void Map::Add(Corpse *);
-template void Map::Add(Creature *);
+template void Map::Add(Creature* );
 template void Map::Add(GameObject *);
 template void Map::Add(DynamicObject *);
 
 template void Map::Remove(Corpse *, bool);
-template void Map::Remove(Creature *, bool);
+template void Map::Remove(Creature* , bool);
 template void Map::Remove(GameObject *, bool);
 template void Map::Remove(DynamicObject *, bool);
 
@@ -2221,7 +2221,7 @@ bool InstanceMap::CanEnter(Player* player)
     }
 
     // cannot enter while an encounter is in progress on raids
-    /*Group *pGroup = player->GetGroup();
+    /*Group* pGroup = player->GetGroup();
     if (!player->isGameMaster() && pGroup && pGroup->InCombatToInstance(GetInstanceId()) && player->GetMapId() != GetId())*/
     if (IsRaid() && GetInstanceScript() && GetInstanceScript()->IsEncounterInProgress())
     {
@@ -2275,7 +2275,7 @@ bool InstanceMap::Add(Player* player)
         // Dungeon only code
         if (IsDungeon())
         {
-            Group *group = player->GetGroup();
+            Group* group = player->GetGroup();
 
             // increase current instances (hourly limit)
             if (!group || !group->isLFGGroup())
@@ -2483,7 +2483,7 @@ void InstanceMap::PermBindAllPlayers(Player* player)
         return;
     }
 
-    Group *group = player->GetGroup();
+    Group* group = player->GetGroup();
     // group members outside the instance group don't get bound
     for (MapRefManager::iterator itr = m_mapRefManager.begin(); itr != m_mapRefManager.end(); ++itr)
     {

@@ -866,7 +866,7 @@ void BattlegroundSA::UpdateDemolisherSpawns()
     {
         if (m_BgCreatures[i])
         {
-            if (Creature *Demolisher = GetBGCreature(i))
+            if (Creature* Demolisher = GetBGCreature(i))
             {
                 if (Demolisher->isDead())
                 {

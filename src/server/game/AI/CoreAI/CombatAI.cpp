@@ -21,7 +21,7 @@
 #include "Vehicle.h"
 #include "ObjectAccessor.h"
 
-int AggressorAI::Permissible(const Creature *creature)
+int AggressorAI::Permissible(const Creature* creature)
 {
     // have some hostile factions, it will be selected by IsHostileTo check at MoveInLineOfSight
     if (!creature->isCivilian() && !creature->IsNeutralToAll())
@@ -39,27 +39,27 @@ void AggressorAI::UpdateAI(const uint32 /*diff*/)
 }
 
 // some day we will delete these useless things
-int CombatAI::Permissible(const Creature * /*creature*/)
+int CombatAI::Permissible(const Creature* /*creature*/)
 {
     return PERMIT_BASE_NO;
 }
 
-int ArchorAI::Permissible(const Creature * /*creature*/)
+int ArchorAI::Permissible(const Creature* /*creature*/)
 {
     return PERMIT_BASE_NO;
 }
 
-int TurretAI::Permissible(const Creature * /*creature*/)
+int TurretAI::Permissible(const Creature* /*creature*/)
 {
     return PERMIT_BASE_NO;
 }
 
-int AOEAI::Permissible(const Creature * /*creature*/)
+int AOEAI::Permissible(const Creature* /*creature*/)
 {
     return PERMIT_BASE_NO;
 }
 
-int VehicleAI::Permissible(const Creature * /*creature*/)
+int VehicleAI::Permissible(const Creature* /*creature*/)
 {
     return PERMIT_BASE_NO;
 }
@@ -177,7 +177,7 @@ void CasterAI::UpdateAI(const uint32 diff)
 //ArchorAI
 //////////////
 
-ArchorAI::ArchorAI(Creature *c) : CreatureAI(c)
+ArchorAI::ArchorAI(Creature* c) : CreatureAI(c)
 {
     if (!me->m_spells[0])
         sLog->outError("ArchorAI set for creature (entry = %u) with spell1=0. AI will do nothing", me->GetEntry());
@@ -224,7 +224,7 @@ void ArchorAI::UpdateAI(const uint32 /*diff*/)
 //TurretAI
 //////////////
 
-TurretAI::TurretAI(Creature *c) : CreatureAI(c)
+TurretAI::TurretAI(Creature* c) : CreatureAI(c)
 {
     if (!me->m_spells[0])
         sLog->outError("TurretAI set for creature (entry = %u) with spell1=0. AI will do nothing", me->GetEntry());
@@ -261,7 +261,7 @@ void TurretAI::UpdateAI(const uint32 /*diff*/)
 //AOEAI
 //////////////
 
-AOEAI::AOEAI(Creature *c) : CreatureAI(c)
+AOEAI::AOEAI(Creature* c) : CreatureAI(c)
 {
     if (!me->m_spells[0])
         sLog->outError("AOEAI set for creature (entry = %u) with spell1=0. AI will do nothing", me->GetEntry());
@@ -291,7 +291,7 @@ void AOEAI::UpdateAI(const uint32 /*diff*/)
 //VehicleAI
 //////////////
 
-VehicleAI::VehicleAI(Creature *c) : CreatureAI(c), m_vehicle(c->GetVehicleKit()), m_IsVehicleInUse(false), m_ConditionsTimer(VEHICLE_CONDITION_CHECK_TIME)
+VehicleAI::VehicleAI(Creature* c) : CreatureAI(c), m_vehicle(c->GetVehicleKit()), m_IsVehicleInUse(false), m_ConditionsTimer(VEHICLE_CONDITION_CHECK_TIME)
 {
     LoadConditions();
     m_DoDismiss = false;
@@ -342,7 +342,7 @@ void VehicleAI::LoadConditions()
 
 void VehicleAI::CheckConditions(const uint32 diff)
 {
-    if(m_ConditionsTimer < diff)
+    if (m_ConditionsTimer < diff)
     {
         if (!conditions.empty())
         {

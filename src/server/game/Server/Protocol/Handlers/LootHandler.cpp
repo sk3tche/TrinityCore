@@ -162,7 +162,7 @@ void WorldSession::HandleLootMoneyOpcode(WorldPacket & /*recv_data*/)
     {
         if (shareMoney && player->GetGroup())      //item, pickpocket and players can be looted only single player
         {
-            Group *group = player->GetGroup();
+            Group* group = player->GetGroup();
 
             std::vector<Player*> playersNear;
             for (GroupReference *itr = group->GetFirstMember(); itr != NULL; itr = itr->next())
@@ -446,7 +446,7 @@ void WorldSession::HandleLootMasterGiveOpcode(WorldPacket & recv_data)
 
     if (IS_CRE_OR_VEH_GUID(GetPlayer()->GetLootGUID()))
     {
-        Creature *pCreature = GetPlayer()->GetMap()->GetCreature(lootguid);
+        Creature* pCreature = GetPlayer()->GetMap()->GetCreature(lootguid);
         if (!pCreature)
             return;
 

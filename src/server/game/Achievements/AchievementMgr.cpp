@@ -2211,7 +2211,7 @@ void AchievementGlobalMgr::LoadAchievementCriteriaData()
 
     do
     {
-        Field *fields = result->Fetch();
+        Field* fields = result->Fetch();
         uint32 criteria_id = fields[0].GetUInt32();
 
         AchievementCriteriaEntry const* criteria = sAchievementCriteriaStore.LookupEntry(criteria_id);
@@ -2360,7 +2360,7 @@ void AchievementGlobalMgr::LoadCompletedAchievements()
 
     do
     {
-        Field *fields = result->Fetch();
+        Field* fields = result->Fetch();
 
         uint32 achievement_id = fields[0].GetUInt32();
         if (!sAchievementStore.LookupEntry(achievement_id))
@@ -2399,7 +2399,7 @@ void AchievementGlobalMgr::LoadRewards()
     do
     {
 
-        Field *fields = result->Fetch();
+        Field* fields = result->Fetch();
         uint32 entry = fields[0].GetUInt32();
         const AchievementEntry* pAchievement = sAchievementStore.LookupEntry(entry);
         if (!pAchievement)
@@ -2505,7 +2505,7 @@ void AchievementGlobalMgr::LoadRewardLocales()
 
     do
     {
-        Field *fields = result->Fetch();
+        Field* fields = result->Fetch();
 
         uint32 entry = fields[0].GetUInt32();
 

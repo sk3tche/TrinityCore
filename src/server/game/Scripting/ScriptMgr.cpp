@@ -1079,12 +1079,12 @@ void ScriptMgr::OnPVPKill(Player* killer, Player* killed)
     FOREACH_SCRIPT(PlayerScript)->OnPVPKill(killer, killed);
 }
 
-void ScriptMgr::OnCreatureKill(Player* killer, Creature *killed)
+void ScriptMgr::OnCreatureKill(Player* killer, Creature* killed)
 {
     FOREACH_SCRIPT(PlayerScript)->OnCreatureKill(killer, killed);
 }
 
-void ScriptMgr::OnPlayerKilledByCreature(Creature *killer, Player* killed)
+void ScriptMgr::OnPlayerKilledByCreature(Creature* killer, Player* killed)
 {
     FOREACH_SCRIPT(PlayerScript)->OnPlayerKilledByCreature(killer, killed);
 }

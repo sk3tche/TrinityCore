@@ -140,7 +140,7 @@ bool Group::Create(Player* leader)
     return true;
 }
 
-void Group::LoadGroupFromDB(Field *fields)
+void Group::LoadGroupFromDB(Field* fields)
 {
     m_dbStoreId = fields[15].GetUInt32();
     m_guid = MAKE_NEW_GUID(sGroupMgr->GenerateGroupId(), 0, HIGHGUID_GROUP);
@@ -720,7 +720,7 @@ void Group::SendLootAllPassed(uint32 NumberOfPlayers, const Roll &r)
 }
 
 // notify group members which player is the allowed looter for the given creature
-void Group::SendLooter(Creature *pCreature, Player* pLooter)
+void Group::SendLooter(Creature* pCreature, Player* pLooter)
 {
     ASSERT(pCreature);
 
@@ -812,7 +812,7 @@ void Group::GroupLoot(Loot *loot, WorldObject* pLootedObject)
 
                 RollId.push_back(r);
 
-                if (Creature* creature = dynamic_cast<Creature *>(pLootedObject))
+                if (Creature* creature = dynamic_cast<Creature* >(pLootedObject))
                 {
                     creature->m_groupLootTimer = 60000;
                     creature->lootingGroupLowGUID = GetLowGUID();
@@ -903,7 +903,7 @@ void Group::NeedBeforeGreed(Loot *loot, WorldObject* pLootedObject)
 
                 RollId.push_back(r);
 
-                if (Creature* creature = dynamic_cast<Creature *>(pLootedObject))
+                if (Creature* creature = dynamic_cast<Creature* >(pLootedObject))
                 {
                     creature->m_groupLootTimer = 60000;
                     creature->lootingGroupLowGUID = GetLowGUID();

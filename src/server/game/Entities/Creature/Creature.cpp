@@ -78,7 +78,7 @@ bool VendorItemData::RemoveItem(uint32 item_id)
 VendorItem const* VendorItemData::FindItemCostPair(uint32 item_id, uint32 extendedCost) const
 {
     for (VendorItemList::const_iterator i = m_items.begin(); i != m_items.end(); ++i)
-        if((*i)->item == item_id && (*i)->ExtendedCost == extendedCost)
+        if ((*i)->item == item_id && (*i)->ExtendedCost == extendedCost)
             return *i;
     return NULL;
 }
@@ -241,7 +241,7 @@ void Creature::RemoveCorpse(bool setSpawnTime)
         AI()->CorpseRemoved(respawnDelay);
 
     // Should get removed later, just keep "compatibility" with scripts
-    if(setSpawnTime)
+    if (setSpawnTime)
         m_respawnTime = time(NULL) + respawnDelay;
 
     float x, y, z, o;
@@ -974,7 +974,7 @@ Player* Creature::GetLootRecipient() const
     return ObjectAccessor::FindPlayer(m_lootRecipient);
 }
 
-Group *Creature::GetLootRecipientGroup() const
+Group* Creature::GetLootRecipientGroup() const
 {
     if (!m_lootRecipientGroup)
         return NULL;
@@ -1003,7 +1003,7 @@ void Creature::SetLootRecipient(Unit* unit)
         return;
 
     m_lootRecipient = player->GetGUID();
-    if (Group *group = player->GetGroup())
+    if (Group* group = player->GetGroup())
         m_lootRecipientGroup = group->GetLowGUID();
 
     SetFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_TAPPED);
@@ -1707,7 +1707,7 @@ SpellEntry const* Creature::reachWithSpellAttack(Unit* victim)
         }
 
         bool bcontinue = true;
-        for (uint32 j = 0; j < MAX_SPELL_EFFECTS; j++)
+        for (uint8 j = 0; j < MAX_SPELL_EFFECTS; j++)
         {
             if ((spellInfo->Effect[j] == SPELL_EFFECT_SCHOOL_DAMAGE)       ||
                 (spellInfo->Effect[j] == SPELL_EFFECT_INSTAKILL)            ||
@@ -1757,7 +1757,7 @@ SpellEntry const* Creature::reachWithSpellCure(Unit* victim)
         }
 
         bool bcontinue = true;
-        for (uint32 j = 0; j < MAX_SPELL_EFFECTS; j++)
+        for (uint8 j = 0; j < MAX_SPELL_EFFECTS; j++)
         {
             if ((spellInfo->Effect[j] == SPELL_EFFECT_HEAL))
             {
@@ -2252,7 +2252,7 @@ void Creature::AllLootRemovedFromCorpse()
     if (!HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_SKINNABLE))
     {
         time_t now = time(NULL);
-        if(m_corpseRemoveTime <= now)
+        if (m_corpseRemoveTime <= now)
             return;
 
         float decayRate;

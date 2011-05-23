@@ -591,7 +591,7 @@ class CreatureEventAI : public CreatureAI
 {
 
     public:
-        explicit CreatureEventAI(Creature *c);
+        explicit CreatureEventAI(Creature* c);
         ~CreatureEventAI()
         {
             m_CreatureEventAIList.clear();
@@ -611,7 +611,7 @@ class CreatureEventAI : public CreatureAI
         void HealReceived(Unit* /*done_by*/, uint32& /*addhealth*/) {}
         void UpdateAI(const uint32 diff);
         void ReceiveEmote(Player* pPlayer, uint32 text_emote);
-        static int Permissible(const Creature *);
+        static int Permissible(const Creature* );
 
         bool ProcessEvent(CreatureEventAIHolder& pHolder, Unit* pActionInvoker = NULL);
         void ProcessAction(CreatureEventAI_Action const& action, uint32 rnd, uint32 EventId, Unit* pActionInvoker);

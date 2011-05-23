@@ -221,7 +221,7 @@ class InstanceScript : public ZoneScript
         void AddMinion(Creature* minion, bool add);
 
         void UpdateDoorState(GameObject *door);
-        void UpdateMinionState(Creature *minion, EncounterState state);
+        void UpdateMinionState(Creature* minion, EncounterState state);
 
         std::string LoadBossState(char const* data);
         std::string GetBossSaveData();

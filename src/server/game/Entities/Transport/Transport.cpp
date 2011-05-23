@@ -45,7 +45,7 @@ void MapManager::LoadTransports()
     do
     {
 
-        Field *fields = result->Fetch();
+        Field* fields = result->Fetch();
         uint32 lowguid = fields[0].GetUInt32();
         uint32 entry = fields[1].GetUInt32();
         std::string name = fields[2].GetString();
@@ -114,7 +114,7 @@ void MapManager::LoadTransports()
     {
         do
         {
-            Field *fields = result->Fetch();
+            Field* fields = result->Fetch();
 
             uint32 guid  = fields[0].GetUInt32();
             uint32 entry = fields[1].GetUInt32();
@@ -146,7 +146,7 @@ void MapManager::LoadTransportNPCs()
 
     do
     {
-        Field *fields = result->Fetch();
+        Field* fields = result->Fetch();
         uint32 guid = fields[0].GetUInt32();
         uint32 entry = fields[1].GetUInt32();
         uint32 transportEntry = fields[2].GetUInt32();
@@ -541,7 +541,7 @@ bool Transport::RemovePassenger(Player* passenger)
 
 void Transport::Update(uint32 p_diff)
 {
-    if(!AI())
+    if (!AI())
     {
         if (!AIM_Initialize())
             sLog->outError("Could not initialize GameObjectAI for Transport");
@@ -669,7 +669,7 @@ uint32 Transport::AddNPCPassenger(uint32 tguid, uint32 entry, float x, float y, 
 
     pCreature->SetHomePosition(pCreature->GetPositionX(), pCreature->GetPositionY(), pCreature->GetPositionZ(), pCreature->GetOrientation());
 
-    if(!pCreature->IsPositionValid())
+    if (!pCreature->IsPositionValid())
     {
         sLog->outError("Creature (guidlow %d, entry %d) not created. Suggested coordinates isn't valid (X: %f Y: %f)", pCreature->GetGUIDLow(), pCreature->GetEntry(), pCreature->GetPositionX(), pCreature->GetPositionY());
         delete pCreature;

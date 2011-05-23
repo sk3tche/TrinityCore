@@ -29,7 +29,7 @@
 #include "Util.h"
 #include "Group.h"
 
-int PetAI::Permissible(const Creature *creature)
+int PetAI::Permissible(const Creature* creature)
 {
     if (creature->isPet())
         return PERMIT_BASE_SPECIAL;
@@ -37,7 +37,7 @@ int PetAI::Permissible(const Creature *creature)
     return PERMIT_BASE_NO;
 }
 
-PetAI::PetAI(Creature *c) : CreatureAI(c), i_tracker(TIME_INTERVAL_LOOK)
+PetAI::PetAI(Creature* c) : CreatureAI(c), i_tracker(TIME_INTERVAL_LOOK)
 {
     m_AllySet.clear();
     UpdateAllies();
@@ -238,7 +238,7 @@ void PetAI::UpdateAI(const uint32 diff)
 void PetAI::UpdateAllies()
 {
     Unit* owner = me->GetCharmerOrOwner();
-    Group *pGroup = NULL;
+    Group* pGroup = NULL;
 
     m_updateAlliesTimer = 10*IN_MILLISECONDS;                //update friendly targets every 10 seconds, lesser checks increase performance
 

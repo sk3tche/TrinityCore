@@ -298,7 +298,7 @@ inline void Battleground::_ProcessRessurect(uint32 diff)
         {
             for (std::map<uint64, std::vector<uint64> >::iterator itr = m_ReviveQueue.begin(); itr != m_ReviveQueue.end(); ++itr)
             {
-                Creature *sh = NULL;
+                Creature* sh = NULL;
                 for (std::vector<uint64>::const_iterator itr2 = (itr->second).begin(); itr2 != (itr->second).end(); ++itr2)
                 {
                     Player* plr = sObjectMgr->GetPlayer(*itr2);
@@ -461,7 +461,7 @@ inline void Battleground::_ProcessJoin(uint32 diff)
                     for (Unit::AuraApplicationMap::iterator iter = auraMap.begin(); iter != auraMap.end();)
                     {
                         AuraApplication * aurApp = iter->second;
-                        Aura * aura = aurApp->GetBase();
+                        Aura* aura = aurApp->GetBase();
                         if (!aura->IsPermanent()
                             && aura->GetDuration() <= 30*IN_MILLISECONDS
                             && aurApp->IsPositive()
@@ -960,7 +960,7 @@ void Battleground::RemovePlayerAtLeave(const uint64& guid, bool Transport, bool 
         }
 
         // remove from raid group if player is member
-        if (Group *group = GetBgRaid(team))
+        if (Group* group = GetBgRaid(team))
         {
             if (!group->RemoveMember(guid))                // group was disbanded
             {
@@ -1455,7 +1455,7 @@ GameObject* Battleground::GetBGObject(uint32 type)
 
 Creature* Battleground::GetBGCreature(uint32 type)
 {
-    Creature *creature = GetBgMap()->GetCreature(m_BgCreatures[type]);
+    Creature* creature = GetBgMap()->GetCreature(m_BgCreatures[type]);
     if (!creature)
         sLog->outError("Battleground::GetBGCreature: creature (type: %u, GUID: %u) not found for BG (map: %u, instance id: %u)!",
             type, GUID_LOPART(m_BgCreatures[type]), m_MapId, m_InstanceID);
@@ -1524,7 +1524,7 @@ bool Battleground::DelCreature(uint32 type)
     if (!m_BgCreatures[type])
         return true;
 
-    if (Creature *creature = GetBgMap()->GetCreature(m_BgCreatures[type]))
+    if (Creature* creature = GetBgMap()->GetCreature(m_BgCreatures[type]))
     {
         creature->AddObjectToRemoveList();
         m_BgCreatures[type] = 0;
@@ -1813,7 +1813,7 @@ void Battleground::UpdateArenaWorldState()
     UpdateWorldState(0xe11, GetAlivePlayersCountByTeam(ALLIANCE));
 }
 
-void Battleground::SetBgRaid(uint32 TeamID, Group *bg_raid)
+void Battleground::SetBgRaid(uint32 TeamID, Group* bg_raid)
 {
     Group*& old_raid = TeamID == ALLIANCE ? m_BgRaids[BG_TEAM_ALLIANCE] : m_BgRaids[BG_TEAM_HORDE];
     if (old_raid)

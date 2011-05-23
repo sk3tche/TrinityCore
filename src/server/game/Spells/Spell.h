@@ -416,7 +416,7 @@ class Spell
         void EffectCastButtons(SpellEffIndex effIndex);
         void EffectRechargeManaGem(SpellEffIndex effIndex);
 
-        typedef std::set<Aura *> UsedSpellMods;
+        typedef std::set<Aura* > UsedSpellMods;
 
         Spell(Unit* Caster, SpellEntry const* info, bool triggered, uint64 originalCasterGUID = 0, bool skipCheck = false);
         ~Spell();
@@ -599,7 +599,7 @@ class Spell
         GameObject* gameObjTarget;
         int32 damage;
         // used in effects handlers
-        Aura * m_spellAura;
+        Aura* m_spellAura;
 
         // this is set in Spell Hit, but used in Apply Aura handler
         DiminishingLevels m_diminishLevel;

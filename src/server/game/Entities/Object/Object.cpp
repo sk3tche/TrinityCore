@@ -1520,7 +1520,7 @@ bool Position::HasInArc(float arc, const Position *obj) const
 
     // move angle to range -pi ... +pi
     angle = MapManager::NormalizeOrientation(angle);
-    if(angle > M_PI)
+    if (angle > M_PI)
         angle -= 2.0f*M_PI;
 
     float lborder =  -1 * (arc/2.0f);                       // in range -pi..0
@@ -2360,7 +2360,7 @@ Creature* WorldObject::SummonTrigger(float x, float y, float z, float ang, uint3
 
 Creature* WorldObject::FindNearestCreature(uint32 entry, float range, bool alive)
 {
-    Creature *creature = NULL;
+    Creature* creature = NULL;
     Trinity::NearestCreatureEntryWithLiveStateInObjectRangeCheck checker(*this, entry, alive, range);
     Trinity::CreatureLastSearcher<Trinity::NearestCreatureEntryWithLiveStateInObjectRangeCheck> searcher(this, creature, checker);
     VisitNearbyObject(range, searcher);

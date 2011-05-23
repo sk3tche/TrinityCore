@@ -460,7 +460,7 @@ void WorldSession::LogoutPlayer(bool Save)
         }
 
 		// Dismount player when logging out...
-		if(_player->IsMounted())
+		if (_player->IsMounted())
 		{
 			_player->Unmount();
 			_player->RemoveAurasByType(SPELL_AURA_MOUNTED);
@@ -620,7 +620,7 @@ void WorldSession::LoadAccountData(PreparedQueryResult result, uint32 mask)
 
     do
     {
-        Field *fields = result->Fetch();
+        Field* fields = result->Fetch();
         uint32 type = fields[0].GetUInt8();
         if (type >= NUM_ACCOUNT_DATA_TYPES)
         {

@@ -271,7 +271,7 @@ bool ConditionMgr::IsPlayerMeetToConditionList(Player* player, const ConditionLi
                 ConditionReferenceMap::const_iterator ref = m_ConditionReferenceMap.find((*i)->mReferenceId);
                 if (ref != m_ConditionReferenceMap.end())
                 {
-                    if(!IsPlayerMeetToConditionList(player, (*ref).second, invoker))
+                    if (!IsPlayerMeetToConditionList(player, (*ref).second, invoker))
                         ElseGroupMap[(*i)->mElseGroup] = false;
                 }
                 else
@@ -300,7 +300,7 @@ bool ConditionMgr::IsPlayerMeetToConditions(Player* player, ConditionList condit
     if (conditions.empty())
         return true;
 
-    if(player)
+    if (player)
         player->m_ConditionErrorMsgId = 0;
 
     sLog->outDebug(LOG_FILTER_CONDITIONSYS, "ConditionMgr::IsPlayerMeetToConditions");
@@ -392,7 +392,7 @@ void ConditionMgr::LoadConditions(bool isReload)
     do
     {
 
-        Field *fields = result->Fetch();
+        Field* fields = result->Fetch();
 
         Condition* cond = new Condition();
         int32 iSourceTypeOrReferenceId   = fields[0].GetInt32();

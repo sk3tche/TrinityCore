@@ -277,7 +277,7 @@ bool ChatHandler::HandlePInfoCommand(const char* args)
         if (!result)
             return false;
 
-        Field *fields = result->Fetch();
+        Field* fields = result->Fetch();
         total_player_time = fields[0].GetUInt32();
         level = fields[1].GetUInt32();
         money = fields[2].GetUInt32();
@@ -326,12 +326,12 @@ bool ChatHandler::HandlePInfoCommand(const char* args)
 
     if (QueryResult result = LoginDatabase.PQuery("SELECT unbandate, bandate = unbandate FROM account_banned WHERE id = '%u' AND active ORDER BY bandate ASC LIMIT 1", accId))
     {
-        Field * fields = result->Fetch();
+        Field* fields = result->Fetch();
         banTime = fields[1].GetBool() ? 0 : fields[0].GetUInt64();
     }
     else if (QueryResult result = CharacterDatabase.PQuery("SELECT unbandate, bandate = unbandate FROM character_banned WHERE guid = '%u' AND active ORDER BY bandate ASC LIMIT 1", GUID_LOPART(target_guid)))
     {
-        Field * fields = result->Fetch();
+        Field* fields = result->Fetch();
         banTime = fields[1].GetBool() ? 0 : fields[0].GetUInt64();
     }
 
@@ -441,10 +441,10 @@ bool ChatHandler::HandleCharacterChangeFactionCommand(const char * args)
     uint64 target_guid;
     std::string target_name;
 
-    if(!extractPlayerTarget((char*)args, &target, &target_guid, &target_name))
+    if (!extractPlayerTarget((char*)args, &target, &target_guid, &target_name))
         return false;
 
-    if(target)
+    if (target)
     {
         // TODO : add text into database
         PSendSysMessage(LANG_CUSTOMIZE_PLAYER, GetNameLink(target).c_str());
@@ -468,10 +468,10 @@ bool ChatHandler::HandleCharacterChangeRaceCommand(const char * args)
     Player* target;
     uint64 target_guid;
     std::string target_name;
-    if(!extractPlayerTarget((char*)args, &target, &target_guid, &target_name))
+    if (!extractPlayerTarget((char*)args, &target, &target_guid, &target_name))
         return false;
 
-    if(target)
+    if (target)
     {
         // TODO : add text into database
         PSendSysMessage(LANG_CUSTOMIZE_PLAYER, GetNameLink(target).c_str());
@@ -772,7 +772,7 @@ bool ChatHandler::HandleWaterwalkCommand(const char* args)
 bool ChatHandler::HandleCreatePetCommand(const char* /*args*/)
 {
     Player* player = m_session->GetPlayer();
-    Creature *creatureTarget = getSelectedCreature();
+    Creature* creatureTarget = getSelectedCreature();
 
     if (!creatureTarget || creatureTarget->isPet() || creatureTarget->GetTypeId() == TYPEID_PLAYER)
     {

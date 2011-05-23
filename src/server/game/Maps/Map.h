@@ -273,7 +273,7 @@ class Map : public GridRefManager<NGridType>
         virtual void InitVisibilityDistance();
 
         void PlayerRelocation(Player* , float x, float y, float z, float orientation);
-        void CreatureRelocation(Creature *creature, float x, float y, float z, float ang, bool respawnRelocationOnFail = true);
+        void CreatureRelocation(Creature* creature, float x, float y, float z, float ang, bool respawnRelocationOnFail = true);
 
         template<class T, class CONTAINER> void Visit(const Cell& cell, TypeContainerVisitor<T, CONTAINER> &visitor);
 
@@ -350,7 +350,7 @@ class Map : public GridRefManager<NGridType>
         void RemoveAllObjectsInRemoveList();
         virtual void RemoveAllPlayers();
 
-        bool CreatureRespawnRelocation(Creature *c);        // used only in MoveAllCreaturesInMoveList and ObjectGridUnloader
+        bool CreatureRespawnRelocation(Creature* c);        // used only in MoveAllCreaturesInMoveList and ObjectGridUnloader
 
         // assert print helper
         bool CheckGridIntegrity(Creature* c, bool moved) const;
@@ -451,9 +451,9 @@ class Map : public GridRefManager<NGridType>
         void SendInitTransports(Player* player);
         void SendRemoveTransports(Player* player);
 
-        bool CreatureCellRelocation(Creature *creature, Cell new_cell);
+        bool CreatureCellRelocation(Creature* creature, Cell new_cell);
 
-        void AddCreatureToMoveList(Creature *c, float x, float y, float z, float ang);
+        void AddCreatureToMoveList(Creature* c, float x, float y, float z, float ang);
         CreatureMoveList i_creaturesToMove;
 
         bool loaded(const GridPair &) const;

@@ -697,7 +697,7 @@ void BattlegroundMgr::CreateInitialBattlegrounds()
 
     do
     {
-        Field *fields = result->Fetch();
+        Field* fields = result->Fetch();
 
         uint32 bgTypeID_ = fields[0].GetUInt32();
         if (sDisableMgr->IsDisabledFor(DISABLE_TYPE_BATTLEGROUND, bgTypeID_, NULL))
@@ -1093,7 +1093,7 @@ void BattlegroundMgr::LoadBattleMastersEntry()
     {
         ++count;
 
-        Field *fields = result->Fetch();
+        Field* fields = result->Fetch();
 
         uint32 entry = fields[0].GetUInt32();
         uint32 bgTypeId  = fields[1].GetUInt32();

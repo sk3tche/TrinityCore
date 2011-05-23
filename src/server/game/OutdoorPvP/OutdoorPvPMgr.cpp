@@ -56,7 +56,7 @@ void OutdoorPvPMgr::InitOutdoorPvP()
 
     do
     {
-        Field *fields = result->Fetch();
+        Field* fields = result->Fetch();
 
         typeId = fields[0].GetUInt32();
 
@@ -202,7 +202,7 @@ void OutdoorPvPMgr::HandleGossipOption(Player* plr, uint64 guid, uint32 gossipid
     }
 }
 
-bool OutdoorPvPMgr::CanTalkTo(Player* plr, Creature * c, GossipMenuItems gso)
+bool OutdoorPvPMgr::CanTalkTo(Player* plr, Creature* c, GossipMenuItems gso)
 {
     for (OutdoorPvPSet::iterator itr = m_OutdoorPvPSet.begin(); itr != m_OutdoorPvPSet.end(); ++itr)
     {

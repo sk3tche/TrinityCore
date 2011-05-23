@@ -251,7 +251,7 @@ void IrcBot::SockRecv()
                 // Join Channel
                 //  - SJGR has no MOTD, so we need to look for MOTD File is Missing
                 //  - Also make sure that it is not a PRIVMSG
-                if(reply.find("252") != std::string::npos &&
+                if (reply.find("252") != std::string::npos &&
                     reply.find("PRIVMSG") == std::string::npos)
                 {
                     SendData(IDENTIFY, IRC_PASS);
@@ -260,10 +260,10 @@ void IrcBot::SockRecv()
                 }
 
                 std::vector<char const*> args;
-                if(reply.find("PRIVMSG") != std::string::npos)
+                if (reply.find("PRIVMSG") != std::string::npos)
                     SplitArgs(reply.c_str(), args);
 
-                if(args.size() < 1)
+                if (args.size() < 1)
                     return;
 
                 if (!stricmp(args[1], "PRIVMSG") && !stricmp(args[2], IRC_CHANNEL) && args[3][1] == '!')
@@ -271,7 +271,7 @@ void IrcBot::SockRecv()
                     std::string command = args[3];
                     command.erase(0, 2); // erase : and ! from the commands
 
-                    if(command[command.length()-1] == '\r')
+                    if (command[command.length()-1] == '\r')
                         command.erase(command.length()-1); // remove the trailing newline
 
                     std::vector<char const*> params;
@@ -406,7 +406,7 @@ void IrcBot::ParseCommand(std::string nickName, char const* cmd, std::vector<cha
     }
     else if (!stricmp(cmd, "restart"))
     {
-        if(args.size() < 1)
+        if (args.size() < 1)
             SendData(PRIVMSG, "Not enough arguments! !restart [irc | core]");
         else if (!stricmp(args[0], "irc"))
         {
@@ -417,7 +417,7 @@ void IrcBot::ParseCommand(std::string nickName, char const* cmd, std::vector<cha
         else if (!stricmp(args[0], "core"))
         {
             int restartTime = 10; // Default time 10 seconds if not supplied.
-            if(args.size() < 2)
+            if (args.size() < 2)
                 sWorld->ShutdownServ(restartTime, SHUTDOWN_MASK_RESTART, RESTART_EXIT_CODE);
             else
                 sWorld->ShutdownServ((int)args[1], SHUTDOWN_MASK_RESTART, RESTART_EXIT_CODE);

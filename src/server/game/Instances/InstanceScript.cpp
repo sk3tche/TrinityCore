@@ -82,7 +82,7 @@ void InstanceScript::LoadDoorData(const DoorData *data)
     sLog->outDebug(LOG_FILTER_TSCR, "InstanceScript::LoadDoorData: " UI64FMTD " doors loaded.", uint64(doors.size()));
 }
 
-void InstanceScript::UpdateMinionState(Creature *minion, EncounterState state)
+void InstanceScript::UpdateMinionState(Creature* minion, EncounterState state)
 {
     switch (state)
     {
@@ -175,7 +175,7 @@ void InstanceScript::AddDoor(GameObject *door, bool add)
         UpdateDoorState(door);
 }
 
-void InstanceScript::AddMinion(Creature *minion, bool add)
+void InstanceScript::AddMinion(Creature* minion, bool add)
 {
     MinionInfoMap::iterator itr = minions.find(minion->GetEntry());
     if (itr == minions.end())

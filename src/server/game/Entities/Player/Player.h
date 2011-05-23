@@ -133,14 +133,14 @@ PlayerAvoidanceDiminsihing const PlayerAvoidanceDiminsihingData[MAX_CLASSES] =
 // Spell modifier (used for modify other spells)
 struct SpellModifier
 {
-    SpellModifier(Aura * _ownerAura = NULL) : charges(0), ownerAura(_ownerAura) {}
+    SpellModifier(Aura* _ownerAura = NULL) : charges(0), ownerAura(_ownerAura) {}
     SpellModOp   op   : 8;
     SpellModType type : 8;
     int16 charges     : 16;
     int32 value;
     flag96 mask;
     uint32 spellId;
-    Aura * const ownerAura;
+    Aura* const ownerAura;
 };
 
 typedef UNORDERED_MAP<uint32, PlayerTalent*> PlayerTalentMap;
@@ -1322,7 +1322,7 @@ class Player : public Unit, public GridObject<Player>
         }
         void SendNewItem(Item *item, uint32 count, bool received, bool created, bool broadcast = false);
         bool BuyItemFromVendorSlot(uint64 vendorguid, uint32 vendorslot, uint32 item, uint8 count, uint8 bag, uint8 slot);
-        bool _StoreOrEquipNewItem(uint32 vendorslot, uint32 item, uint8 count, uint8 bag, uint8 slot, int32 price, ItemTemplate const* pProto, Creature *pVendor, VendorItem const* crItem, bool bStore);
+        bool _StoreOrEquipNewItem(uint32 vendorslot, uint32 item, uint8 count, uint8 bag, uint8 slot, int32 price, ItemTemplate const* pProto, Creature* pVendor, VendorItem const* crItem, bool bStore);
 
         float GetReputationPriceDiscount(Creature const* pCreature) const;
 
@@ -2362,7 +2362,7 @@ class Player : public Unit, public GridObject<Player>
         bool HasPendingBind() const { return _pendingBind != NULL; }
         void SendRaidInfo();
         void SendSavedInstances();
-        static void ConvertInstancesToGroup(Player* player, Group *group, bool switchLeader);
+        static void ConvertInstancesToGroup(Player* player, Group* group, bool switchLeader);
         bool Satisfy(AccessRequirement const* ar, uint32 target_map, bool report = false);
         bool CheckInstanceLoginValid();
         bool CheckInstanceCount(uint32 instanceId) const
@@ -2386,12 +2386,12 @@ class Player : public Unit, public GridObject<Player>
         /***                   GROUP SYSTEM                    ***/
         /*********************************************************/
 
-        Group * GetGroupInvite() { return m_groupInvite; }
-        void SetGroupInvite(Group *group) { m_groupInvite = group; }
-        Group * GetGroup() { return m_group.getTarget(); }
-        const Group * GetGroup() const { return (const Group*)m_group.getTarget(); }
+        Group* GetGroupInvite() { return m_groupInvite; }
+        void SetGroupInvite(Group* group) { m_groupInvite = group; }
+        Group* GetGroup() { return m_group.getTarget(); }
+        const Group* GetGroup() const { return (const Group*)m_group.getTarget(); }
         GroupReference& GetGroupRef() { return m_group; }
-        void SetGroup(Group *group, int8 subgroup = -1);
+        void SetGroup(Group* group, int8 subgroup = -1);
         uint8 GetSubGroup() const { return m_group.getSubGroup(); }
         uint32 GetGroupUpdateFlag() const { return m_groupUpdateMask; }
         void SetGroupUpdateFlag(uint32 flag) { m_groupUpdateMask |= flag; }
@@ -2400,12 +2400,12 @@ class Player : public Unit, public GridObject<Player>
         Player* GetNextRandomRaidMember(float radius);
         PartyResult CanUninviteFromGroup() const;
         // Battleground Group System
-        void SetBattlegroundRaid(Group *group, int8 subgroup = -1);
+        void SetBattlegroundRaid(Group* group, int8 subgroup = -1);
         void RemoveFromBattlegroundRaid();
-        Group * GetOriginalGroup() { return m_originalGroup.getTarget(); }
+        Group* GetOriginalGroup() { return m_originalGroup.getTarget(); }
         GroupReference& GetOriginalGroupRef() { return m_originalGroup; }
         uint8 GetOriginalSubGroup() const { return m_originalGroup.getSubGroup(); }
-        void SetOriginalGroup(Group *group, int8 subgroup = -1);
+        void SetOriginalGroup(Group* group, int8 subgroup = -1);
 
         void SetPassOnGroupLoot(bool bPassOnGroupLoot) { m_bPassOnGroupLoot = bPassOnGroupLoot; }
         bool GetPassOnGroupLoot() const { return m_bPassOnGroupLoot; }
@@ -2688,7 +2688,7 @@ class Player : public Unit, public GridObject<Player>
         // Groups
         GroupReference m_group;
         GroupReference m_originalGroup;
-        Group *m_groupInvite;
+        Group* m_groupInvite;
         uint32 m_groupUpdateMask;
         uint64 m_auraRaidUpdateMask;
         bool m_bPassOnGroupLoot;

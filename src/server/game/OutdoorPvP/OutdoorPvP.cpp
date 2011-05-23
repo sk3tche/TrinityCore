@@ -148,7 +148,7 @@ bool OPvPCapturePoint::DelCreature(uint32 type)
         return false;
     }
 
-    Creature *cr = HashMapHolder<Creature>::Find(m_Creatures[type]);
+    Creature* cr = HashMapHolder<Creature>::Find(m_Creatures[type]);
     if (!cr)
     {
         // can happen when closing the core
@@ -432,7 +432,7 @@ void OPvPCapturePoint::SendObjectiveComplete(uint32 id, uint64 guid)
 
 void OutdoorPvP::HandleKill(Player* killer, Unit* killed)
 {
-    if (Group * pGroup = killer->GetGroup())
+    if (Group* pGroup = killer->GetGroup())
     {
         for (GroupReference *itr = pGroup->GetFirstMember(); itr != NULL; itr = itr->next())
         {
@@ -511,7 +511,7 @@ bool OutdoorPvP::HandleGossipOption(Player* plr, uint64 guid, uint32 id)
     return false;
 }
 
-bool OutdoorPvP::CanTalkTo(Player* plr, Creature * c, GossipMenuItems gso)
+bool OutdoorPvP::CanTalkTo(Player* plr, Creature* c, GossipMenuItems gso)
 {
     for (OPvPCapturePointMap::iterator itr = m_capturePoints.begin(); itr != m_capturePoints.end(); ++itr)
         if (itr->second->CanTalkTo(plr, c, gso))
@@ -534,7 +534,7 @@ bool OPvPCapturePoint::HandleGossipOption(Player* /*plr*/, uint64 /*guid*/, uint
     return false;
 }
 
-bool OPvPCapturePoint::CanTalkTo(Player* /*plr*/, Creature * /*c*/, GossipMenuItems /*gso*/)
+bool OPvPCapturePoint::CanTalkTo(Player* /*plr*/, Creature* /*c*/, GossipMenuItems /*gso*/)
 {
     return false;
 }

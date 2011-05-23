@@ -34,7 +34,7 @@ class GuardAI : public ScriptedAI
 
     public:
 
-        explicit GuardAI(Creature *c);
+        explicit GuardAI(Creature* c);
 
         void MoveInLineOfSight(Unit* );
         void EnterEvadeMode();
@@ -42,7 +42,7 @@ class GuardAI : public ScriptedAI
         bool CanSeeAlways(WorldObject const* obj);
 
         void UpdateAI(const uint32);
-        static int Permissible(const Creature *);
+        static int Permissible(const Creature* );
 
     private:
         uint64 i_victimGuid;

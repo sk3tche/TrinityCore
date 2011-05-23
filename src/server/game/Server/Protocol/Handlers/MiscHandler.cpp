@@ -91,7 +91,7 @@ void WorldSession::HandleGossipSelectOptionOpcode(WorldPacket & recv_data)
     if (_player->PlayerTalkClass->GossipOptionCoded(gossipListId))
         recv_data >> code;
 
-    Creature *unit = NULL;
+    Creature* unit = NULL;
     GameObject *go = NULL;
     if (IS_CRE_OR_VEH_GUID(guid))
     {
@@ -1339,7 +1339,7 @@ void WorldSession::HandleWhoisOpcode(WorldPacket& recv_data)
         return;
     }
 
-    Field *fields = result->Fetch();
+    Field* fields = result->Fetch();
     std::string acc = fields[0].GetString();
     if (acc.empty())
         acc = "Unknown";
@@ -1491,7 +1491,7 @@ void WorldSession::HandleTimeSyncResp(WorldPacket & recv_data)
 void WorldSession::HandleResetInstancesOpcode(WorldPacket & /*recv_data*/)
 {
     sLog->outDebug(LOG_FILTER_NETWORKIO, "WORLD: CMSG_RESET_INSTANCES");
-    Group *pGroup = _player->GetGroup();
+    Group* pGroup = _player->GetGroup();
     if (pGroup)
     {
         if (pGroup->IsLeader(_player->GetGUID()))
@@ -1534,7 +1534,7 @@ void WorldSession::HandleSetDungeonDifficultyOpcode(WorldPacket & recv_data)
     if (_player->getLevel() < LEVELREQUIREMENT_HEROIC)
         return;
 
-    Group *pGroup = _player->GetGroup();
+    Group* pGroup = _player->GetGroup();
     if (pGroup)
     {
         if (pGroup->IsLeader(_player->GetGUID()))
@@ -1595,7 +1595,7 @@ void WorldSession::HandleSetRaidDifficultyOpcode(WorldPacket & recv_data)
     if (_player->getLevel() < LEVELREQUIREMENT_HEROIC)
         return;
 
-    Group *pGroup = _player->GetGroup();
+    Group* pGroup = _player->GetGroup();
     if (pGroup)
     {
         if (pGroup->IsLeader(_player->GetGUID()))

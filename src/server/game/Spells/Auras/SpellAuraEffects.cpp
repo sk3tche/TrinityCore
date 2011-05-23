@@ -371,7 +371,7 @@ pAuraEffectHandler AuraEffectHandler[TOTAL_AURAS]=
     &AuraEffect::HandleNoImmediateEffect,                         //316 SPELL_AURA_PERIODIC_HASTE implemented in AuraEffect::CalculatePeriodic
 };
 
-AuraEffect::AuraEffect(Aura * base, uint8 effIndex, int32 *baseAmount, Unit* caster):
+AuraEffect::AuraEffect(Aura* base, uint8 effIndex, int32 *baseAmount, Unit* caster):
 m_base(base), m_spellProto(base->GetSpellProto()), m_effIndex(effIndex),
 m_baseAmount(baseAmount ? *baseAmount : m_spellProto->EffectBasePoints[m_effIndex]),
 m_canBeRecalculated(true), m_spellmod(NULL), m_isPeriodic(false),
@@ -496,13 +496,13 @@ int32 AuraEffect::CalculateAmount(Unit* caster)
                         DoneActualBenefit = caster->ApplyEffectModifiers(GetSpellProto(), m_effIndex, DoneActualBenefit);
                     }
                     // Fire Ward
-                    else if(GetSpellProto()->SpellFamilyFlags[0] & 0x8 && GetSpellProto()->SpellFamilyFlags[2] & 0x8)
+                    else if (GetSpellProto()->SpellFamilyFlags[0] & 0x8 && GetSpellProto()->SpellFamilyFlags[2] & 0x8)
                     {
                         // +80.68% from sp bonus
                         DoneActualBenefit += caster->SpellBaseDamageBonus(GetSpellSchoolMask(m_spellProto)) * 0.8068f;
                     }
                     // Frost Ward
-                    else if(GetSpellProto()->SpellFamilyFlags[0] & 0x100 && GetSpellProto()->SpellFamilyFlags[2] & 0x8)
+                    else if (GetSpellProto()->SpellFamilyFlags[0] & 0x100 && GetSpellProto()->SpellFamilyFlags[2] & 0x8)
                     {
                         // +80.68% from sp bonus
                         DoneActualBenefit += caster->SpellBaseDamageBonus(GetSpellSchoolMask(m_spellProto)) * 0.8068f;
@@ -1020,7 +1020,7 @@ void AuraEffect::ApplySpellMod(Unit* target, bool apply)
             Unit::AuraApplicationMap & auras = target->GetAppliedAuras();
             for (Unit::AuraApplicationMap::iterator iter = auras.begin(); iter != auras.end(); ++iter)
             {
-                Aura * aura = iter->second->GetBase();
+                Aura* aura = iter->second->GetBase();
                 // only passive auras-active auras should have amount set on spellcast and not be affected
                 // if aura is casted by others, it will not be affected
                 if ((aura->IsPassive() || aura->GetSpellProto()->AttributesEx2 & SPELL_ATTR2_ALWAYS_APPLY_MODIFIERS) && aura->GetCasterGUID() == guid && sSpellMgr->IsAffectedByMod(aura->GetSpellProto(), m_spellmod))
@@ -2390,12 +2390,12 @@ void AuraEffect::TriggerSpell(Unit* target, Unit* caster) const
 
                     if (permafrostCaster)
                     {
-                        if (Creature *permafrostCasterAsCreature = permafrostCaster->ToCreature())
+                        if (Creature* permafrostCasterAsCreature = permafrostCaster->ToCreature())
                             permafrostCasterAsCreature->DespawnOrUnsummon(3000);
 
                         caster->CastSpell(caster, 66181, false);
                         caster->RemoveAllAuras();
-                        if (Creature *casterAsCreature = caster->ToCreature())
+                        if (Creature* casterAsCreature = caster->ToCreature())
                             casterAsCreature->DisappearAndDie();
                     }
                 }
@@ -3247,7 +3247,7 @@ void AuraEffect::HandleAuraModShapeshift(AuraApplication const* aurApp, uint8 mo
         // Disarm handling
         // If druid shifts while being disarmed we need to deal with that since forms aren't affected by disarm
         // and also HandleAuraModDisarm is not triggered
-        if(!target->CanUseAttackType(BASE_ATTACK))
+        if (!target->CanUseAttackType(BASE_ATTACK))
         {
             if (Item *pItem = target->ToPlayer()->GetItemByPos(INVENTORY_SLOT_BAG_0, EQUIPMENT_SLOT_MAINHAND))
             {
@@ -5811,8 +5811,8 @@ void AuraEffect::HandleAuraDummy(AuraApplication const* aurApp, uint8 mode, bool
                     target->CastSpell(target, 34027, true, NULL, this);
 
                     // set 3 stacks and 3 charges (to make all auras not disappear at once)
-                    Aura * owner_aura = target->GetAura(34027, GetCasterGUID());
-                    Aura * pet_aura  = pet->GetAura(58914, GetCasterGUID());
+                    Aura* owner_aura = target->GetAura(34027, GetCasterGUID());
+                    Aura* pet_aura  = pet->GetAura(58914, GetCasterGUID());
                     if (owner_aura)
                     {
                         owner_aura->SetStackAmount(owner_aura->GetSpellProto()->StackAmount);
@@ -5846,7 +5846,7 @@ void AuraEffect::HandleAuraDummy(AuraApplication const* aurApp, uint8 mode, bool
                 {
                     target->CastSpell(target, 55166, true, NULL, this);
                     // set 3 stacks and 3 charges (to make all auras not disappear at once)
-                    Aura * owner_aura = target->GetAura(55166, GetCasterGUID());
+                    Aura* owner_aura = target->GetAura(55166, GetCasterGUID());
                     if (owner_aura)
                     {
                         // This aura lasts 2 sec, need this hack to properly proc spells
@@ -6323,7 +6323,7 @@ void AuraEffect::HandleAuraDummy(AuraApplication const* aurApp, uint8 mode, bool
                     uint64 guid = caster->m_SummonSlot[3];
                     if (guid)
                     {
-                        Creature *totem = caster->GetMap()->GetCreature(guid);
+                        Creature* totem = caster->GetMap()->GetCreature(guid);
                         if (totem && totem->isTotem())
                             caster->ToPlayer()->CastSpell(totem, 6277, true);
                     }
