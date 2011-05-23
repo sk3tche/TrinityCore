@@ -8130,13 +8130,27 @@ bool Unit::HandleProcTriggerSpell(Unit *pVictim, uint32 damage, AuraEffect* trig
                     {
                         float stat = 0.0f;
                         // strength
-                        if (GetStat(STAT_STRENGTH) > stat) { trigger_spell_id = 60229;stat = GetStat(STAT_STRENGTH); }
+                        if (GetStat(STAT_STRENGTH) > stat)
+                        {
+                            trigger_spell_id = 60229;
+                            stat = GetStat(STAT_STRENGTH);
+                        }
                         // agility
-                        if (GetStat(STAT_AGILITY)  > stat) { trigger_spell_id = 60233;stat = GetStat(STAT_AGILITY);  }
+                        if (GetStat(STAT_AGILITY) > stat)
+                        {
+                            trigger_spell_id = 60233;
+                            stat = GetStat(STAT_AGILITY);
+                        }
                         // intellect
-                        if (GetStat(STAT_INTELLECT)> stat) { trigger_spell_id = 60234;stat = GetStat(STAT_INTELLECT);}
+                        if (GetStat(STAT_INTELLECT) > stat)
+                        {
+                            trigger_spell_id = 60234;
+                            stat = GetStat(STAT_INTELLECT);
+                        }
                         // spirit
-                        if (GetStat(STAT_SPIRIT)   > stat) { trigger_spell_id = 60235;                               }
+                        if (GetStat(STAT_SPIRIT) > stat)
+                            trigger_spell_id = 60235;
+
                         break;
                     }
                     case 64568:             // Blood Reserve
@@ -8152,18 +8166,28 @@ bool Unit::HandleProcTriggerSpell(Unit *pVictim, uint32 damage, AuraEffect* trig
                     {
                         float stat = 0.0f;
                         // strength
-                        if (GetStat(STAT_STRENGTH) > stat) { trigger_spell_id = 67708;stat = GetStat(STAT_STRENGTH); }
+                        if (GetStat(STAT_STRENGTH) > stat)
+                        {
+                            trigger_spell_id = 67708;
+                            stat = GetStat(STAT_STRENGTH);
+                        }
                         // agility
-                        if (GetStat(STAT_AGILITY)  > stat) { trigger_spell_id = 67703;                               }
+                        if (GetStat(STAT_AGILITY) > stat)
+                            trigger_spell_id = 67703;
                         break;
                     }
                     case 67771:             // Death's Choice (heroic), Item - Coliseum 25 Heroic Melee Trinket
                     {
                         float stat = 0.0f;
                         // strength
-                        if (GetStat(STAT_STRENGTH) > stat) { trigger_spell_id = 67773;stat = GetStat(STAT_STRENGTH); }
+                        if (GetStat(STAT_STRENGTH) > stat)
+                        {
+                            trigger_spell_id = 67773;
+                            stat = GetStat(STAT_STRENGTH);
+                        }
                         // agility
-                        if (GetStat(STAT_AGILITY)  > stat) { trigger_spell_id = 67772;                               }
+                        if (GetStat(STAT_AGILITY) > stat)
+                            trigger_spell_id = 67772;
                         break;
                     }
                     // Mana Drain Trigger
@@ -10318,6 +10342,19 @@ uint32 Unit::SpellDamageBonus(Unit *pVictim, SpellEntry const *spellProto, uint3
                     AddPctN(DoneTotalMod, (*i)->GetAmount());
                 break;
             }
+            // Dirty Deeds (Rank 1)
+            case 6427:
+            case 6580:
+            // Dirty Deeds (Rank 2)
+            case 6428:
+            case 6579:
+            {
+                if (pVictim->HasAuraState(AURA_STATE_HEALTHLESS_35_PERCENT, spellProto, this))
+                {
+                    AuraEffect* eff0 = (*i)->GetBase()->GetEffect(EFFECT_0);
+                    AddPctN(DoneTotalMod, -eff0->GetAmount());
+                }
+            }
             // Soul Siphon
             case 4992:
             case 4993:
@@ -11704,6 +11741,18 @@ void Unit::MeleeDamageBonus(Unit *pVictim, uint32 *pdamage, WeaponAttackType att
                     AddPctN(DoneTotalMod, (*i)->GetAmount());
                 break;
             }
+            // Dirty Deeds
+            case 6427:
+            case 6428:
+            {
+                if (pVictim->HasAuraState(AURA_STATE_HEALTHLESS_35_PERCENT, spellProto, this))
+                {
+                    AuraEffect* eff0 = (*i)->GetBase()->GetEffect(EFFECT_0);
+                    AddPctN(DoneTotalMod, -eff0->GetAmount());
+                }
+            }
+            default:
+                break;
         }
     }
 
@@ -11783,29 +11832,6 @@ void Unit::MeleeDamageBonus(Unit *pVictim, uint32 *pdamage, WeaponAttackType att
             case 1933:
                 if ((*i)->GetMiscValue() & (spellProto ? GetSpellSchoolMask(spellProto) : 0))
                     AddPctN(TakenTotalMod, (*i)->GetAmount());
-                break;
-        }
-    }
-
-    // .. taken pct: class scripts
-    AuraEffectList const& mclassScritAuras = GetAuraEffectsByType(SPELL_AURA_OVERRIDE_CLASS_SCRIPTS);
-    for (AuraEffectList::const_iterator i = mclassScritAuras.begin(); i != mclassScritAuras.end(); ++i)
-    {
-        switch((*i)->GetMiscValue())
-        {
-            case 6427: case 6428:                           // Dirty Deeds
-                if (pVictim->HasAuraState(AURA_STATE_HEALTHLESS_35_PERCENT, spellProto, this))
-                {
-                    AuraEffect* eff0 = (*i)->GetBase()->GetEffect(0);
-                    if (!eff0 || (*i)->GetEffIndex() != 1)
-                    {
-                        sLog->outError("Spell structure of DD (%u) changed.", (*i)->GetId());
-                        continue;
-                    }
-
-                    // effect 0 have expected value but in negative state
-                    AddPctN(TakenTotalMod, -eff0->GetAmount());
-                }
                 break;
         }
     }

@@ -2231,11 +2231,18 @@ Pet* Player::SummonPet(uint32 entry, float x, float y, float z, float ang, PetTy
         return NULL;
     }
 
-    Map *map = GetMap();
+    Map* map = GetMap();
+    if (!map)
+    {
+        sLog->outError("Pet: No map found for spawning %u", entry);
+        delete pet;
+        return NULL;
+    }
+
     uint32 pet_number = sObjectMgr->GeneratePetNumber();
     if (!pet->Create(sObjectMgr->GenerateLowGuid(HIGHGUID_PET), map, GetPhaseMask(), entry, pet_number))
     {
-        sLog->outError("no such creature entry %u", entry);
+        sLog->outError("Pet: Tried to summon a invalid creature entry: %u", entry);
         delete pet;
         return NULL;
     }

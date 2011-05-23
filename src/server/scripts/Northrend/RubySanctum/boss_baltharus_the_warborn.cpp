@@ -276,14 +276,14 @@ class spell_baltharus_summon_clone : public SpellScriptLoader
 
                 Position pos;
                 caster->GetPosition(&pos);
-                TempSummon* summon = caster->GetMap()->SummonCreature(entry, pos, properties, duration, caster);
+
+                TempSummon* summon = caster->GetMap()->SummonCreature(entry, pos, properties, duration, caster, GetSpellInfo()->Id);
                 if (!summon)
                     return;
 
                 summon->SetHealth(caster->GetHealth());
                 summon->CastSpell(summon, SPELL_SPAWN_EFFECT, true);
 
-                summon->SetUInt32Value(UNIT_CREATED_BY_SPELL, GetSpellInfo()->Id);
                 summon->SetCreatorGUID(caster->GetGUID());
                 baltharus->AI()->JustSummoned(summon);
             }
