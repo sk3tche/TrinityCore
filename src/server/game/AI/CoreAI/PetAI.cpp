@@ -133,7 +133,7 @@ void PetAI::UpdateAI(const uint32 diff)
             if (!spellID)
                 continue;
 
-            SpellEntry const *spellInfo = sSpellStore.LookupEntry(spellID);
+            SpellEntry const* spellInfo = sSpellStore.LookupEntry(spellID);
             if (!spellInfo)
                 continue;
 

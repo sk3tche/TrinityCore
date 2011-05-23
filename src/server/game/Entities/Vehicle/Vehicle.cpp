@@ -27,13 +27,13 @@
 #include "CreatureAI.h"
 #include "ZoneScript.h"
 
-Vehicle::Vehicle(Unit* unit, VehicleEntry const *vehInfo, uint32 creatureEntry)
+Vehicle::Vehicle(Unit* unit, VehicleEntry const* vehInfo, uint32 creatureEntry)
 : me(unit), m_vehicleInfo(vehInfo), m_usableSeatNum(0), m_bonusHP(0), m_creatureEntry(creatureEntry)
 {
     for (uint32 i = 0; i < MAX_VEHICLE_SEATS; ++i)
     {
         if (uint32 seatId = m_vehicleInfo->m_seatID[i])
-            if (VehicleSeatEntry const *veSeat = sVehicleSeatStore.LookupEntry(seatId))
+            if (VehicleSeatEntry const* veSeat = sVehicleSeatStore.LookupEntry(seatId))
             {
                 m_Seats.insert(std::make_pair(i, VehicleSeat(veSeat)));
                 if (veSeat->CanEnterOrExit())
@@ -96,7 +96,7 @@ void Vehicle::Install()
                     if (!pCreature->m_spells[i])
                         continue;
 
-                    SpellEntry const *spellInfo = sSpellStore.LookupEntry(pCreature->m_spells[i]);
+                    SpellEntry const* spellInfo = sSpellStore.LookupEntry(pCreature->m_spells[i]);
                     if (!spellInfo)
                         continue;
 
@@ -320,7 +320,7 @@ bool Vehicle::AddPassenger(Unit* unit, int8 seatId)
         unit->AddUnitState(UNIT_STAT_ONVEHICLE);
 
     unit->AddUnitMovementFlag(MOVEMENTFLAG_ONTRANSPORT);
-    VehicleSeatEntry const *veSeat = seat->second.seatInfo;
+    VehicleSeatEntry const* veSeat = seat->second.seatInfo;
     unit->m_movementInfo.t_pos.m_positionX = veSeat->m_attachmentOffsetX;
     unit->m_movementInfo.t_pos.m_positionY = veSeat->m_attachmentOffsetY;
     unit->m_movementInfo.t_pos.m_positionZ = veSeat->m_attachmentOffsetZ;
@@ -336,7 +336,7 @@ bool Vehicle::AddPassenger(Unit* unit, int8 seatId)
             ASSERT(false);
 
         // hack: should be done by aura system
-        if (VehicleScalingInfo const *scalingInfo = sObjectMgr->GetVehicleScalingInfo(m_vehicleInfo->m_ID))
+        if (VehicleScalingInfo const* scalingInfo = sObjectMgr->GetVehicleScalingInfo(m_vehicleInfo->m_ID))
         {
             Player* plr = unit->ToPlayer();
             float averageItemLevel = plr->GetAverageItemLevel();

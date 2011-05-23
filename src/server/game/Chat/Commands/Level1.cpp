@@ -164,7 +164,7 @@ bool ChatHandler::HandleGPSCommand(const char* args)
 
     Map2ZoneCoordinates(zone_x, zone_y, zone_id);
 
-    Map const *map = obj->GetMap();
+    Map const* map = obj->GetMap();
     float ground_z = map->GetHeight(obj->GetPositionX(), obj->GetPositionY(), MAX_HEIGHT);
     float floor_z = map->GetHeight(obj->GetPositionX(), obj->GetPositionY(), obj->GetPositionZ());
 
@@ -558,7 +558,7 @@ bool ChatHandler::HandleLookupAreaCommand(const char* args)
     // Search in AreaTable.dbc
     for (uint32 areaflag = 0; areaflag < sAreaStore.GetNumRows (); ++areaflag)
     {
-        AreaTableEntry const *areaEntry = sAreaStore.LookupEntry (areaflag);
+        AreaTableEntry const* areaEntry = sAreaStore.LookupEntry (areaflag);
         if (areaEntry)
         {
             int loc = GetSessionDbcLocale ();

@@ -501,7 +501,7 @@ bool ChatHandler::HandleCharacterReputationCommand(const char* args)
     FactionStateList const& targetFSL = target->GetReputationMgr().GetStateList();
     for (FactionStateList::const_iterator itr = targetFSL.begin(); itr != targetFSL.end(); ++itr)
     {
-        FactionEntry const *factionEntry = sFactionStore.LookupEntry(itr->second.ID);
+        FactionEntry const* factionEntry = sFactionStore.LookupEntry(itr->second.ID);
         char const* factionName = factionEntry ? factionEntry->name[loc] : "#Not found#";
         ReputationRank rank = target->GetReputationMgr().GetRank(factionEntry);
         std::string rankName = GetTrinityString(ReputationRankStrIndex[rank]);
@@ -851,7 +851,7 @@ bool ChatHandler::HandlePetLearnCommand(const char* args)
         return false;
 
     Player* plr = m_session->GetPlayer();
-    Pet *pet = plr->GetPet();
+    Pet* pet = plr->GetPet();
 
     if (!pet)
     {
@@ -894,7 +894,7 @@ bool ChatHandler::HandlePetUnlearnCommand(const char *args)
         return false;
 
     Player* plr = m_session->GetPlayer();
-    Pet *pet = plr->GetPet();
+    Pet* pet = plr->GetPet();
 
     if (!pet)
     {
@@ -919,7 +919,7 @@ bool ChatHandler::HandlePetTpCommand(const char *args)
         return false;
 
     Player* plr = m_session->GetPlayer();
-    Pet *pet = plr->GetPet();
+    Pet* pet = plr->GetPet();
 
     if (!pet)
     {
@@ -962,7 +962,7 @@ bool ChatHandler::HandleLookupTitleCommand(const char* args)
     // Search in CharTitles.dbc
     for (uint32 id = 0; id < sCharTitlesStore.GetNumRows(); id++)
     {
-        CharTitlesEntry const *titleInfo = sCharTitlesStore.LookupEntry(id);
+        CharTitlesEntry const* titleInfo = sCharTitlesStore.LookupEntry(id);
         if (titleInfo)
         {
             int loc = GetSessionDbcLocale();
@@ -1035,7 +1035,7 @@ bool ChatHandler::HandleCharacterTitlesCommand(const char* args)
     // Search in CharTitles.dbc
     for (uint32 id = 0; id < sCharTitlesStore.GetNumRows(); id++)
     {
-        CharTitlesEntry const *titleInfo = sCharTitlesStore.LookupEntry(id);
+        CharTitlesEntry const* titleInfo = sCharTitlesStore.LookupEntry(id);
         if (titleInfo && target->HasTitle(titleInfo))
         {
             std::string name = titleInfo->name[loc];

@@ -255,7 +255,7 @@ void Creature::RemoveCorpse(bool setSpawnTime)
  */
 bool Creature::InitEntry(uint32 Entry, uint32 /*team*/, const CreatureData *data)
 {
-    CreatureTemplate const *normalInfo = sObjectMgr->GetCreatureTemplate(Entry);
+    CreatureTemplate const* normalInfo = sObjectMgr->GetCreatureTemplate(Entry);
     if (!normalInfo)
     {
         sLog->outErrorDb("Creature::InitEntry creature entry %u does not exist.", Entry);
@@ -263,7 +263,7 @@ bool Creature::InitEntry(uint32 Entry, uint32 /*team*/, const CreatureData *data
     }
 
     // get difficulty 1 mode entry
-    CreatureTemplate const *cinfo = normalInfo;
+    CreatureTemplate const* cinfo = normalInfo;
     for (uint8 diff = uint8(GetMap()->GetSpawnMode()); diff > 0;)
     {
         // we already have valid Map pointer for current creature!
@@ -301,7 +301,7 @@ bool Creature::InitEntry(uint32 Entry, uint32 /*team*/, const CreatureData *data
     }
 
     uint32 displayID = sObjectMgr->ChooseDisplayId(0, GetCreatureInfo(), data);
-    CreatureModelInfo const *minfo = sObjectMgr->GetCreatureModelRandomGender(&displayID);
+    CreatureModelInfo const* minfo = sObjectMgr->GetCreatureModelRandomGender(&displayID);
     if (!minfo)                                             // Cancel load if no model defined
     {
         sLog->outErrorDb("Creature (Entry: %u) has no model defined in table `creature_template`, can't load. ", Entry);
@@ -740,7 +740,7 @@ bool Creature::Create(uint32 guidlow, Map* map, uint32 phaseMask, uint32 Entry, 
     SetMap(map);
     SetPhaseMask(phaseMask, false);
 
-    CreatureTemplate const *cinfo = sObjectMgr->GetCreatureTemplate(Entry);
+    CreatureTemplate const* cinfo = sObjectMgr->GetCreatureTemplate(Entry);
     if (!cinfo)
     {
         sLog->outErrorDb("Creature::Create(): creature template (guidlow: %u, entry: %u) does not exist.", guidlow, Entry);
@@ -780,7 +780,7 @@ bool Creature::Create(uint32 guidlow, Map* map, uint32 phaseMask, uint32 Entry, 
 
     LoadCreaturesAddon();
     uint32 displayID = GetNativeDisplayId();
-    CreatureModelInfo const *minfo = sObjectMgr->GetCreatureModelRandomGender(&displayID);
+    CreatureModelInfo const* minfo = sObjectMgr->GetCreatureModelRandomGender(&displayID);
     if (minfo && !isTotem())                               // Cancel load if no model defined or if totem
     {
         SetDisplayId(displayID);
@@ -1026,7 +1026,7 @@ void Creature::SaveToDB()
 {
     // this should only be used when the creature has already been loaded
     // preferably after adding to map, because mapid may not be valid otherwise
-    CreatureData const *data = sObjectMgr->GetCreatureData(m_DBTableGuid);
+    CreatureData const* data = sObjectMgr->GetCreatureData(m_DBTableGuid);
     if (!data)
     {
         sLog->outError("Creature::SaveToDB failed, cannot get creature data!");
@@ -1049,7 +1049,7 @@ void Creature::SaveToDB(uint32 mapid, uint8 spawnMask, uint32 phaseMask)
     uint32 dynamicflags = GetUInt32Value(UNIT_DYNAMIC_FLAGS);
 
     // check if it's a custom model and if not, use 0 for displayId
-    CreatureTemplate const *cinfo = GetCreatureInfo();
+    CreatureTemplate const* cinfo = GetCreatureInfo();
     if (cinfo)
     {
         if (displayId == cinfo->Modelid1 || displayId == cinfo->Modelid2 ||
@@ -1240,7 +1240,7 @@ bool Creature::CreateFromProto(uint32 guidlow, uint32 Entry, uint32 vehId, uint3
             return false;
     }
 
-    CreatureTemplate const *cinfo = sObjectMgr->GetCreatureTemplate(Entry);
+    CreatureTemplate const* cinfo = sObjectMgr->GetCreatureTemplate(Entry);
     if (!cinfo)
     {
         sLog->outErrorDb("Creature::CreateFromProto(): creature template (guidlow: %u, entry: %u) does not exist.", guidlow, Entry);
@@ -1349,7 +1349,7 @@ void Creature::LoadEquipment(uint32 equip_entry, bool force)
         return;
     }
 
-    EquipmentInfo const *einfo = sObjectMgr->GetEquipmentInfo(equip_entry);
+    EquipmentInfo const* einfo = sObjectMgr->GetEquipmentInfo(equip_entry);
     if (!einfo)
         return;
 
@@ -1543,7 +1543,7 @@ void Creature::setDeathState(DeathState s)
         SetFullHealth();
         SetLootRecipient(NULL);
         ResetPlayerDamageReq();
-        CreatureTemplate const *cinfo = GetCreatureInfo();
+        CreatureTemplate const* cinfo = GetCreatureInfo();
         AddUnitMovementFlag(MOVEMENTFLAG_WALKING);
         if (GetCreatureInfo()->InhabitType & INHABIT_AIR)
             AddUnitMovementFlag(MOVEMENTFLAG_CAN_FLY | MOVEMENTFLAG_FLYING);
@@ -1605,7 +1605,7 @@ void Creature::Respawn(bool force)
         if (m_originalEntry != GetEntry())
             UpdateEntry(m_originalEntry);
 
-        CreatureTemplate const *cinfo = GetCreatureInfo();
+        CreatureTemplate const* cinfo = GetCreatureInfo();
         SelectLevel(cinfo);
 
         if (m_isDeadByDefault)
@@ -1619,7 +1619,7 @@ void Creature::Respawn(bool force)
             setDeathState(JUST_ALIVED);
 
         uint32 displayID = GetNativeDisplayId();
-        CreatureModelInfo const *minfo = sObjectMgr->GetCreatureModelRandomGender(&displayID);
+        CreatureModelInfo const* minfo = sObjectMgr->GetCreatureModelRandomGender(&displayID);
         if (minfo)                                             // Cancel load if no model defined
         {
             SetDisplayId(displayID);
@@ -1690,7 +1690,7 @@ bool Creature::IsImmunedToSpellEffect(SpellEntry const* spellInfo, uint32 index)
     return Unit::IsImmunedToSpellEffect(spellInfo, index);
 }
 
-SpellEntry const *Creature::reachWithSpellAttack(Unit* victim)
+SpellEntry const* Creature::reachWithSpellAttack(Unit* victim)
 {
     if (!victim)
         return NULL;
@@ -1699,7 +1699,7 @@ SpellEntry const *Creature::reachWithSpellAttack(Unit* victim)
     {
         if (!m_spells[i])
             continue;
-        SpellEntry const *spellInfo = sSpellStore.LookupEntry(m_spells[i]);
+        SpellEntry const* spellInfo = sSpellStore.LookupEntry(m_spells[i]);
         if (!spellInfo)
         {
             sLog->outError("WORLD: unknown spell id %i", m_spells[i]);
@@ -1740,7 +1740,7 @@ SpellEntry const *Creature::reachWithSpellAttack(Unit* victim)
     return NULL;
 }
 
-SpellEntry const *Creature::reachWithSpellCure(Unit* victim)
+SpellEntry const* Creature::reachWithSpellCure(Unit* victim)
 {
     if (!victim)
         return NULL;
@@ -1749,7 +1749,7 @@ SpellEntry const *Creature::reachWithSpellCure(Unit* victim)
     {
         if (!m_spells[i])
             continue;
-        SpellEntry const *spellInfo = sSpellStore.LookupEntry(m_spells[i]);
+        SpellEntry const* spellInfo = sSpellStore.LookupEntry(m_spells[i]);
         if (!spellInfo)
         {
             sLog->outError("WORLD: unknown spell id %i", m_spells[i]);
@@ -2000,7 +2000,7 @@ void Creature::SaveRespawnTime()
 }
 
 // this should not be called by petAI or
-bool Creature::canCreatureAttack(Unit const *victim, bool force) const
+bool Creature::canCreatureAttack(Unit const* victim, bool force) const
 {
     if (!victim->IsInMap(this))
         return false;
@@ -2041,7 +2041,7 @@ CreatureAddon const* Creature::GetCreatureAddon() const
 //creature_addon table
 bool Creature::LoadCreaturesAddon(bool reload)
 {
-    CreatureAddon const *cainfo = GetCreatureAddon();
+    CreatureAddon const* cainfo = GetCreatureAddon();
     if (!cainfo)
         return false;
 
@@ -2088,7 +2088,7 @@ bool Creature::LoadCreaturesAddon(bool reload)
     {
         for (std::vector<uint32>::const_iterator itr = cainfo->auras.begin(); itr != cainfo->auras.end(); ++itr)
         {
-            SpellEntry const *AdditionalSpellInfo = sSpellStore.LookupEntry(*itr);
+            SpellEntry const* AdditionalSpellInfo = sSpellStore.LookupEntry(*itr);
             if (!AdditionalSpellInfo)
             {
                 sLog->outErrorDb("Creature (GUID: %u Entry: %u) has wrong spell %u defined in `auras` field.", GetGUIDLow(), GetEntry(), *itr);
@@ -2171,7 +2171,7 @@ void Creature::_AddCreatureCategoryCooldown(uint32 category, time_t apply_time)
 
 void Creature::AddCreatureSpellCooldown(uint32 spellid)
 {
-    SpellEntry const *spellInfo = sSpellStore.LookupEntry(spellid);
+    SpellEntry const* spellInfo = sSpellStore.LookupEntry(spellid);
     if (!spellInfo)
         return;
 
@@ -2188,7 +2188,7 @@ void Creature::AddCreatureSpellCooldown(uint32 spellid)
 
 bool Creature::HasCategoryCooldown(uint32 spell_id) const
 {
-    SpellEntry const *spellInfo = sSpellStore.LookupEntry(spell_id);
+    SpellEntry const* spellInfo = sSpellStore.LookupEntry(spell_id);
     if (!spellInfo)
         return false;
 
@@ -2256,7 +2256,7 @@ void Creature::AllLootRemovedFromCorpse()
             return;
 
         float decayRate;
-        CreatureTemplate const *cinfo = GetCreatureInfo();
+        CreatureTemplate const* cinfo = GetCreatureInfo();
 
         decayRate = sWorld->getRate(RATE_CORPSE_DECAY_LOOTED);
         uint32 diff = uint32((m_corpseRemoveTime - now) * decayRate);
@@ -2387,7 +2387,7 @@ const char* Creature::GetNameForLocaleIdx(LocaleConstant loc_idx) const
     if (loc_idx != DEFAULT_LOCALE)
     {
         uint8 uloc_idx = uint8(loc_idx);
-        CreatureLocale const *cl = sObjectMgr->GetCreatureLocale(GetEntry());
+        CreatureLocale const* cl = sObjectMgr->GetCreatureLocale(GetEntry());
         if (cl)
         {
             if (cl->Name.size() > uloc_idx && !cl->Name[uloc_idx].empty())
@@ -2417,6 +2417,6 @@ void Creature::FarTeleportTo(Map* map, float X, float Y, float Z, float O)
 
 bool Creature::IsDungeonBoss() const
 {
-    CreatureTemplate const *cinfo = sObjectMgr->GetCreatureTemplate(GetEntry());
+    CreatureTemplate const* cinfo = sObjectMgr->GetCreatureTemplate(GetEntry());
     return cinfo && (cinfo->flags_extra & CREATURE_FLAG_EXTRA_DUNGEON_BOSS);
 }

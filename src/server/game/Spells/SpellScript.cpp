@@ -212,7 +212,7 @@ void SpellScript::UnitTargetHandler::Call(SpellScript* spellScript, std::list<Un
     (spellScript->*pUnitTargetHandlerScript)(unitTargets);
 }
 
-bool SpellScript::_Validate(SpellEntry const * entry)
+bool SpellScript::_Validate(SpellEntry const* entry)
 {
     for (std::list<EffectHandler>::iterator itr = OnEffect.begin(); itr != OnEffect.end();  ++itr)
         if (!(*itr).GetAffectedEffectsMask(entry))
@@ -466,7 +466,7 @@ void SpellScript::SetCustomCastResultMessage(SpellCustomErrors result)
     m_spell->m_customError = result;
 }
 
-bool AuraScript::_Validate(SpellEntry const * entry)
+bool AuraScript::_Validate(SpellEntry const* entry)
 {
     for (std::list<EffectApplyHandler>::iterator itr = OnEffectApply.begin(); itr != OnEffectApply.end();  ++itr)
         if (!(*itr).GetAffectedEffectsMask(entry))
@@ -592,7 +592,7 @@ AuraScript::EffectApplyHandler::EffectApplyHandler(AuraEffectApplicationModeFnTy
     mode = _mode;
 }
 
-void AuraScript::EffectApplyHandler::Call(AuraScript* auraScript, AuraEffect const * _aurEff, AuraEffectHandleModes _mode)
+void AuraScript::EffectApplyHandler::Call(AuraScript* auraScript, AuraEffect const* _aurEff, AuraEffectHandleModes _mode)
 {
     if (_mode & mode)
         (auraScript->*pEffectHandlerScript)(_aurEff, _mode);

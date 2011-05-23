@@ -1242,7 +1242,7 @@ void WorldSession::HandleRemoveGlyph(WorldPacket & recv_data)
 
     if (uint32 glyph = _player->GetGlyph(slot))
     {
-        if (GlyphPropertiesEntry const *gp = sGlyphPropertiesStore.LookupEntry(glyph))
+        if (GlyphPropertiesEntry const* gp = sGlyphPropertiesStore.LookupEntry(glyph))
         {
             _player->RemoveAurasDueToSpell(gp->SpellId);
             _player->SetGlyph(slot, 0);

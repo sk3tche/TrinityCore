@@ -70,7 +70,7 @@ void Bag::RemoveFromWorld()
 
 bool Bag::Create(uint32 guidlow, uint32 itemid, Player const* owner)
 {
-    ItemTemplate const * itemProto = sObjectMgr->GetItemTemplate(itemid);
+    ItemTemplate const* itemProto = sObjectMgr->GetItemTemplate(itemid);
 
     if (!itemProto || itemProto->ContainerSlots > MAX_BAG_SIZE)
         return false;
@@ -217,7 +217,7 @@ uint32 Bag::GetItemCountWithLimitCategory(uint32 limitCategory, Item* skipItem) 
     for (uint32 i = 0; i < GetBagSize(); ++i)
         if (Item *pItem = m_bagslot[i])
             if (pItem != skipItem)
-                if (ItemTemplate const *pProto = pItem->GetTemplate())
+                if (ItemTemplate const* pProto = pItem->GetTemplate())
                     if (pProto->ItemLimitCategory == limitCategory)
                         count += m_bagslot[i]->GetCount();
 

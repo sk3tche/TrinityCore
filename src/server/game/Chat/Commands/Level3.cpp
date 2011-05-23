@@ -263,7 +263,7 @@ bool ChatHandler::HandleAddItemCommand(const char *args)
 
     sLog->outDetail(GetTrinityString(LANG_ADDITEM), itemId, count);
 
-    ItemTemplate const *pProto = sObjectMgr->GetItemTemplate(itemId);
+    ItemTemplate const* pProto = sObjectMgr->GetItemTemplate(itemId);
     if (!pProto)
     {
         PSendSysMessage(LANG_COMMAND_ITEMIDINVALID, itemId);
@@ -614,7 +614,7 @@ bool ChatHandler::HandleListObjectCommand(const char *args)
         return false;
     }
 
-    GameObjectTemplate const * gInfo = sObjectMgr->GetGameObjectTemplate(go_id);
+    GameObjectTemplate const* gInfo = sObjectMgr->GetGameObjectTemplate(go_id);
     if (!gInfo)
     {
         PSendSysMessage(LANG_COMMAND_LISTOBJINVALIDID, go_id);
@@ -765,7 +765,7 @@ bool ChatHandler::HandleLookupItemCommand(const char *args)
         if (loc_idx >= 0)
         {
             uint8 uloc_idx = uint8(loc_idx);
-            if (ItemLocale const *il = sObjectMgr->GetItemLocale(itr->second.ItemId))
+            if (ItemLocale const* il = sObjectMgr->GetItemLocale(itr->second.ItemId))
             {
                 if (il->Name.size() > uloc_idx && !il->Name[uloc_idx].empty())
                 {
@@ -842,7 +842,7 @@ bool ChatHandler::HandleLookupItemSetCommand(const char *args)
     // Search in ItemSet.dbc
     for (uint32 id = 0; id < sItemSetStore.GetNumRows(); id++)
     {
-        ItemSetEntry const *set = sItemSetStore.LookupEntry(id);
+        ItemSetEntry const* set = sItemSetStore.LookupEntry(id);
         if (set)
         {
             int loc = GetSessionDbcLocale();
@@ -915,7 +915,7 @@ bool ChatHandler::HandleLookupSkillCommand(const char *args)
     // Search in SkillLine.dbc
     for (uint32 id = 0; id < sSkillLineStore.GetNumRows(); id++)
     {
-        SkillLineEntry const *skillInfo = sSkillLineStore.LookupEntry(id);
+        SkillLineEntry const* skillInfo = sSkillLineStore.LookupEntry(id);
         if (skillInfo)
         {
             int loc = GetSessionDbcLocale();
@@ -1002,7 +1002,7 @@ bool ChatHandler::HandleLookupSpellCommand(const char *args)
     // Search in Spell.dbc
     for (uint32 id = 0; id < sSpellStore.GetNumRows(); id++)
     {
-        SpellEntry const *spellInfo = sSpellStore.LookupEntry(id);
+        SpellEntry const* spellInfo = sSpellStore.LookupEntry(id);
         if (spellInfo)
         {
             int loc = GetSessionDbcLocale();
@@ -1117,7 +1117,7 @@ bool ChatHandler::HandleLookupQuestCommand(const char *args)
         if (loc_idx >= 0)
         {
             uint8 uloc_idx = uint8(loc_idx);
-            if (QuestLocale const *il = sObjectMgr->GetQuestLocale(qinfo->GetQuestId()))
+            if (QuestLocale const* il = sObjectMgr->GetQuestLocale(qinfo->GetQuestId()))
             {
                 if (il->Title.size() > uloc_idx && !il->Title[uloc_idx].empty())
                 {
@@ -1230,7 +1230,7 @@ bool ChatHandler::HandleLookupCreatureCommand(const char *args)
     {
         uint32 id = itr->second.Entry;
         uint8 localeIndex = GetSessionDbLocaleIndex();
-        if (CreatureLocale const *cl = sObjectMgr->GetCreatureLocale(id))
+        if (CreatureLocale const* cl = sObjectMgr->GetCreatureLocale(id))
         {
             if (cl->Name.size() > localeIndex && !cl->Name[localeIndex].empty ())
             {
@@ -1307,7 +1307,7 @@ bool ChatHandler::HandleLookupObjectCommand(const char *args)
     for (GameObjectTemplateContainer::const_iterator itr = gotc->begin(); itr != gotc->end(); ++itr)
     {
         uint8 localeIndex = GetSessionDbLocaleIndex();
-        if (GameObjectLocale const *gl = sObjectMgr->GetGameObjectLocale(itr->second.entry))
+        if (GameObjectLocale const* gl = sObjectMgr->GetGameObjectLocale(itr->second.entry))
         {
             if (gl->Name.size() > localeIndex && !gl->Name[localeIndex].empty())
             {
@@ -1385,7 +1385,7 @@ bool ChatHandler::HandleLookupFactionCommand(const char *args)
 
     for (uint32 id = 0; id < sFactionStore.GetNumRows(); ++id)
     {
-        FactionEntry const *factionEntry = sFactionStore.LookupEntry (id);
+        FactionEntry const* factionEntry = sFactionStore.LookupEntry (id);
         if (factionEntry)
         {
             FactionState const* repState = target ? target->GetReputationMgr().GetState(factionEntry) : NULL;
@@ -1485,7 +1485,7 @@ bool ChatHandler::HandleLookupTaxiNodeCommand(const char * args)
     // Search in TaxiNodes.dbc
     for (uint32 id = 0; id < sTaxiNodesStore.GetNumRows(); id++)
     {
-        TaxiNodesEntry const *nodeEntry = sTaxiNodesStore.LookupEntry(id);
+        TaxiNodesEntry const* nodeEntry = sTaxiNodesStore.LookupEntry(id);
         if (nodeEntry)
         {
             int loc = GetSessionDbcLocale();
@@ -1955,7 +1955,7 @@ bool ChatHandler::HandleAuraCommand(const char *args)
     // number or [name] Shift-click form |color|Hspell:spell_id|h[name]|h|r or Htalent form
     uint32 spellID = extractSpellIdFromLink((char*)args);
 
-    if (SpellEntry const *spellInfo = sSpellStore.LookupEntry(spellID))
+    if (SpellEntry const* spellInfo = sSpellStore.LookupEntry(spellID))
         Aura::TryCreate(spellInfo, target, target);
 
     return true;
@@ -2025,7 +2025,7 @@ bool ChatHandler::HandleLinkGraveCommand(const char *args)
 
     uint32 zoneId = player->GetZoneId();
 
-    AreaTableEntry const *areaEntry = GetAreaEntryByAreaID(zoneId);
+    AreaTableEntry const* areaEntry = GetAreaEntryByAreaID(zoneId);
     if (!areaEntry || areaEntry->zone !=0)
     {
         PSendSysMessage(LANG_COMMAND_GRAVEYARDWRONGZONE, g_id, zoneId);
@@ -2405,8 +2405,8 @@ bool ChatHandler::HandleListAurasCommand (const char * /*args*/)
     {
         bool talent = GetTalentSpellCost(itr->second->GetBase()->GetId()) > 0;
 
-        AuraApplication const * aurApp = itr->second;
-        Aura const * aura = aurApp->GetBase();
+        AuraApplication const* aurApp = itr->second;
+        Aura const* aura = aurApp->GetBase();
         char const* name = aura->GetSpellProto()->SpellName[GetSessionDbcLocale()];
 
         if (m_session)
@@ -2609,9 +2609,9 @@ bool ChatHandler::HandleResetTalentsCommand(const char * args)
         if (!*args && creature && creature->isPet())
         {
             Unit* owner = creature->GetOwner();
-            if (owner && owner->GetTypeId() == TYPEID_PLAYER && ((Pet *)creature)->IsPermanentPetFor(owner->ToPlayer()))
+            if (owner && owner->GetTypeId() == TYPEID_PLAYER && ((Pet* )creature)->IsPermanentPetFor(owner->ToPlayer()))
             {
-                ((Pet *)creature)->resetTalents(true);
+                ((Pet* )creature)->resetTalents(true);
                 owner->ToPlayer()->SendTalentsInfoData(true);
 
                 ChatHandler(owner->ToPlayer()).SendSysMessage(LANG_RESET_PET_TALENTS);
@@ -4510,7 +4510,7 @@ bool ChatHandler::HandleFreezeCommand(const char *args)
         //if player class = hunter || warlock remove pet if alive
         if ((player->getClass() == CLASS_HUNTER) || (player->getClass() == CLASS_WARLOCK))
         {
-            if (Pet *pet = player->GetPet())
+            if (Pet* pet = player->GetPet())
             {
                 pet->SavePetToDB(PET_SAVE_AS_CURRENT);
                 // not let dismiss dead pet
@@ -4520,7 +4520,7 @@ bool ChatHandler::HandleFreezeCommand(const char *args)
         }
 
         //m_session->GetPlayer()->CastSpell(player, spellID, false);
-        if (SpellEntry const *spellInfo = sSpellStore.LookupEntry(9454))
+        if (SpellEntry const* spellInfo = sSpellStore.LookupEntry(9454))
             Aura::TryCreate(spellInfo, player, player);
 
         //save player

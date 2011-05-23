@@ -458,7 +458,7 @@ class Creature : public Unit, public GridObject<Creature>
         bool isCanTrainingOf(Player* player, bool msg) const;
         bool isCanInteractWithBattleMaster(Player* player, bool msg) const;
         bool isCanTrainingAndResetTalentsOf(Player* pPlayer) const;
-        bool canCreatureAttack(Unit const *victim, bool force = true) const;
+        bool canCreatureAttack(Unit const* victim, bool force = true) const;
         bool IsImmunedToSpell(SpellEntry const* spellInfo);
                                                             // redefine Unit::IsImmunedToSpell
         bool IsImmunedToSpellEffect(SpellEntry const* spellInfo, uint32 index) const;
@@ -527,8 +527,8 @@ class Creature : public Unit, public GridObject<Creature>
 
         TrainerSpellData const* GetTrainerSpells() const;
 
-        CreatureTemplate const *GetCreatureInfo() const { return m_creatureInfo; }
-        CreatureData const *GetCreatureData() const { return m_creatureData; }
+        CreatureTemplate const* GetCreatureInfo() const { return m_creatureInfo; }
+        CreatureData const* GetCreatureData() const { return m_creatureData; }
         CreatureAddon const* GetCreatureAddon() const;
 
         std::string GetAIName() const;
@@ -571,8 +571,8 @@ class Creature : public Unit, public GridObject<Creature>
         void RemoveLootMode(uint16 lootMode) { m_LootMode &= ~lootMode; }
         void ResetLootMode() { m_LootMode = LOOT_MODE_DEFAULT; }
 
-        SpellEntry const *reachWithSpellAttack(Unit* victim);
-        SpellEntry const *reachWithSpellCure(Unit* victim);
+        SpellEntry const* reachWithSpellAttack(Unit* victim);
+        SpellEntry const* reachWithSpellCure(Unit* victim);
 
         uint32 m_spells[CREATURE_MAX_SPELLS];
         CreatureSpellCooldowns m_CreatureSpellCooldowns;

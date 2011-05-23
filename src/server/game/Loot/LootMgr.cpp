@@ -53,7 +53,7 @@ class LootTemplate::LootGroup                               // A set of loot def
     public:
         void AddEntry(LootStoreItem& item);                 // Adds an entry to the group (at loading stage)
         bool HasQuestDrop() const;                          // True if group includes at least 1 quest drop entry
-        bool HasQuestDropForPlayer(Player const * player) const;
+        bool HasQuestDropForPlayer(Player const* player) const;
                                                             // The same for active quests of the player
         void Process(Loot& loot, uint16 lootMode) const;    // Rolls an item from the group (if any) and adds the item to the loot
         float RawTotalChance() const;                       // Overall chance for the group (without equal chanced items)
@@ -69,7 +69,7 @@ class LootTemplate::LootGroup                               // A set of loot def
         LootStoreItemList ExplicitlyChanced;                // Entries with chances defined in DB
         LootStoreItemList EqualChanced;                     // Zero chances - every entry takes the same chance
 
-        LootStoreItem const * Roll() const;                 // Rolls an item from the group, returns NULL if all miss their chances
+        LootStoreItem const* Roll() const;                 // Rolls an item from the group, returns NULL if all miss their chances
 };
 
 //Remove all data and free all memory
@@ -248,7 +248,7 @@ bool LootStoreItem::Roll(bool rate) const
     if (mincountOrRef < 0)                                   // reference case
         return roll_chance_f(chance* (rate ? sWorld->getRate(RATE_DROP_ITEM_REFERENCED) : 1.0f));
 
-    ItemTemplate const *pProto = sObjectMgr->GetItemTemplate(itemid);
+    ItemTemplate const* pProto = sObjectMgr->GetItemTemplate(itemid);
 
     float qualityModifier = pProto && rate ? sWorld->getRate(qualityToRate[pProto->Quality]) : 1.0f;
 
@@ -272,7 +272,7 @@ bool LootStoreItem::IsValid(LootStore const& store, uint32 entry) const
 
     if (mincountOrRef > 0)                                  // item (quest or non-quest) entry, maybe grouped
     {
-        ItemTemplate const *proto = sObjectMgr->GetItemTemplate(itemid);
+        ItemTemplate const* proto = sObjectMgr->GetItemTemplate(itemid);
         if (!proto)
         {
             sLog->outErrorDb("Table '%s' entry %d item %d: item entry not listed in `item_template` - skipped", store.GetName(), entry, itemid);
@@ -337,13 +337,13 @@ LootItem::LootItem(LootStoreItem const& li)
 }
 
 // Basic checks for player/item compatibility - if false no chance to see the item in the loot
-bool LootItem::AllowedForPlayer(Player const * player) const
+bool LootItem::AllowedForPlayer(Player const* player) const
 {
     // DB conditions check
     if (!sConditionMgr->IsPlayerMeetToConditions(const_cast<Player*>(player), conditions))
         return false;
 
-    ItemTemplate const *pProto = sObjectMgr->GetItemTemplate(itemid);
+    ItemTemplate const* pProto = sObjectMgr->GetItemTemplate(itemid);
     if (!pProto)
         return false;
 
@@ -440,7 +440,7 @@ bool Loot::FillLoot(uint32 lootId, LootStore const& store, Player* lootOwner, bo
 
         for (uint8 i = 0; i < items.size(); ++i)
         {
-            if (ItemTemplate const *proto = sObjectMgr->GetItemTemplate(items[i].itemid))
+            if (ItemTemplate const* proto = sObjectMgr->GetItemTemplate(items[i].itemid))
                 if (proto->Quality < uint32(pGroup->GetLootThreshold()))
                     items[i].is_underthreshold = true;
         }
@@ -474,7 +474,7 @@ void Loot::FillNotNormalLootFor(Player* pl, bool presentAtLooting)
 
     // Process currency items
     uint32 max_slot = GetMaxSlotInLootFor(pl);
-    LootItem const *item = NULL;
+    LootItem const* item = NULL;
     uint32 itemsSize = uint32(items.size());
     for (uint32 i = 0; i < max_slot; ++i)
     {
@@ -972,7 +972,7 @@ void LootTemplate::LootGroup::AddEntry(LootStoreItem& item)
 }
 
 // Rolls an item from the group, returns NULL if all miss their chances
-LootStoreItem const * LootTemplate::LootGroup::Roll() const
+LootStoreItem const* LootTemplate::LootGroup::Roll() const
 {
     if (!ExplicitlyChanced.empty())                             // First explicitly chanced entries are checked
     {
@@ -1007,7 +1007,7 @@ bool LootTemplate::LootGroup::HasQuestDrop() const
 }
 
 // True if group includes at least 1 quest drop entry for active quests of the player
-bool LootTemplate::LootGroup::HasQuestDropForPlayer(Player const * player) const
+bool LootTemplate::LootGroup::HasQuestDropForPlayer(Player const* player) const
 {
     for (LootStoreItemList::const_iterator i = ExplicitlyChanced.begin(); i != ExplicitlyChanced.end(); ++i)
         if (player->HasQuestForItem(i->itemid))
@@ -1085,7 +1085,7 @@ void LootTemplate::LootGroup::Process(Loot& loot, uint16 lootMode) const
         if (item != NULL && item->lootmode & lootMode)   // only add this item if roll succeeds and the mode matches
         {
             bool duplicate = false;
-            if (ItemTemplate const *_proto = sObjectMgr->GetItemTemplate(item->itemid))
+            if (ItemTemplate const* _proto = sObjectMgr->GetItemTemplate(item->itemid))
             {
                 uint8 _item_counter = 0;
                 for (LootItemList::const_iterator _item = loot.items.begin(); _item != loot.items.end(); ++_item)
@@ -1226,7 +1226,7 @@ void LootTemplate::Process(Loot& loot, bool rate, uint16 lootMode, uint8 groupId
         if (!i->Roll(rate))
             continue;                                         // Bad luck for the entry
 
-        if (ItemTemplate const *_proto = sObjectMgr->GetItemTemplate(i->itemid))
+        if (ItemTemplate const* _proto = sObjectMgr->GetItemTemplate(i->itemid))
         {
             uint8 _item_counter = 0;
             LootItemList::const_iterator _item = loot.items.begin();

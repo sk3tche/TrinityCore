@@ -285,7 +285,7 @@ void WorldSession::HandleItemQuerySingleOpcode(WorldPacket & recv_data)
 
     sLog->outDetail("STORAGE: Item Query = %u", item);
 
-    ItemTemplate const *pProto = sObjectMgr->GetItemTemplate(item);
+    ItemTemplate const* pProto = sObjectMgr->GetItemTemplate(item);
     if (pProto)
     {
         std::string Name        = pProto->Name1;
@@ -294,7 +294,7 @@ void WorldSession::HandleItemQuerySingleOpcode(WorldPacket & recv_data)
         int loc_idx = GetSessionDbLocaleIndex();
         if (loc_idx >= 0)
         {
-            if (ItemLocale const *il = sObjectMgr->GetItemLocale(pProto->ItemId))
+            if (ItemLocale const* il = sObjectMgr->GetItemLocale(pProto->ItemId))
             {
                 sObjectMgr->GetLocaleString(il->Name, loc_idx, Name);
                 sObjectMgr->GetLocaleString(il->Description, loc_idx, Description);
@@ -550,7 +550,7 @@ void WorldSession::HandleSellItemOpcode(WorldPacket & recv_data)
             }
         }
 
-        ItemTemplate const *pProto = pItem->GetTemplate();
+        ItemTemplate const* pProto = pItem->GetTemplate();
         if (pProto)
         {
             if (pProto->SellPrice > 0)
@@ -764,7 +764,7 @@ void WorldSession::SendListInventory(uint64 vendorguid)
     {
         if (VendorItem const* crItem = vItems->GetItem(vendorslot))
         {
-            if (ItemTemplate const *pProto = sObjectMgr->GetItemTemplate(crItem->item))
+            if (ItemTemplate const* pProto = sObjectMgr->GetItemTemplate(crItem->item))
             {
                 if ((pProto->AllowableClass & _player->getClassMask()) == 0 && pProto->Bonding == BIND_WHEN_PICKED_UP && !_player->isGameMaster())
                     continue;
@@ -1022,13 +1022,13 @@ void WorldSession::HandleItemNameQueryOpcode(WorldPacket & recv_data)
     recv_data.read_skip<uint64>();                          // guid
 
     sLog->outDebug(LOG_FILTER_NETWORKIO, "WORLD: CMSG_ITEM_NAME_QUERY %u", itemid);
-    ItemSetNameEntry const *pName = sObjectMgr->GetItemSetNameEntry(itemid);
+    ItemSetNameEntry const* pName = sObjectMgr->GetItemSetNameEntry(itemid);
     if (pName)
     {
         std::string Name = pName->name;
         int loc_idx = GetSessionDbLocaleIndex();
         if (loc_idx >= 0)
-            if (ItemSetNameLocale const *isnl = sObjectMgr->GetItemSetNameLocale(itemid))
+            if (ItemSetNameLocale const* isnl = sObjectMgr->GetItemSetNameLocale(itemid))
                 sObjectMgr->GetLocaleString(isnl->Name, loc_idx, Name);
 
         WorldPacket data(SMSG_ITEM_NAME_QUERY_RESPONSE, (4+Name.size()+1+4));
@@ -1178,7 +1178,7 @@ void WorldSession::HandleSocketOpcode(WorldPacket& recv_data)
     for (int i = 0; i < MAX_GEM_SOCKETS; ++i)
         Gems[i] = gem_guids[i] ? _player->GetItemByGuid(gem_guids[i]) : NULL;
 
-    GemPropertiesEntry const *GemProps[MAX_GEM_SOCKETS];
+    GemPropertiesEntry const* GemProps[MAX_GEM_SOCKETS];
     for (int i = 0; i < MAX_GEM_SOCKETS; ++i)                //get geminfo from dbc storage
         GemProps[i] = (Gems[i]) ? sGemPropertiesStore.LookupEntry(Gems[i]->GetTemplate()->GemProperties) : NULL;
 

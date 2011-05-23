@@ -933,7 +933,7 @@ bool ConditionMgr::isSourceTypeValid(Condition* cond)
                 return false;
             }
 
-            ItemTemplate const *pItemProto = sObjectMgr->GetItemTemplate(cond->mSourceEntry);
+            ItemTemplate const* pItemProto = sObjectMgr->GetItemTemplate(cond->mSourceEntry);
             if (!pItemProto)
             {
                 sLog->outErrorDb("SourceEntry %u in `condition` table, does not exist in `item_tamplate`, ignoring.", cond->mSourceEntry);
@@ -980,7 +980,7 @@ bool ConditionMgr::isSourceTypeValid(Condition* cond)
         }
         case CONDITION_SOURCE_TYPE_QUEST_ACCEPT:
             {
-                Quest const *Quest = sObjectMgr->GetQuestTemplate(cond->mSourceEntry);
+                Quest const* Quest = sObjectMgr->GetQuestTemplate(cond->mSourceEntry);
                 if (!Quest)
                 {
                     sLog->outErrorDb("CONDITION_SOURCE_TYPE_QUEST_ACCEPT specifies non-existing quest (%u), skipped", cond->mSourceEntry);
@@ -990,7 +990,7 @@ bool ConditionMgr::isSourceTypeValid(Condition* cond)
             break;
         case CONDITION_SOURCE_TYPE_QUEST_SHOW_MARK:
             {
-                Quest const *Quest = sObjectMgr->GetQuestTemplate(cond->mSourceEntry);
+                Quest const* Quest = sObjectMgr->GetQuestTemplate(cond->mSourceEntry);
                 if (!Quest)
                 {
                     sLog->outErrorDb("CONDITION_SOURCE_TYPE_QUEST_SHOW_MARK specifies non-existing quest (%u), skipped", cond->mSourceEntry);
@@ -1049,7 +1049,7 @@ bool ConditionMgr::isConditionTypeValid(Condition* cond)
         }
         case CONDITION_ITEM:
         {
-            ItemTemplate const *proto = sObjectMgr->GetItemTemplate(cond->mConditionValue1);
+            ItemTemplate const* proto = sObjectMgr->GetItemTemplate(cond->mConditionValue1);
             if (!proto)
             {
                 sLog->outErrorDb("Item condition has non existing item (%u), skipped", cond->mConditionValue1);
@@ -1065,7 +1065,7 @@ bool ConditionMgr::isConditionTypeValid(Condition* cond)
         }
         case CONDITION_ITEM_EQUIPPED:
         {
-            ItemTemplate const *proto = sObjectMgr->GetItemTemplate(cond->mConditionValue1);
+            ItemTemplate const* proto = sObjectMgr->GetItemTemplate(cond->mConditionValue1);
             if (!proto)
             {
                 sLog->outErrorDb("ItemEquipped condition has non existing item (%u), skipped", cond->mConditionValue1);
@@ -1119,7 +1119,7 @@ bool ConditionMgr::isConditionTypeValid(Condition* cond)
         }
         case CONDITION_SKILL:
         {
-            SkillLineEntry const *pSkill = sSkillLineStore.LookupEntry(cond->mConditionValue1);
+            SkillLineEntry const* pSkill = sSkillLineStore.LookupEntry(cond->mConditionValue1);
             if (!pSkill)
             {
                 sLog->outErrorDb("Skill condition specifies non-existing skill (%u), skipped", cond->mConditionValue1);
@@ -1138,7 +1138,7 @@ bool ConditionMgr::isConditionTypeValid(Condition* cond)
         case CONDITION_QUEST_NONE:
         case CONDITION_QUEST_COMPLETE:
         {
-            Quest const *Quest = sObjectMgr->GetQuestTemplate(cond->mConditionValue1);
+            Quest const* Quest = sObjectMgr->GetQuestTemplate(cond->mConditionValue1);
             if (!Quest)
             {
                 sLog->outErrorDb("Quest condition specifies non-existing quest (%u), skipped", cond->mConditionValue1);
@@ -1289,7 +1289,7 @@ bool ConditionMgr::isConditionTypeValid(Condition* cond)
         }
         case CONDITION_MAPID:
         {
-            MapEntry const * me = sMapStore.LookupEntry(cond->mConditionValue1);
+            MapEntry const* me = sMapStore.LookupEntry(cond->mConditionValue1);
             if (!me)
             {
                 sLog->outErrorDb("Map condition has non existing map (%u), skipped", cond->mConditionValue1);
@@ -1332,7 +1332,7 @@ bool ConditionMgr::isConditionTypeValid(Condition* cond)
         }
         case CONDITION_NOITEM:
         {
-            ItemTemplate const *proto = sObjectMgr->GetItemTemplate(cond->mConditionValue1);
+            ItemTemplate const* proto = sObjectMgr->GetItemTemplate(cond->mConditionValue1);
             if (!proto)
             {
                 sLog->outErrorDb("NoItem condition has non existing item (%u), skipped", cond->mConditionValue1);

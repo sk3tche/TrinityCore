@@ -350,12 +350,12 @@ class AuraScript : public _SpellScript
     public:
 
     #define AURASCRIPT_FUNCTION_TYPE_DEFINES(CLASSNAME) \
-        typedef void(CLASSNAME::*AuraEffectApplicationModeFnType)(AuraEffect const *, AuraEffectHandleModes); \
-        typedef void(CLASSNAME::*AuraEffectPeriodicFnType)(AuraEffect const *); \
+        typedef void(CLASSNAME::*AuraEffectApplicationModeFnType)(AuraEffect const* , AuraEffectHandleModes); \
+        typedef void(CLASSNAME::*AuraEffectPeriodicFnType)(AuraEffect const* ); \
         typedef void(CLASSNAME::*AuraEffectUpdatePeriodicFnType)(AuraEffect *); \
-        typedef void(CLASSNAME::*AuraEffectCalcAmountFnType)(AuraEffect const *, int32 &, bool &); \
-        typedef void(CLASSNAME::*AuraEffectCalcPeriodicFnType)(AuraEffect const *, bool &, int32 &); \
-        typedef void(CLASSNAME::*AuraEffectCalcSpellModFnType)(AuraEffect const *, SpellModifier *&); \
+        typedef void(CLASSNAME::*AuraEffectCalcAmountFnType)(AuraEffect const* , int32 &, bool &); \
+        typedef void(CLASSNAME::*AuraEffectCalcPeriodicFnType)(AuraEffect const* , bool &, int32 &); \
+        typedef void(CLASSNAME::*AuraEffectCalcSpellModFnType)(AuraEffect const* , SpellModifier *&); \
         typedef void(CLASSNAME::*AuraEffectAbsorbFnType)(AuraEffect *, DamageInfo &, uint32 &); \
 
         AURASCRIPT_FUNCTION_TYPE_DEFINES(AuraScript)
@@ -365,13 +365,13 @@ class AuraScript : public _SpellScript
             public:
                 EffectBase(uint8 _effIndex, uint16 _effName);
                 std::string ToString();
-                bool CheckEffect(SpellEntry const * spellEntry, uint8 effIndex);
+                bool CheckEffect(SpellEntry const* spellEntry, uint8 effIndex);
         };
         class EffectPeriodicHandler : public EffectBase
         {
             public:
                 EffectPeriodicHandler(AuraEffectPeriodicFnType _pEffectHandlerScript, uint8 _effIndex, uint16 _effName);
-                void Call(AuraScript * auraScript, AuraEffect const * _aurEff);
+                void Call(AuraScript * auraScript, AuraEffect const* _aurEff);
             private:
                 AuraEffectPeriodicFnType pEffectHandlerScript;
         };
@@ -411,7 +411,7 @@ class AuraScript : public _SpellScript
         {
             public:
                 EffectApplyHandler(AuraEffectApplicationModeFnType _pEffectHandlerScript, uint8 _effIndex, uint16 _effName, AuraEffectHandleModes _mode);
-                void Call(AuraScript * auraScript, AuraEffect const * _aurEff, AuraEffectHandleModes _mode);
+                void Call(AuraScript * auraScript, AuraEffect const* _aurEff, AuraEffectHandleModes _mode);
             private:
                 AuraEffectApplicationModeFnType pEffectHandlerScript;
                 AuraEffectHandleModes mode;
@@ -446,14 +446,14 @@ class AuraScript : public _SpellScript
         #define PrepareAuraScript(CLASSNAME) AURASCRIPT_FUNCTION_TYPE_DEFINES(CLASSNAME) AURASCRIPT_FUNCTION_CAST_DEFINES(CLASSNAME)
 
     public:
-        bool _Validate(SpellEntry const * entry);
+        bool _Validate(SpellEntry const* entry);
         bool _Load(Aura * aura);
-        void _PrepareScriptCall(AuraScriptHookType hookType, AuraApplication const * aurApp = NULL);
+        void _PrepareScriptCall(AuraScriptHookType hookType, AuraApplication const* aurApp = NULL);
         void _FinishScriptCall();
         bool _IsDefaultActionPrevented();
     private:
         Aura * m_aura;
-        AuraApplication const * m_auraApplication;
+        AuraApplication const* m_auraApplication;
         bool m_defaultActionPrevented;
     public:
         //
@@ -600,7 +600,7 @@ class AuraScript : public _SpellScript
         // return NULL is when the call happens in an unsupported hook, in other cases, it is always valid
         Unit* GetTarget() const;
         // returns AuraApplication object of currently processed target
-        AuraApplication const * GetTargetApplication() const;
+        AuraApplication const* GetTargetApplication() const;
 };
 
 //

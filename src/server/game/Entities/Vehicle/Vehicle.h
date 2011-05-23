@@ -79,8 +79,8 @@ enum VehicleSpells
 
 struct VehicleSeat
 {
-    explicit VehicleSeat(VehicleSeatEntry const *_seatInfo) : seatInfo(_seatInfo), passenger(0) {}
-    VehicleSeatEntry const *seatInfo;
+    explicit VehicleSeat(VehicleSeatEntry const* _seatInfo) : seatInfo(_seatInfo), passenger(0) {}
+    VehicleSeatEntry const* seatInfo;
     uint64 passenger;
 };
 
@@ -113,7 +113,7 @@ class Vehicle
     friend class WorldSession;
 
     public:
-        explicit Vehicle(Unit* unit, VehicleEntry const *vehInfo, uint32 creatureEntry);
+        explicit Vehicle(Unit* unit, VehicleEntry const* vehInfo, uint32 creatureEntry);
         virtual ~Vehicle();
 
         void Install();
@@ -122,7 +122,7 @@ class Vehicle
         void InstallAllAccessories(bool evading);
 
         Unit* GetBase() const { return me; }
-        VehicleEntry const *GetVehicleInfo() const { return m_vehicleInfo; }
+        VehicleEntry const* GetVehicleInfo() const { return m_vehicleInfo; }
         uint32 const& GetCreatureEntry() const { return m_creatureEntry; }
 
         bool HasEmptySeat(int8 seatId) const;
@@ -150,7 +150,7 @@ class Vehicle
 
     protected:
         Unit* me;
-        VehicleEntry const *m_vehicleInfo;
+        VehicleEntry const* m_vehicleInfo;
         uint32 m_usableSeatNum;         // Number of seats that match VehicleSeatEntry::UsableByPlayer, used for proper display flags
         uint32 m_bonusHP;
         uint32 m_creatureEntry;         // Can be different than me->GetBase()->GetEntry() in case of players

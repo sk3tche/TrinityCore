@@ -121,12 +121,12 @@ namespace Trinity
     struct MessageDistDeliverer
     {
         WorldObject *i_source;
-        WorldPacket *i_message;
+        WorldPacket* i_message;
         uint32 i_phaseMask;
         float i_distSq;
         uint32 team;
         Player const* skipped_receiver;
-        MessageDistDeliverer(WorldObject *src, WorldPacket *msg, float dist, bool own_team_only = false, Player const* skipped = NULL)
+        MessageDistDeliverer(WorldObject *src, WorldPacket* msg, float dist, bool own_team_only = false, Player const* skipped = NULL)
             : i_source(src), i_message(msg), i_phaseMask(src->GetPhaseMask()), i_distSq(dist * dist)
             , team((own_team_only && src->GetTypeId() == TYPEID_PLAYER) ? ((Player*)src)->GetTeam() : 0)
             , skipped_receiver(skipped)
@@ -990,7 +990,7 @@ namespace Trinity
             }
 
     private:
-            Creature const *me;
+            Creature const* me;
             float m_range;
             NearestHostileUnitCheck(NearestHostileUnitCheck const&);
     };
@@ -1027,7 +1027,7 @@ namespace Trinity
             }
             float GetLastRange() const { return m_range; }
         private:
-            Creature const *me;
+            Creature const* me;
             float m_range;
             bool m_force;
             NearestHostileUnitInAttackDistanceCheck(NearestHostileUnitInAttackDistanceCheck const&);

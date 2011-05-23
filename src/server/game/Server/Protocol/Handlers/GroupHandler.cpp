@@ -708,7 +708,7 @@ void WorldSession::HandleRaidReadyCheckFinishedOpcode(WorldPacket & /*recv_data*
     // Is any reaction need?
 }
 
-void WorldSession::BuildPartyMemberStatsChangedPacket(Player* player, WorldPacket *data)
+void WorldSession::BuildPartyMemberStatsChangedPacket(Player* player, WorldPacket* data)
 {
     uint32 mask = player->GetGroupUpdateFlag();
 
@@ -776,14 +776,14 @@ void WorldSession::BuildPartyMemberStatsChangedPacket(Player* player, WorldPacke
         {
             if (auramask & (uint64(1) << i))
             {
-                AuraApplication const * aurApp = player->GetVisibleAura(i);
+                AuraApplication const* aurApp = player->GetVisibleAura(i);
                 *data << uint32(aurApp ? aurApp->GetBase()->GetId() : 0);
                 *data << uint8(1);
             }
         }
     }
 
-    Pet *pet = player->GetPet();
+    Pet* pet = player->GetPet();
     if (mask & GROUP_UPDATE_FLAG_PET_GUID)
     {
         if (pet)
@@ -866,7 +866,7 @@ void WorldSession::BuildPartyMemberStatsChangedPacket(Player* player, WorldPacke
             {
                 if (auramask & (uint64(1) << i))
                 {
-                    AuraApplication const * aurApp = player->GetVisibleAura(i);
+                    AuraApplication const* aurApp = player->GetVisibleAura(i);
                     *data << uint32(aurApp ? aurApp->GetBase()->GetId() : 0);
                     *data << uint8(1);
                 }
@@ -896,7 +896,7 @@ void WorldSession::HandleRequestPartyMemberStatsOpcode(WorldPacket &recv_data)
         return;
     }
 
-    Pet *pet = player->GetPet();
+    Pet* pet = player->GetPet();
 
     WorldPacket data(SMSG_PARTY_MEMBER_STATS_FULL, 4+2+2+2+1+2*6+8+1+8);
     data << uint8(0);                                       // only for SMSG_PARTY_MEMBER_STATS_FULL, probably arena/bg related

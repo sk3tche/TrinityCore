@@ -33,7 +33,7 @@ struct ItemSetEffect
 {
     uint32 setid;
     uint32 item_count;
-    SpellEntry const *spells[8];
+    SpellEntry const* spells[8];
 };
 
 enum InventoryResult
@@ -221,7 +221,7 @@ struct ItemRequiredTarget
     bool IsFitToRequirements(Unit* pUnitTarget) const;
 };
 
-bool ItemCanGoIntoBag(ItemTemplate const *proto, ItemTemplate const *pBagProto);
+bool ItemCanGoIntoBag(ItemTemplate const* proto, ItemTemplate const* pBagProto);
 
 class Item : public Object
 {
@@ -280,11 +280,11 @@ class Item : public Object
         InventoryResult CanBeMergedPartlyWith(ItemTemplate const* proto) const;
 
         uint8 GetSlot() const {return m_slot;}
-        Bag *GetContainer() { return m_container; }
+        Bag* GetContainer() { return m_container; }
         uint8 GetBagSlot() const;
         void SetSlot(uint8 slot) { m_slot = slot; }
         uint16 GetPos() const { return uint16(GetBagSlot()) << 8 | GetSlot(); }
-        void SetContainer(Bag *container) { m_container = container; }
+        void SetContainer(Bag* container) { m_container = container; }
 
         bool IsInBag() const { return m_container != NULL; }
         bool IsEquipped() const;
@@ -361,7 +361,7 @@ class Item : public Object
     private:
         std::string m_text;
         uint8 m_slot;
-        Bag *m_container;
+        Bag* m_container;
         ItemUpdateState uState;
         int16 uQueuePos;
         bool mb_in_trade;                                   // true if item is currently in trade-window

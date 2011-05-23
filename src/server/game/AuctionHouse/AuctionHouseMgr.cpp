@@ -328,7 +328,7 @@ void AuctionHouseMgr::LoadAuctionItems()
         uint32 item_guid        = fields[11].GetUInt32();
         uint32 item_template    = fields[12].GetUInt32();
 
-        ItemTemplate const *proto = sObjectMgr->GetItemTemplate(item_template);
+        ItemTemplate const* proto = sObjectMgr->GetItemTemplate(item_template);
         if (!proto)
         {
             sLog->outError("AuctionHouseMgr::LoadAuctionItems: Unknown item (GUID: %u id: #%u) in auction, skipped.", item_guid, item_template);
@@ -571,7 +571,7 @@ void AuctionHouseObject::BuildListAuctionItems(WorldPacket& data, Player* player
         if (!item)
             continue;
 
-        ItemTemplate const *proto = item->GetTemplate();
+        ItemTemplate const* proto = item->GetTemplate();
 
         if (itemClass != 0xffffffff && proto->Class != itemClass)
             continue;
@@ -601,7 +601,7 @@ void AuctionHouseObject::BuildListAuctionItems(WorldPacket& data, Player* player
 
             // local name
             if (loc_idx >= 0)
-                if (ItemLocale const *il = sObjectMgr->GetItemLocale(proto->ItemId))
+                if (ItemLocale const* il = sObjectMgr->GetItemLocale(proto->ItemId))
                     sObjectMgr->GetLocaleString(il->Name, loc_idx, name);
 
             // DO NOT use GetItemEnchantMod(proto->RandomProperty) as it may return a result

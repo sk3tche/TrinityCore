@@ -151,7 +151,7 @@ bool BattlegroundSA::ResetObjs()
     //Graveyards!
     for (uint8 i = 0;i < BG_SA_MAX_GY; i++)
     {
-        WorldSafeLocsEntry const *sg = NULL;
+        WorldSafeLocsEntry const* sg = NULL;
         sg = sWorldSafeLocsStore.LookupEntry(BG_SA_GYEntries[i]);
 
         if (!sg)
@@ -716,7 +716,7 @@ void BattlegroundSA::CaptureGraveyard(BG_SA_Graveyards i, Player* Source)
 
     DelCreature(BG_SA_MAXNPC + i);
     GraveyardStatus[i] = Source->GetTeamId();
-    WorldSafeLocsEntry const *sg = NULL;
+    WorldSafeLocsEntry const* sg = NULL;
     sg = sWorldSafeLocsStore.LookupEntry(BG_SA_GYEntries[i]);
     AddSpiritGuide(i + BG_SA_MAXNPC, sg->x, sg->y, sg->z, BG_SA_GYOrientation[i], (GraveyardStatus[i] == TEAM_ALLIANCE?  ALLIANCE : HORDE));
     uint32 npc = 0;

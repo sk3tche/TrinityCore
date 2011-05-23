@@ -418,10 +418,10 @@ class Spell
 
         typedef std::set<Aura *> UsedSpellMods;
 
-        Spell(Unit* Caster, SpellEntry const *info, bool triggered, uint64 originalCasterGUID = 0, bool skipCheck = false);
+        Spell(Unit* Caster, SpellEntry const* info, bool triggered, uint64 originalCasterGUID = 0, bool skipCheck = false);
         ~Spell();
 
-        void prepare(SpellCastTargets const* targets, AuraEffect const * triggeredByAura = NULL);
+        void prepare(SpellCastTargets const* targets, AuraEffect const* triggeredByAura = NULL);
         void cancel();
         void update(uint32 difftime);
         void cast(bool skipCheck = false);
@@ -458,8 +458,8 @@ class Spell
         void setState(uint32 state) { m_spellState = state; }
 
         void DoCreateItem(uint32 i, uint32 itemtype);
-        void WriteSpellGoTargets(WorldPacket * data);
-        void WriteAmmoToPacket(WorldPacket * data);
+        void WriteSpellGoTargets(WorldPacket* data);
+        void WriteAmmoToPacket(WorldPacket* data);
 
         void SelectSpellTargets();
         void SelectEffectTargets(uint32 i, uint32 cur);
@@ -535,7 +535,7 @@ class Spell
 
         Unit* GetCaster() const { return m_caster; }
         Unit* GetOriginalCaster() const { return m_originalCaster; }
-        SpellEntry const * GetSpellInfo() const { return m_spellInfo; }
+        SpellEntry const* GetSpellInfo() const { return m_spellInfo; }
         int32 GetPowerCost() const { return m_powerCost; }
 
         void UpdatePointers();                              // must be used at call Spell code after time delay (non triggered spell cast/update spell call/etc)
@@ -618,7 +618,7 @@ class Spell
         uint32 m_procAttacker;                // Attacker trigger flags
         uint32 m_procVictim;                  // Victim   trigger flags
         uint32 m_procEx;
-        void   prepareDataForTriggerSystem(AuraEffect const * triggeredByAura);
+        void   prepareDataForTriggerSystem(AuraEffect const* triggeredByAura);
 
         // *****************************************
         // Spell target subsystem
@@ -701,7 +701,7 @@ class Spell
 
         // effect helpers
         void GetSummonPosition(uint32 i, Position &pos, float radius = 0.0f, uint32 count = 0);
-        void SummonGuardian(uint32 i, uint32 entry, SummonPropertiesEntry const *properties);
+        void SummonGuardian(uint32 i, uint32 entry, SummonPropertiesEntry const* properties);
         void CalculateJumpSpeeds(uint8 i, float dist, float & speedxy, float & speedz);
 
         SpellCastResult CanOpenLock(uint32 effIndex, uint32 lockid, SkillType& skillid, int32& reqSkillValue, int32& skillValue);
@@ -749,10 +749,10 @@ namespace Trinity
         uint32 i_entry;
         const Position * const i_pos;
         bool i_requireDeadTarget;
-        SpellEntry const * i_spellProto;
+        SpellEntry const* i_spellProto;
 
         SpellNotifierCreatureAndPlayer(Unit* source, std::list<Unit*> &data, float radius, SpellNotifyPushType type,
-            SpellTargets TargetType = SPELL_TARGETS_ENEMY, const Position *pos = NULL, uint32 entry = 0, SpellEntry const * spellProto = NULL)
+            SpellTargets TargetType = SPELL_TARGETS_ENEMY, const Position *pos = NULL, uint32 entry = 0, SpellEntry const* spellProto = NULL)
             : i_data(&data), i_push_type(type), i_radius(radius), i_TargetType(TargetType),
             i_source(source), i_entry(entry), i_pos(pos), i_spellProto(spellProto)
         {

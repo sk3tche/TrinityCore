@@ -477,7 +477,7 @@ void BattlegroundIC::RealocatePlayers(ICNodePointType nodeType)
     std::vector<uint64> ghost_list = m_ReviveQueue[m_BgCreatures[BG_IC_NPC_SPIRIT_GUIDE_1+nodeType-2]];
     if (!ghost_list.empty())
     {
-        WorldSafeLocsEntry const *ClosestGrave = NULL;
+        WorldSafeLocsEntry const* ClosestGrave = NULL;
         for (std::vector<uint64>::const_iterator itr = ghost_list.begin(); itr != ghost_list.end(); ++itr)
         {
             Player* plr = sObjectMgr->GetPlayer(*itr);

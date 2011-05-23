@@ -155,7 +155,7 @@ void WorldSession::HandleCreatureQueryOpcode(WorldPacket & recv_data)
     uint64 guid;
     recv_data >> guid;
 
-    CreatureTemplate const *ci = sObjectMgr->GetCreatureTemplate(entry);
+    CreatureTemplate const* ci = sObjectMgr->GetCreatureTemplate(entry);
     if (ci)
     {
 
@@ -166,7 +166,7 @@ void WorldSession::HandleCreatureQueryOpcode(WorldPacket & recv_data)
         int loc_idx = GetSessionDbLocaleIndex();
         if (loc_idx >= 0)
         {
-            if (CreatureLocale const *cl = sObjectMgr->GetCreatureLocale(entry))
+            if (CreatureLocale const* cl = sObjectMgr->GetCreatureLocale(entry))
             {
                 sObjectMgr->GetLocaleString(cl->Name, loc_idx, Name);
                 sObjectMgr->GetLocaleString(cl->SubName, loc_idx, SubName);
@@ -232,7 +232,7 @@ void WorldSession::HandleGameObjectQueryOpcode(WorldPacket & recv_data)
         int loc_idx = GetSessionDbLocaleIndex();
         if (loc_idx >= 0)
         {
-            if (GameObjectLocale const *gl = sObjectMgr->GetGameObjectLocale(entry))
+            if (GameObjectLocale const* gl = sObjectMgr->GetGameObjectLocale(entry))
             {
                 sObjectMgr->GetLocaleString(gl->Name, loc_idx, Name);
                 sObjectMgr->GetLocaleString(gl->CastBarCaption, loc_idx, CastBarCaption);
@@ -361,7 +361,7 @@ void WorldSession::HandleNpcTextQueryOpcode(WorldPacket & recv_data)
         int loc_idx = GetSessionDbLocaleIndex();
         if (loc_idx >= 0)
         {
-            if (NpcTextLocale const *nl = sObjectMgr->GetNpcTextLocale(textID))
+            if (NpcTextLocale const* nl = sObjectMgr->GetNpcTextLocale(textID))
             {
                 for (int i = 0; i < MAX_LOCALES; ++i)
                 {
@@ -428,7 +428,7 @@ void WorldSession::HandlePageTextQueryOpcode(WorldPacket & recv_data)
 
             int loc_idx = GetSessionDbLocaleIndex();
             if (loc_idx >= 0)
-                if (PageTextLocale const *pl = sObjectMgr->GetPageTextLocale(pageID))
+                if (PageTextLocale const* pl = sObjectMgr->GetPageTextLocale(pageID))
                     sObjectMgr->GetLocaleString(pl->Text, loc_idx, Text);
 
             data << Text;
@@ -481,7 +481,7 @@ void WorldSession::HandleQuestPOIQuery(WorldPacket& recv_data)
 
         if (questOk)
         {
-            QuestPOIVector const *POI = sObjectMgr->GetQuestPOIVector(questId);
+            QuestPOIVector const* POI = sObjectMgr->GetQuestPOIVector(questId);
 
             if (POI)
             {

@@ -1330,7 +1330,7 @@ void GameEventMgr::ChangeEquipOrModel(int16 event_id, bool activate)
             CreatureData const* data2 = sObjectMgr->GetCreatureData(itr->first);
             if (data2 && activate)
             {
-                CreatureTemplate const *cinfo = sObjectMgr->GetCreatureTemplate(data2->id);
+                CreatureTemplate const* cinfo = sObjectMgr->GetCreatureTemplate(data2->id);
                 uint32 displayID = sObjectMgr->ChooseDisplayId(0, cinfo, data2);
                 sObjectMgr->GetCreatureModelRandomGender(&displayID);
 
@@ -1480,7 +1480,7 @@ void GameEventMgr::UpdateWorldStates(uint16 event_id, bool Activate)
         BattlegroundTypeId bgTypeId = BattlegroundMgr::WeekendHolidayIdToBGType(event.holiday_id);
         if (bgTypeId != BATTLEGROUND_TYPE_NONE)
         {
-            BattlemasterListEntry const * bl = sBattlemasterListStore.LookupEntry(bgTypeId);
+            BattlemasterListEntry const* bl = sBattlemasterListStore.LookupEntry(bgTypeId);
             if (bl && bl->HolidayWorldStateId)
             {
                 WorldPacket data;

@@ -145,7 +145,7 @@ public:
     explicit PacketFilter(WorldSession * pSession) : m_pSession(pSession) {}
     virtual ~PacketFilter() {}
 
-    virtual bool Process(WorldPacket * /*packet*/) { return true; }
+    virtual bool Process(WorldPacket* /*packet*/) { return true; }
     virtual bool ProcessLogout() const { return true; }
 
 protected:
@@ -158,7 +158,7 @@ public:
     explicit MapSessionFilter(WorldSession * pSession) : PacketFilter(pSession) {}
     ~MapSessionFilter() {}
 
-    virtual bool Process(WorldPacket * packet);
+    virtual bool Process(WorldPacket* packet);
     //in Map::Update() we do not process player logout!
     virtual bool ProcessLogout() const { return false; }
 };
@@ -192,7 +192,7 @@ class WorldSession
         void SendAddonsInfo();
 
         void ReadMovementInfo(WorldPacket &data, MovementInfo *mi);
-        void WriteMovementInfo(WorldPacket *data, MovementInfo *mi);
+        void WriteMovementInfo(WorldPacket* data, MovementInfo *mi);
 
         void SendPacket(WorldPacket const* packet);
         void SendNotification(const char *format, ...) ATTR_PRINTF(2, 3);
@@ -318,7 +318,7 @@ class WorldSession
         void SendNotInArenaTeamPacket(uint8 type);
         void SendPetitionShowList(uint64 guid);
 
-        void BuildPartyMemberStatsChangedPacket(Player* player, WorldPacket *data);
+        void BuildPartyMemberStatsChangedPacket(Player* player, WorldPacket* data);
 
         void DoLootRelease(uint64 lguid);
 
@@ -877,8 +877,8 @@ class WorldSession
         void moveItems(Item* myItems[], Item* hisItems[]);
 
         // logging helper
-        void LogUnexpectedOpcode(WorldPacket *packet, const char* status, const char *reason);
-        void LogUnprocessedTail(WorldPacket *packet);
+        void LogUnexpectedOpcode(WorldPacket* packet, const char* status, const char *reason);
+        void LogUnprocessedTail(WorldPacket* packet);
 
         // EnumData helpers
         bool CharCanLogin(uint32 lowGUID)

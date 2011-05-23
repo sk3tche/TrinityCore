@@ -109,11 +109,11 @@ void AddItemsSetItem(Player* player, Item* item)
     }
 }
 
-void RemoveItemsSetItem(Player*player, ItemTemplate const *proto)
+void RemoveItemsSetItem(Player*player, ItemTemplate const* proto)
 {
     uint32 setid = proto->ItemSet;
 
-    ItemSetEntry const *set = sItemSetStore.LookupEntry(setid);
+    ItemSetEntry const* set = sItemSetStore.LookupEntry(setid);
 
     if (!set)
     {
@@ -167,7 +167,7 @@ void RemoveItemsSetItem(Player*player, ItemTemplate const *proto)
     }
 }
 
-bool ItemCanGoIntoBag(ItemTemplate const *pProto, ItemTemplate const *pBagProto)
+bool ItemCanGoIntoBag(ItemTemplate const* pProto, ItemTemplate const* pBagProto)
 {
     if (!pProto || !pBagProto)
         return false;
@@ -263,7 +263,7 @@ bool Item::Create(uint32 guidlow, uint32 itemid, Player const* owner)
     SetUInt64Value(ITEM_FIELD_OWNER, owner ? owner->GetGUID() : 0);
     SetUInt64Value(ITEM_FIELD_CONTAINED, owner ? owner->GetGUID() : 0);
 
-    ItemTemplate const *itemProto = sObjectMgr->GetItemTemplate(itemid);
+    ItemTemplate const* itemProto = sObjectMgr->GetItemTemplate(itemid);
     if (!itemProto)
         return false;
 
@@ -496,7 +496,7 @@ void Item::DeleteFromInventoryDB(SQLTransaction& trans)
     DeleteFromInventoryDB(trans, GetGUIDLow());
 }
 
-ItemTemplate const *Item::GetTemplate() const
+ItemTemplate const* Item::GetTemplate() const
 {
     return sObjectMgr->GetItemTemplate(GetEntry());
 }
@@ -585,7 +585,7 @@ uint32 Item::GetSpell()
 
 int32 Item::GenerateItemRandomPropertyId(uint32 item_id)
 {
-    ItemTemplate const *itemProto = sObjectMgr->GetItemTemplate(item_id);
+    ItemTemplate const* itemProto = sObjectMgr->GetItemTemplate(item_id);
 
     if (!itemProto)
         return 0;
@@ -605,7 +605,7 @@ int32 Item::GenerateItemRandomPropertyId(uint32 item_id)
     if (itemProto->RandomProperty)
     {
         uint32 randomPropId = GetItemEnchantMod(itemProto->RandomProperty);
-        ItemRandomPropertiesEntry const *random_id = sItemRandomPropertiesStore.LookupEntry(randomPropId);
+        ItemRandomPropertiesEntry const* random_id = sItemRandomPropertiesStore.LookupEntry(randomPropId);
         if (!random_id)
         {
             sLog->outErrorDb("Enchantment id #%u used but it doesn't have records in 'ItemRandomProperties.dbc'", randomPropId);
@@ -618,7 +618,7 @@ int32 Item::GenerateItemRandomPropertyId(uint32 item_id)
     else
     {
         uint32 randomPropId = GetItemEnchantMod(itemProto->RandomSuffix);
-        ItemRandomSuffixEntry const *random_id = sItemRandomSuffixStore.LookupEntry(randomPropId);
+        ItemRandomSuffixEntry const* random_id = sItemRandomSuffixStore.LookupEntry(randomPropId);
         if (!random_id)
         {
             sLog->outErrorDb("Enchantment id #%u used but it doesn't have records in sItemRandomSuffixStore.", randomPropId);
@@ -636,7 +636,7 @@ void Item::SetItemRandomProperties(int32 randomPropId)
 
     if (randomPropId > 0)
     {
-        ItemRandomPropertiesEntry const *item_rand = sItemRandomPropertiesStore.LookupEntry(randomPropId);
+        ItemRandomPropertiesEntry const* item_rand = sItemRandomPropertiesStore.LookupEntry(randomPropId);
         if (item_rand)
         {
             if (GetInt32Value(ITEM_FIELD_RANDOM_PROPERTIES_ID) != int32(item_rand->ID))
@@ -650,7 +650,7 @@ void Item::SetItemRandomProperties(int32 randomPropId)
     }
     else
     {
-        ItemRandomSuffixEntry const *item_rand = sItemRandomSuffixStore.LookupEntry(-randomPropId);
+        ItemRandomSuffixEntry const* item_rand = sItemRandomSuffixStore.LookupEntry(-randomPropId);
         if (item_rand)
         {
             if (GetInt32Value(ITEM_FIELD_RANDOM_PROPERTIES_ID) != -int32(item_rand->ID) ||
@@ -1035,7 +1035,7 @@ Item* Item::CreateItem(uint32 item, uint32 count, Player const* player)
     if (count < 1)
         return NULL;                                        //don't create item at zero count
 
-    ItemTemplate const *pProto = sObjectMgr->GetItemTemplate(item);
+    ItemTemplate const* pProto = sObjectMgr->GetItemTemplate(item);
     if (pProto)
     {
         if (count > pProto->GetMaxStackSize())

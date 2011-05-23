@@ -134,7 +134,7 @@ void WorldSession::SendTrainerList(uint64 guid, const std::string& strTitle)
     if (!unit->isCanTrainingOf(_player, true))
         return;
 
-    CreatureTemplate const *ci = unit->GetCreatureInfo();
+    CreatureTemplate const* ci = unit->GetCreatureInfo();
 
     if (!ci)
     {
@@ -417,7 +417,7 @@ void WorldSession::SendSpiritResurrect()
     _player->DurabilityLossAll(0.25f, true);
 
     // get corpse nearest graveyard
-    WorldSafeLocsEntry const *corpseGrave = NULL;
+    WorldSafeLocsEntry const* corpseGrave = NULL;
     Corpse *corpse = _player->GetCorpse();
     if (corpse)
         corpseGrave = sObjectMgr->GetClosestGraveYard(
@@ -429,7 +429,7 @@ void WorldSession::SendSpiritResurrect()
     // teleport to nearest from corpse graveyard, if different from nearest to player ghost
     if (corpseGrave)
     {
-        WorldSafeLocsEntry const *ghostGrave = sObjectMgr->GetClosestGraveYard(
+        WorldSafeLocsEntry const* ghostGrave = sObjectMgr->GetClosestGraveYard(
             _player->GetPositionX(), _player->GetPositionY(), _player->GetPositionZ(), _player->GetMapId(), _player->GetTeam());
 
         if (corpseGrave != ghostGrave)
@@ -541,7 +541,7 @@ void WorldSession::SendStablePetCallback(QueryResult result, uint64 guid)
 
     data << uint64 (guid);
 
-    Pet *pet = _player->GetPet();
+    Pet* pet = _player->GetPet();
 
     size_t wpos = data.wpos();
     data << uint8(0);                                       // place holder for slot show number
@@ -613,7 +613,7 @@ void WorldSession::HandleStablePet(WorldPacket & recv_data)
     if (GetPlayer()->HasUnitState(UNIT_STAT_DIED))
         GetPlayer()->RemoveAurasByType(SPELL_AURA_FEIGN_DEATH);
 
-    Pet *pet = _player->GetPet();
+    Pet* pet = _player->GetPet();
 
     // can't place in stable dead pet
     if (!pet||!pet->isAlive()||pet->getPetType() != HUNTER_PET)
@@ -726,7 +726,7 @@ void WorldSession::HandleUnstablePetCallback(QueryResult result, uint32 petnumbe
     if (pet)
         _player->RemovePet(pet, PET_SAVE_AS_DELETED);
 
-    Pet *newpet = new Pet(_player, HUNTER_PET);
+    Pet* newpet = new Pet(_player, HUNTER_PET);
     if (!newpet->LoadPetFromDB(_player, creature_id, petnumber))
     {
         delete newpet;
@@ -757,7 +757,7 @@ void WorldSession::HandleBuyStableSlot(WorldPacket & recv_data)
 
     if (GetPlayer()->m_stableSlots < MAX_PET_STABLES)
     {
-        StableSlotPricesEntry const *SlotPrice = sStableSlotPricesStore.LookupEntry(GetPlayer()->m_stableSlots+1);
+        StableSlotPricesEntry const* SlotPrice = sStableSlotPricesStore.LookupEntry(GetPlayer()->m_stableSlots+1);
         if (_player->HasEnoughMoney(SlotPrice->Price))
         {
             ++GetPlayer()->m_stableSlots;
@@ -849,7 +849,7 @@ void WorldSession::HandleStableSwapPetCallback(QueryResult result, uint32 petnum
     _player->RemovePet(pet, pet->isAlive() ? PetSaveMode(slot) : PET_SAVE_AS_DELETED);
 
     // summon unstabled pet
-    Pet *newpet = new Pet(_player);
+    Pet* newpet = new Pet(_player);
     if (!newpet->LoadPetFromDB(_player, creature_id, petnumber))
     {
         delete newpet;

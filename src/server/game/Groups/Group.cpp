@@ -739,7 +739,7 @@ void Group::SendLooter(Creature *pCreature, Player* pLooter)
 void Group::GroupLoot(Loot *loot, WorldObject* pLootedObject)
 {
     std::vector<LootItem>::iterator i;
-    ItemTemplate const *item;
+    ItemTemplate const* item;
     uint8 itemSlot = 0;
 
     for (i = loot->items.begin(); i != loot->items.end(); ++i, ++itemSlot)
@@ -833,7 +833,7 @@ void Group::GroupLoot(Loot *loot, WorldObject* pLootedObject)
 
 void Group::NeedBeforeGreed(Loot *loot, WorldObject* pLootedObject)
 {
-    ItemTemplate const *item;
+    ItemTemplate const* item;
     uint8 itemSlot = 0;
     for (std::vector<LootItem>::iterator i=loot->items.begin(); i != loot->items.end(); ++i, ++itemSlot)
     {
@@ -1121,7 +1121,7 @@ void Group::CountTheRoll(Rolls::iterator rollI, uint32 NumberOfPlayers)
                     item->is_looted = true;
                     roll->getLoot()->NotifyItemRemoved(roll->itemSlot);
                     roll->getLoot()->unlootedCount--;
-                    ItemTemplate const *pProto = sObjectMgr->GetItemTemplate(roll->itemid);
+                    ItemTemplate const* pProto = sObjectMgr->GetItemTemplate(roll->itemid);
                     player->AutoStoreLoot(pProto->DisenchantID, LootTemplates_Disenchant, true);
                 }
             }
@@ -1256,7 +1256,7 @@ void Group::UpdatePlayerOutOfRange(Player* pPlayer)
     }
 }
 
-void Group::BroadcastPacket(WorldPacket *packet, bool ignorePlayersInBGRaid, int group, uint64 ignore)
+void Group::BroadcastPacket(WorldPacket* packet, bool ignorePlayersInBGRaid, int group, uint64 ignore)
 {
     for (GroupReference *itr = GetFirstMember(); itr != NULL; itr = itr->next())
     {
@@ -1269,7 +1269,7 @@ void Group::BroadcastPacket(WorldPacket *packet, bool ignorePlayersInBGRaid, int
     }
 }
 
-void Group::BroadcastReadyCheck(WorldPacket *packet)
+void Group::BroadcastReadyCheck(WorldPacket* packet)
 {
     for (GroupReference *itr = GetFirstMember(); itr != NULL; itr = itr->next())
     {

@@ -493,7 +493,7 @@ bool BattlegroundEY::SetupBattleground()
             sLog->outError("BattlegroundEY: Cannot spawn buff");
     }
 
-    WorldSafeLocsEntry const *sg = NULL;
+    WorldSafeLocsEntry const* sg = NULL;
     sg = sWorldSafeLocsStore.LookupEntry(EY_GRAVEYARD_MAIN_ALLIANCE);
     if (!sg || !AddSpiritGuide(EY_SPIRIT_MAIN_ALLIANCE, sg->x, sg->y, sg->z, 3.124139f, ALLIANCE))
     {
@@ -738,7 +738,7 @@ void BattlegroundEY::EventTeamCapturedPoint(Player* Source, uint32 Point)
     if (m_BgCreatures[Point])
         DelCreature(Point);
 
-    WorldSafeLocsEntry const *sg = NULL;
+    WorldSafeLocsEntry const* sg = NULL;
     sg = sWorldSafeLocsStore.LookupEntry(m_CapturingPointTypes[Point].GraveYardId);
     if (!sg || !AddSpiritGuide(Point, sg->x, sg->y, sg->z, 3.124139f, Team))
         sLog->outError("BatteGroundEY: Failed to spawn spirit guide! point: %u, team: %u, graveyard_id: %u",
@@ -873,7 +873,7 @@ void BattlegroundEY::FillInitialWorldStates(WorldPacket& data)
     data << uint32(0xc0d) << uint32(0x17b);
 }
 
-WorldSafeLocsEntry const *BattlegroundEY::GetClosestGraveYard(Player* player)
+WorldSafeLocsEntry const* BattlegroundEY::GetClosestGraveYard(Player* player)
 {
     uint32 g_id = 0;
 
