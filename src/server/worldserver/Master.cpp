@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2008-2011 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
+ * Copyright (C) 2011-2011 ShitJustGotReal <http://www.projectsjgr.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -128,15 +129,20 @@ int Master::Run()
     sLog->outString("%s (worldserver-daemon)", _FULLVERSION);
     sLog->outString("<Ctrl-C> to stop.\n");
 
-    sLog->outString(" ______                       __");
-    sLog->outString("/\\__  _\\       __          __/\\ \\__");
-    sLog->outString("\\/_/\\ \\/ _ __ /\\_\\    ___ /\\_\\ \\ ,_\\  __  __");
-    sLog->outString("   \\ \\ \\/\\`'__\\/\\ \\ /' _ `\\/\\ \\ \\ \\/ /\\ \\/\\ \\");
-    sLog->outString("    \\ \\ \\ \\ \\/ \\ \\ \\/\\ \\/\\ \\ \\ \\ \\ \\_\\ \\ \\_\\ \\");
-    sLog->outString("     \\ \\_\\ \\_\\  \\ \\_\\ \\_\\ \\_\\ \\_\\ \\__\\\\/`____ \\");
-    sLog->outString("      \\/_/\\/_/   \\/_/\\/_/\\/_/\\/_/\\/__/ `/___/> \\");
-    sLog->outString("                                 C O R E  /\\___/");
-    sLog->outString("http://TrinityCore.org                    \\/__/\n");
+    sLog->outString(" _______________________________________ "
+    sLog->outString("|                                       |"
+    sLog->outString("| .d8888b. 888888  .d8888b.  8888888b.  |"
+    sLog->outString("|d88P  Y88b   88b d88P  Y88b 888   Y88b |"
+    sLog->outString("|Y88b.        888 888    888 888    888 |"
+    sLog->outString("|  Y888b.     888 888        888   d88P |"
+    sLog->outString("|     Y88b.   888 888  88888 8888888P   |"
+    sLog->outString("|       888   888 888    888 888 T88b   |"
+    sLog->outString("|Y88b  d88P   88P Y88b  d88P 888  T88b  |"
+    sLog->outString("|  Y8888P     888   Y8888P88 888   T88b |"
+    sLog->outString("|           .d88P                       |"
+    sLog->outString("|         .d88P                         |"
+    sLog->outString("|        888P                           |"
+    sLog->outString("|_______http://www.projectsjgr.com______|"
 
 #ifdef USE_SFMT_FOR_RNG
     sLog->outString("\n");
