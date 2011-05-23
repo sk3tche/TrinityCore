@@ -30,7 +30,7 @@ void PassiveAI::UpdateAI(const uint32)
         EnterEvadeMode();
 }
 
-void PossessedAI::AttackStart(Unit *target)
+void PossessedAI::AttackStart(Unit* target)
 {
     me->Attack(target, true);
 }
@@ -46,7 +46,7 @@ void PossessedAI::UpdateAI(const uint32 /*diff*/)
     }
 }
 
-void PossessedAI::JustDied(Unit * /*u*/)
+void PossessedAI::JustDied(Unit* /*u*/)
 {
     // We died while possessed, disable our loot
     me->RemoveFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE);
@@ -59,7 +59,7 @@ void PossessedAI::KilledUnit(Unit* victim)
         victim->RemoveFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE);
 }
 
-void CritterAI::DamageTaken(Unit * /*done_by*/, uint32 &)
+void CritterAI::DamageTaken(Unit* /*done_by*/, uint32 &)
 {
     if (!me->HasUnitState(UNIT_STAT_FLEEING))
         me->SetControlled(true, UNIT_STAT_FLEEING);
@@ -72,7 +72,7 @@ void CritterAI::EnterEvadeMode()
     CreatureAI::EnterEvadeMode();
 }
 
-void TriggerAI::IsSummonedBy(Unit *summoner)
+void TriggerAI::IsSummonedBy(Unit* summoner)
 {
     if (me->m_spells[0])
         me->CastSpell(me, me->m_spells[0], false, 0, 0, summoner->GetGUID());

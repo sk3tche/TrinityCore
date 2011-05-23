@@ -243,7 +243,7 @@ HostileReference* ThreatContainer::addThreat(Unit* pVictim, float fThreat)
 
 //============================================================
 
-void ThreatContainer::modifyThreatPercent(Unit *pVictim, int32 iPercent)
+void ThreatContainer::modifyThreatPercent(Unit* pVictim, int32 iPercent)
 {
     if (HostileReference* ref = getReferenceByTarget(pVictim))
         ref->addThreatPercent(iPercent);
@@ -383,7 +383,7 @@ void ThreatManager::addThreat(Unit* pVictim, float fThreat, SpellSchoolMask scho
     {
         uint32 reducedThreadPercent = pVictim->GetReducedThreatPercent();
 
-        Unit *unit = pVictim->GetMisdirectionTarget();
+        Unit* unit = pVictim->GetMisdirectionTarget();
         if (unit)
             if (Aura* pAura = unit->GetAura(63326)) // Glyph of Vigilance
                 reducedThreadPercent += SpellMgr::CalculateSpellEffectAmount(pAura->GetSpellProto(), 0);
@@ -397,7 +397,7 @@ void ThreatManager::addThreat(Unit* pVictim, float fThreat, SpellSchoolMask scho
     _addThreat(pVictim, threat);
 }
 
-void ThreatManager::_addThreat(Unit *pVictim, float fThreat)
+void ThreatManager::_addThreat(Unit* pVictim, float fThreat)
 {
     HostileReference* ref = iThreatContainer.addThreat(pVictim, fThreat);
     // Ref is not in the online refs, search the offline refs next
@@ -417,7 +417,7 @@ void ThreatManager::_addThreat(Unit *pVictim, float fThreat)
 
 //============================================================
 
-void ThreatManager::modifyThreatPercent(Unit *pVictim, int32 iPercent)
+void ThreatManager::modifyThreatPercent(Unit* pVictim, int32 iPercent)
 {
     iThreatContainer.modifyThreatPercent(pVictim, iPercent);
 }
@@ -434,7 +434,7 @@ Unit* ThreatManager::getHostilTarget()
 
 //============================================================
 
-float ThreatManager::getThreat(Unit *pVictim, bool pAlsoSearchOfflineList)
+float ThreatManager::getThreat(Unit* pVictim, bool pAlsoSearchOfflineList)
 {
     float threat = 0.0f;
     HostileReference* ref = iThreatContainer.getReferenceByTarget(pVictim);
@@ -459,7 +459,7 @@ void ThreatManager::tauntApply(Unit* pTaunter)
 
 //============================================================
 
-void ThreatManager::tauntFadeOut(Unit *pTaunter)
+void ThreatManager::tauntFadeOut(Unit* pTaunter)
 {
     HostileReference* ref = iThreatContainer.getReferenceByTarget(pTaunter);
     if (ref)

@@ -35,7 +35,7 @@ ReactorAI::Permissible(const Creature *creature)
 }
 
 void
-ReactorAI::MoveInLineOfSight(Unit *)
+ReactorAI::MoveInLineOfSight(Unit* )
 {
 }
 

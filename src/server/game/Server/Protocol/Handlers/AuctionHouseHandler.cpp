@@ -124,7 +124,7 @@ void WorldSession::HandleAuctionSellItem(WorldPacket & recv_data)
     recv_data >> buyout;
     recv_data >> etime;
 
-    Player *pl = GetPlayer();
+    Player* pl = GetPlayer();
 
     if (!item || !bid || !etime)
         return;                                             //check for cheaters
@@ -275,7 +275,7 @@ void WorldSession::HandleAuctionPlaceBid(WorldPacket & recv_data)
     AuctionHouseObject *auctionHouse = sAuctionMgr->GetAuctionsMap(pCreature->getFaction());
 
     AuctionEntry *auction = auctionHouse->GetAuction(auctionId);
-    Player *pl = GetPlayer();
+    Player* pl = GetPlayer();
 
     if (!auction || auction->owner == pl->GetGUIDLow())
     {
@@ -393,7 +393,7 @@ void WorldSession::HandleAuctionRemoveItem(WorldPacket & recv_data)
     AuctionHouseObject* auctionHouse = sAuctionMgr->GetAuctionsMap(pCreature->getFaction());
 
     AuctionEntry *auction = auctionHouse->GetAuction(auctionId);
-    Player *pl = GetPlayer();
+    Player* pl = GetPlayer();
 
     SQLTransaction trans = CharacterDatabase.BeginTransaction();
     if (auction && auction->owner == pl->GetGUIDLow())
@@ -478,7 +478,7 @@ void WorldSession::HandleAuctionListBidderItems(WorldPacket & recv_data)
     AuctionHouseObject* auctionHouse = sAuctionMgr->GetAuctionsMap(pCreature->getFaction());
 
     WorldPacket data(SMSG_AUCTION_BIDDER_LIST_RESULT, (4+4+4));
-    Player *pl = GetPlayer();
+    Player* pl = GetPlayer();
     data << (uint32) 0;                                     //add 0 as count
     uint32 count = 0;
     uint32 totalcount = 0;

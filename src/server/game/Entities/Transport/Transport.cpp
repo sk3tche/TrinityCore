@@ -492,7 +492,7 @@ void Transport::TeleportTransport(uint32 newMapid, float x, float y, float z)
 
     for (PlayerSet::const_iterator itr = m_passengers.begin(); itr != m_passengers.end();)
     {
-        Player *plr = *itr;
+        Player* plr = *itr;
         ++itr;
 
         if (plr->isDead() && !plr->HasFlag(PLAYER_FLAGS, PLAYER_FLAGS_GHOST))
@@ -506,7 +506,7 @@ void Transport::TeleportTransport(uint32 newMapid, float x, float y, float z)
 
     RemoveFromWorld();
     ResetMap();
-    Map * newMap = sMapMgr->CreateMap(newMapid, this, 0);
+    Map* newMap = sMapMgr->CreateMap(newMapid, this, 0);
     SetMap(newMap);
     ASSERT (GetMap());
     AddToWorld();

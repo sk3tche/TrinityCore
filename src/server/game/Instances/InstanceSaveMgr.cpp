@@ -166,7 +166,7 @@ void InstanceSave::SaveToDB()
     std::string data;
     uint32 completedEncounters = 0;
 
-    Map *map = sMapMgr->FindMap(GetMapId(), m_instanceid);
+    Map* map = sMapMgr->FindMap(GetMapId(), m_instanceid);
     if (map)
     {
         ASSERT(map->IsDungeon());
@@ -491,7 +491,7 @@ void InstanceSaveManager::_ResetSave(InstanceSaveHashMap::iterator &itr)
     InstanceSave::PlayerListType &pList = itr->second->m_playerList;
     while (!pList.empty())
     {
-        Player *player = *(pList.begin());
+        Player* player = *(pList.begin());
         player->UnbindInstance(itr->second->GetMapId(), itr->second->GetDifficulty(), true);
     }
 
@@ -511,7 +511,7 @@ void InstanceSaveManager::_ResetSave(InstanceSaveHashMap::iterator &itr)
 void InstanceSaveManager::_ResetInstance(uint32 mapid, uint32 instanceId)
 {
     sLog->outDebug(LOG_FILTER_MAPS, "InstanceSaveMgr::_ResetInstance %u, %u", mapid, instanceId);
-    Map *map = (MapInstanced*)sMapMgr->CreateBaseMap(mapid);
+    Map* map = (MapInstanced*)sMapMgr->CreateBaseMap(mapid);
     if (!map->Instanceable())
         return;
 
@@ -590,7 +590,7 @@ void InstanceSaveManager::_ResetOrWarnAll(uint32 mapid, Difficulty difficulty, b
 
     for (mitr = instMaps.begin(); mitr != instMaps.end(); ++mitr)
     {
-        Map *map2 = mitr->second;
+        Map* map2 = mitr->second;
         if (!map2->IsDungeon())
             continue;
 

@@ -55,7 +55,7 @@ bool MapSessionFilter::Process(WorldPacket *packet)
     if (opHandle.packetProcessing == PROCESS_THREADUNSAFE)
         return false;
 
-    Player *plr = m_pSession->GetPlayer();
+    Player* plr = m_pSession->GetPlayer();
     if (!plr)
         return false;
 
@@ -77,7 +77,7 @@ bool WorldSessionFilter::Process(WorldPacket *packet)
         return true;
 
     //no player attached? -> our client! ^^
-    Player *plr = m_pSession->GetPlayer();
+    Player* plr = m_pSession->GetPlayer();
     if (!plr)
         return true;
 
@@ -374,10 +374,10 @@ void WorldSession::LogoutPlayer(bool Save)
             _player->RemoveAllAurasOnDeath();
 
             // build set of player who attack _player or who have pet attacking of _player
-            std::set<Player *> aset;
+            std::set<Player* > aset;
             for (Unit::AttackerSet::const_iterator itr = _player->getAttackers().begin(); itr != _player->getAttackers().end(); ++itr)
             {
-                Unit *owner = (*itr)->GetOwner();           // including player controlled case
+                Unit* owner = (*itr)->GetOwner();           // including player controlled case
                 if (owner && owner->GetTypeId() == TYPEID_PLAYER)
                     aset.insert(owner->ToPlayer());
                 else if ((*itr)->GetTypeId() == TYPEID_PLAYER)
@@ -390,7 +390,7 @@ void WorldSession::LogoutPlayer(bool Save)
             _player->RepopAtGraveyard();
 
             // give honor to all attackers from set like group case
-            for (std::set<Player *>::const_iterator itr = aset.begin(); itr != aset.end(); ++itr)
+            for (std::set<Player* >::const_iterator itr = aset.begin(); itr != aset.end(); ++itr)
                 (*itr)->RewardHonor(_player, aset.size());
 
             // give bg rewards and update counters like kill by first from attackers
@@ -497,7 +497,7 @@ void WorldSession::LogoutPlayer(bool Save)
         // calls to GetMap in this case may cause crashes
         _player->CleanupsBeforeDelete();
         sLog->outChar("Account: %d (IP: %s) Logout Character:[%s] (GUID: %u)", GetAccountId(), GetRemoteAddress().c_str(), _player->GetName() , _player->GetGUIDLow());
-        Map *_map = _player->GetMap();
+        Map* _map = _player->GetMap();
         _map->Remove(_player, true);
         SetPlayer(NULL);                                    // deleted in Remove call
 
@@ -938,7 +938,7 @@ void WorldSession::SendAddonsInfo()
     SendPacket(&data);
 }
 
-void WorldSession::SetPlayer(Player *plr)
+void WorldSession::SetPlayer(Player* plr)
 {
     _player = plr;
 

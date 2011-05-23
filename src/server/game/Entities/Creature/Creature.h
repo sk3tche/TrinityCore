@@ -420,7 +420,7 @@ class Creature : public Unit, public GridObject<Creature>
 
         void DisappearAndDie();
 
-        bool Create(uint32 guidlow, Map *map, uint32 phaseMask, uint32 Entry, uint32 vehId, uint32 team, float x, float y, float z, float ang, const CreatureData *data = NULL);
+        bool Create(uint32 guidlow, Map* map, uint32 phaseMask, uint32 Entry, uint32 vehId, uint32 team, float x, float y, float z, float ang, const CreatureData *data = NULL);
         bool LoadCreaturesAddon(bool reload = false);
         void SelectLevel(const CreatureTemplate *cinfo);
         void LoadEquipment(uint32 equip_entry, bool force=false);
@@ -458,7 +458,7 @@ class Creature : public Unit, public GridObject<Creature>
         bool isCanTrainingOf(Player* player, bool msg) const;
         bool isCanInteractWithBattleMaster(Player* player, bool msg) const;
         bool isCanTrainingAndResetTalentsOf(Player* pPlayer) const;
-        bool canCreatureAttack(Unit const *pVictim, bool force = true) const;
+        bool canCreatureAttack(Unit const *victim, bool force = true) const;
         bool IsImmunedToSpell(SpellEntry const* spellInfo);
                                                             // redefine Unit::IsImmunedToSpell
         bool IsImmunedToSpellEffect(SpellEntry const* spellInfo, uint32 index) const;
@@ -547,7 +547,7 @@ class Creature : public Unit, public GridObject<Creature>
         void setDeathState(DeathState s);                   // override virtual Unit::setDeathState
         bool FallGround();
 
-        bool LoadFromDB(uint32 guid, Map *map);
+        bool LoadFromDB(uint32 guid, Map* map);
         void SaveToDB();
                                                             // overriden in Pet
         virtual void SaveToDB(uint32 mapid, uint8 spawnMask, uint32 phaseMask);
@@ -556,10 +556,10 @@ class Creature : public Unit, public GridObject<Creature>
         Loot loot;
         bool lootForPickPocketed;
         bool lootForBody;
-        Player *GetLootRecipient() const;
+        Player* GetLootRecipient() const;
         Group *GetLootRecipientGroup() const;
         bool hasLootRecipient() const { return m_lootRecipient || m_lootRecipientGroup; }
-        bool isTappedBy(Player *player) const;                          // return true if the creature is tapped by the player or a member of his party.
+        bool isTappedBy(Player* player) const;                          // return true if the creature is tapped by the player or a member of his party.
 
         void SetLootRecipient (Unit* unit);
         void AllLootRemovedFromCorpse();
@@ -571,8 +571,8 @@ class Creature : public Unit, public GridObject<Creature>
         void RemoveLootMode(uint16 lootMode) { m_LootMode &= ~lootMode; }
         void ResetLootMode() { m_LootMode = LOOT_MODE_DEFAULT; }
 
-        SpellEntry const *reachWithSpellAttack(Unit *pVictim);
-        SpellEntry const *reachWithSpellCure(Unit *pVictim);
+        SpellEntry const *reachWithSpellAttack(Unit* victim);
+        SpellEntry const *reachWithSpellCure(Unit* victim);
 
         uint32 m_spells[CREATURE_MAX_SPELLS];
         CreatureSpellCooldowns m_CreatureSpellCooldowns;
@@ -655,7 +655,7 @@ class Creature : public Unit, public GridObject<Creature>
         CreatureGroup *GetFormation() {return m_formation;}
         void SetFormation(CreatureGroup *formation) {m_formation = formation;}
 
-        Unit *SelectVictim();
+        Unit* SelectVictim();
         void SetDeadByDefault (bool death_state) {m_isDeadByDefault = death_state;}
 
         void SetDisableReputationGain(bool disable) { DisableReputationGain = disable; }

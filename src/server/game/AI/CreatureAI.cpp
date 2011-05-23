@@ -47,7 +47,7 @@ void CreatureAI::DoZoneInCombat(Creature* creature /*= NULL*/)
     if (!creature->CanHaveThreatList())
         return;
 
-    Map *map = creature->GetMap();
+    Map* map = creature->GetMap();
     if (!map->IsDungeon())                                  //use IsDungeon instead of Instanceable, in case battlegrounds will be instantiated
     {
         sLog->outError("DoZoneInCombat call for map that isn't an instance (creature entry = %d)", creature->GetTypeId() == TYPEID_UNIT ? creature->ToCreature()->GetEntry() : 0);
@@ -56,13 +56,13 @@ void CreatureAI::DoZoneInCombat(Creature* creature /*= NULL*/)
 
     if (!creature->HasReactState(REACT_PASSIVE) && !creature->getVictim())
     {
-        if (Unit *target = creature->SelectNearestTarget(50))
+        if (Unit* target = creature->SelectNearestTarget(50))
             creature->AI()->AttackStart(target);
         else if (creature->isSummon())
         {
-            if (Unit *summoner = creature->ToTempSummon()->GetSummoner())
+            if (Unit* summoner = creature->ToTempSummon()->GetSummoner())
             {
-                Unit *target = summoner->getAttackerForHelper();
+                Unit* target = summoner->getAttackerForHelper();
                 if (!target && summoner->CanHaveThreatList() && !summoner->getThreatManager().isThreatListEmpty())
                     target = summoner->getThreatManager().getHostilTarget();
                 if (target && (creature->IsFriendlyTo(summoner) || creature->IsHostileTo(target)))
@@ -109,7 +109,7 @@ void CreatureAI::DoZoneInCombat(Creature* creature /*= NULL*/)
 
 // scripts does not take care about MoveInLineOfSight loops
 // MoveInLineOfSight can be called inside another MoveInLineOfSight and cause stack overflow
-void CreatureAI::MoveInLineOfSight_Safe(Unit *who)
+void CreatureAI::MoveInLineOfSight_Safe(Unit* who)
 {
     if (m_MoveInLineOfSight_locked == true)
         return;
@@ -118,7 +118,7 @@ void CreatureAI::MoveInLineOfSight_Safe(Unit *who)
     m_MoveInLineOfSight_locked = false;
 }
 
-void CreatureAI::MoveInLineOfSight(Unit *who)
+void CreatureAI::MoveInLineOfSight(Unit* who)
 {
     if (me->getVictim())
         return;
@@ -143,7 +143,7 @@ void CreatureAI::EnterEvadeMode()
 
     if (!me->GetVehicle()) // otherwise me will be in evade mode forever
     {
-        if (Unit *owner = me->GetCharmerOrOwner())
+        if (Unit* owner = me->GetCharmerOrOwner())
         {
             me->GetMotionMaster()->Clear(false);
             me->GetMotionMaster()->MoveFollow(owner, PET_FOLLOW_DIST, me->GetFollowAngle(), MOTION_SLOT_ACTIVE);

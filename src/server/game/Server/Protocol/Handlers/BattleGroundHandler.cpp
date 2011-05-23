@@ -217,7 +217,7 @@ void WorldSession::HandleBattlemasterJoinOpcode(WorldPacket & recv_data)
 
         for (GroupReference *itr = grp->GetFirstMember(); itr != NULL; itr = itr->next())
         {
-            Player *member = itr->getSource();
+            Player* member = itr->getSource();
             if (!member) continue;   // this should never happen
 
             WorldPacket data;
@@ -261,11 +261,11 @@ void WorldSession::HandleBattlegroundPlayerPositionsOpcode(WorldPacket & /*recv_
                 uint32 count1 = 0;                                  //always constant zero?
                 uint32 count2 = 0;                                  //count of next fields
 
-                Player *ali_plr = sObjectMgr->GetPlayer(((BattlegroundWS*)bg)->GetAllianceFlagPickerGUID());
+                Player* ali_plr = sObjectMgr->GetPlayer(((BattlegroundWS*)bg)->GetAllianceFlagPickerGUID());
                 if (ali_plr)
                     ++count2;
 
-                Player *horde_plr = sObjectMgr->GetPlayer(((BattlegroundWS*)bg)->GetHordeFlagPickerGUID());
+                Player* horde_plr = sObjectMgr->GetPlayer(((BattlegroundWS*)bg)->GetHordeFlagPickerGUID());
                 if (horde_plr)
                     ++count2;
 
@@ -762,7 +762,7 @@ void WorldSession::HandleBattlemasterJoinArena(WorldPacket & recv_data)
 
         for (GroupReference *itr = grp->GetFirstMember(); itr != NULL; itr = itr->next())
         {
-            Player *member = itr->getSource();
+            Player* member = itr->getSource();
             if (!member)
                 continue;
 
@@ -805,7 +805,7 @@ void WorldSession::HandleReportPvPAFK(WorldPacket & recv_data)
 {
     uint64 playerGuid;
     recv_data >> playerGuid;
-    Player *reportedPlayer = sObjectMgr->GetPlayer(playerGuid);
+    Player* reportedPlayer = sObjectMgr->GetPlayer(playerGuid);
 
     if (!reportedPlayer)
     {

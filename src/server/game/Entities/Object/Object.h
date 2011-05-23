@@ -160,14 +160,14 @@ class Object
         TypeID GetTypeId() const { return m_objectTypeId; }
         bool isType(uint16 mask) const { return (mask & m_objectType); }
 
-        virtual void BuildCreateUpdateBlockForPlayer(UpdateData *data, Player *target) const;
+        virtual void BuildCreateUpdateBlockForPlayer(UpdateData *data, Player* target) const;
         void SendUpdateToPlayer(Player* player);
 
-        void BuildValuesUpdateBlockForPlayer(UpdateData *data, Player *target) const;
+        void BuildValuesUpdateBlockForPlayer(UpdateData *data, Player* target) const;
         void BuildOutOfRangeUpdateBlock(UpdateData *data) const;
         void BuildMovementUpdateBlock(UpdateData * data, uint32 flags = 0) const;
 
-        virtual void DestroyForPlayer(Player *target, bool anim = false) const;
+        virtual void DestroyForPlayer(Player* target, bool anim = false) const;
 
         const int32& GetInt32Value(uint16 index) const
         {
@@ -316,7 +316,7 @@ class Object
         virtual bool hasQuest(uint32 /* quest_id */) const { return false; }
         virtual bool hasInvolvedQuest(uint32 /* quest_id */) const { return false; }
         virtual void BuildUpdate(UpdateDataMapType&) {}
-        void BuildFieldsUpdate(Player *, UpdateDataMapType &) const;
+        void BuildFieldsUpdate(Player* , UpdateDataMapType &) const;
 
         // FG: some hacky helpers
         void ForceValuesUpdateAtIndex(uint32);
@@ -339,11 +339,11 @@ class Object
         std::string _ConcatFields(uint16 startIndex, uint16 size) const;
         void _LoadIntoDataField(const char* data, uint32 startOffset, uint32 count);
 
-        virtual void _SetUpdateBits(UpdateMask *updateMask, Player *target) const;
+        virtual void _SetUpdateBits(UpdateMask *updateMask, Player* target) const;
 
-        virtual void _SetCreateBits(UpdateMask *updateMask, Player *target) const;
+        virtual void _SetCreateBits(UpdateMask *updateMask, Player* target) const;
         void _BuildMovementUpdate(ByteBuffer * data, uint16 flags) const;
-        void _BuildValuesUpdate(uint8 updatetype, ByteBuffer *data, UpdateMask *updateMask, Player *target) const;
+        void _BuildValuesUpdate(uint8 updatetype, ByteBuffer *data, UpdateMask *updateMask, Player* target) const;
 
         uint16 m_objectType;
 
@@ -470,7 +470,7 @@ struct Position
     bool IsInDist(const Position *pos, float dist) const
         { return GetExactDistSq(pos) < dist * dist; }
     bool HasInArc(float arcangle, const Position *pos) const;
-    bool HasInLine(const Unit *target, float distance, float width) const;
+    bool HasInLine(const Unit* target, float distance, float width) const;
     std::string ToString() const;
 };
 ByteBuffer &operator>>(ByteBuffer& buf, Position::PositionXYZOStreamer const & streamer);
@@ -779,10 +779,10 @@ class WorldObject : public Object, public WorldLocation
         // Low Level Packets
         void SendPlaySound(uint32 Sound, bool OnlySelf);
 
-        virtual void SetMap(Map * map);
+        virtual void SetMap(Map* map);
         virtual void ResetMap();
-        Map * GetMap() const { ASSERT(m_currMap); return m_currMap; }
-        Map * FindMap() const { return m_currMap; }
+        Map* GetMap() const { ASSERT(m_currMap); return m_currMap; }
+        Map* FindMap() const { return m_currMap; }
         //used to check all object's GetMap() calls when object is not in world!
 
         //this function should be removed in nearest time...
@@ -868,7 +868,7 @@ class WorldObject : public Object, public WorldLocation
         void SetLocationInstanceId(uint32 _instanceId) { m_InstanceId = _instanceId; }
 
     private:
-        Map * m_currMap;                                    //current object's Map location
+        Map* m_currMap;                                    //current object's Map location
 
         //uint32 m_mapId;                                     // object at map with map_id
         uint32 m_InstanceId;                                // in map copy with instance id

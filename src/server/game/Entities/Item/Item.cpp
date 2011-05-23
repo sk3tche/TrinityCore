@@ -675,7 +675,7 @@ void Item::UpdateItemSuffixFactor()
     SetUInt32Value(ITEM_FIELD_PROPERTY_SEED, suffixFactor);
 }
 
-void Item::SetState(ItemUpdateState state, Player *forplayer)
+void Item::SetState(ItemUpdateState state, Player* forplayer)
 {
     if (uState == ITEM_NEW && state == ITEM_REMOVED)
     {
@@ -702,7 +702,7 @@ void Item::SetState(ItemUpdateState state, Player *forplayer)
     }
 }
 
-void Item::AddToUpdateQueueOf(Player *player)
+void Item::AddToUpdateQueueOf(Player* player)
 {
     if (IsInUpdateQueue())
         return;
@@ -722,7 +722,7 @@ void Item::AddToUpdateQueueOf(Player *player)
     uQueuePos = player->m_itemUpdateQueue.size()-1;
 }
 
-void Item::RemoveFromUpdateQueueOf(Player *player)
+void Item::RemoveFromUpdateQueueOf(Player* player)
 {
     if (!IsInUpdateQueue())
         return;
@@ -777,7 +777,7 @@ bool Item::CanBeTraded(bool mail, bool trade) const
     return true;
 }
 
-bool Item::HasEnchantRequiredSkill(const Player *pPlayer) const
+bool Item::HasEnchantRequiredSkill(const Player* pPlayer) const
 {
 
   // Check all enchants for required skill
@@ -1115,7 +1115,7 @@ bool ItemRequiredTarget::IsFitToRequirements(Unit* pUnitTarget) const
 
 void Item::BuildUpdate(UpdateDataMapType& data_map)
 {
-    if (Player *owner = GetOwner())
+    if (Player* owner = GetOwner())
         BuildFieldsUpdate(owner, data_map);
     ClearUpdateMask(false);
 }
@@ -1134,7 +1134,7 @@ void Item::DeleteRefundDataFromDB()
     CharacterDatabase.PExecute("DELETE FROM item_refund_instance WHERE item_guid = '%u'", GetGUIDLow());
 }
 
-void Item::SetNotRefundable(Player *owner, bool changestate)
+void Item::SetNotRefundable(Player* owner, bool changestate)
 {
     if (!HasFlag(ITEM_FIELD_FLAGS, ITEM_FLAG_REFUNDABLE))
         return;
@@ -1152,7 +1152,7 @@ void Item::SetNotRefundable(Player *owner, bool changestate)
     owner->DeleteRefundReference(GetGUIDLow());
 }
 
-void Item::UpdatePlayedTime(Player *owner)
+void Item::UpdatePlayedTime(Player* owner)
 {
     /*  Here we update our played time
         We simply add a number to the current played time,

@@ -371,7 +371,7 @@ pAuraEffectHandler AuraEffectHandler[TOTAL_AURAS]=
     &AuraEffect::HandleNoImmediateEffect,                         //316 SPELL_AURA_PERIODIC_HASTE implemented in AuraEffect::CalculatePeriodic
 };
 
-AuraEffect::AuraEffect(Aura * base, uint8 effIndex, int32 *baseAmount, Unit * caster):
+AuraEffect::AuraEffect(Aura * base, uint8 effIndex, int32 *baseAmount, Unit* caster):
 m_base(base), m_spellProto(base->GetSpellProto()), m_effIndex(effIndex),
 m_baseAmount(baseAmount ? *baseAmount : m_spellProto->EffectBasePoints[m_effIndex]),
 m_canBeRecalculated(true), m_spellmod(NULL), m_isPeriodic(false),
@@ -389,7 +389,7 @@ AuraEffect::~AuraEffect()
     delete m_spellmod;
 }
 
-void AuraEffect::GetTargetList(std::list<Unit *> & targetList) const
+void AuraEffect::GetTargetList(std::list<Unit* > & targetList) const
 {
     Aura::ApplicationMap const & targetMap = GetBase()->GetApplicationMap();
     // remove all targets which were not added to new list - they no longer deserve area aura
@@ -411,7 +411,7 @@ void AuraEffect::GetApplicationList(std::list<AuraApplication *> & applicationLi
     }
 }
 
-int32 AuraEffect::CalculateAmount(Unit * caster)
+int32 AuraEffect::CalculateAmount(Unit* caster)
 {
     int32 amount;
     // default amount calculation
@@ -420,7 +420,7 @@ int32 AuraEffect::CalculateAmount(Unit * caster)
     // check item enchant aura cast
     if (!amount && caster)
         if (uint64 itemGUID = GetBase()->GetCastItemGUID())
-            if (Player *playerCaster = dynamic_cast<Player*>(caster))
+            if (Player* playerCaster = dynamic_cast<Player*>(caster))
                 if (Item *castItem = playerCaster->GetItemByGuid(itemGUID))
                     if (castItem->GetItemSuffixFactor())
                     {
@@ -766,7 +766,7 @@ int32 AuraEffect::CalculateAmount(Unit * caster)
     return amount;
 }
 
-void AuraEffect::CalculatePeriodic(Unit * caster, bool create)
+void AuraEffect::CalculatePeriodic(Unit* caster, bool create)
 {
     m_amplitude = m_spellProto->EffectAmplitude[m_effIndex];
 
@@ -942,7 +942,7 @@ void AuraEffect::CalculateSpellMod()
 
 void AuraEffect::ChangeAmount(int32 newAmount, bool mark)
 {
-    //Unit * caster = GetCaster();
+    //Unit* caster = GetCaster();
     // Reapply if amount change
     if (newAmount != GetAmount())
     {
@@ -990,14 +990,14 @@ void AuraEffect::HandleEffect(AuraApplication const * aurApp, uint8 mode, bool a
     (*this.*AuraEffectHandler [GetAuraType()])(aurApp, mode, apply);
 }
 
-void AuraEffect::HandleEffect(Unit * target, uint8 mode, bool apply)
+void AuraEffect::HandleEffect(Unit* target, uint8 mode, bool apply)
 {
     AuraApplication const * aurApp = GetBase()->GetApplicationOfTarget(target->GetGUID());
     ASSERT(aurApp);
     HandleEffect(aurApp, mode, apply);
 }
 
-void AuraEffect::ApplySpellMod(Unit * target, bool apply)
+void AuraEffect::ApplySpellMod(Unit* target, bool apply)
 {
     if (!m_spellmod || target->GetTypeId() != TYPEID_PLAYER)
         return;
@@ -1056,7 +1056,7 @@ void AuraEffect::ApplySpellMod(Unit * target, bool apply)
     }
 }
 
-void AuraEffect::Update(uint32 diff, Unit * caster)
+void AuraEffect::Update(uint32 diff, Unit* caster)
 {
     if (m_isPeriodic && (GetBase()->GetDuration() >=0 || GetBase()->IsPassive() || GetBase()->IsPermanent()))
     {
@@ -1079,7 +1079,7 @@ void AuraEffect::Update(uint32 diff, Unit * caster)
     }
 }
 
-void AuraEffect::UpdatePeriodic(Unit * caster)
+void AuraEffect::UpdatePeriodic(Unit* caster)
 {
     switch(GetAuraType())
     {
@@ -1210,7 +1210,7 @@ void AuraEffect::UpdatePeriodic(Unit * caster)
     GetBase()->CallScriptEffectUpdatePeriodicHandlers(this);
 }
 
-bool AuraEffect::IsPeriodicTickCrit(Unit * target, Unit const * caster) const
+bool AuraEffect::IsPeriodicTickCrit(Unit* target, Unit const * caster) const
 {
     ASSERT(caster);
     Unit::AuraEffectList const& mPeriodicCritAuras= caster->GetAuraEffectsByType(SPELL_AURA_ABILITY_PERIODIC_CRIT);
@@ -1228,19 +1228,19 @@ bool AuraEffect::IsPeriodicTickCrit(Unit * target, Unit const * caster) const
     return false;
 }
 
-void AuraEffect::SendTickImmune(Unit * target, Unit *caster) const
+void AuraEffect::SendTickImmune(Unit* target, Unit* caster) const
 {
     if (caster)
         caster->SendSpellDamageImmune(target, m_spellProto->Id);
 }
 
-void AuraEffect::PeriodicTick(AuraApplication * aurApp, Unit * caster) const
+void AuraEffect::PeriodicTick(AuraApplication * aurApp, Unit* caster) const
 {
     bool prevented = GetBase()->CallScriptEffectPeriodicHandlers(this, aurApp);
     if (prevented)
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     switch(GetAuraType())
     {
@@ -1897,7 +1897,7 @@ void AuraEffect::PeriodicTick(AuraApplication * aurApp, Unit * caster) const
     }
 }
 
-void AuraEffect::PeriodicDummyTick(Unit * target, Unit * caster) const
+void AuraEffect::PeriodicDummyTick(Unit* target, Unit* caster) const
 {
     switch (GetSpellProto()->SpellFamilyName)
     {
@@ -1930,7 +1930,7 @@ void AuraEffect::PeriodicDummyTick(Unit * target, Unit * caster) const
                 if (!target || !target->ToCreature() || !caster->IsVehicle())
                     return;
 
-                Unit *rider = caster->GetVehicleKit()->GetPassenger(0);
+                Unit* rider = caster->GetVehicleKit()->GetPassenger(0);
                 if (!rider)
                     return;
 
@@ -1957,7 +1957,7 @@ void AuraEffect::PeriodicDummyTick(Unit * target, Unit * caster) const
                 if (target->GetMap()->IsDungeon() && int(target->GetAppliedAuras().count(62399)) >= (target->GetMap()->IsHeroic() ? 4 : 2))
                 {
                      target->CastSpell(target, 62475, true); // System Shutdown
-                     if (Unit *veh = target->GetVehicleBase())
+                     if (Unit* veh = target->GetVehicleBase())
                          veh->CastSpell(target, 62475, true);
                 }
                 break;
@@ -1975,7 +1975,7 @@ void AuraEffect::PeriodicDummyTick(Unit * target, Unit * caster) const
             // Mirror Image
             if (GetId() == 55342)
                 // Set name of summons to name of caster
-                target->CastSpell((Unit *)NULL, m_spellProto->EffectTriggerSpell[m_effIndex], true);
+                target->CastSpell((Unit* )NULL, m_spellProto->EffectTriggerSpell[m_effIndex], true);
             break;
         }
         case SPELLFAMILY_WARLOCK:
@@ -2146,7 +2146,7 @@ void AuraEffect::PeriodicDummyTick(Unit * target, Unit * caster) const
     }
 }
 
-void AuraEffect::TriggerSpell(Unit * target, Unit * caster) const
+void AuraEffect::TriggerSpell(Unit* target, Unit* caster) const
 {
     if (!caster || !target)
         return;
@@ -2382,7 +2382,7 @@ void AuraEffect::TriggerSpell(Unit * target, Unit * caster) const
             case 65922:
             case 65923:
                 {
-                    Unit *permafrostCaster = NULL;
+                    Unit* permafrostCaster = NULL;
                     if (caster->HasAura(66193)) permafrostCaster = caster->GetAura(66193)->GetCaster();
                     if (caster->HasAura(67855)) permafrostCaster = caster->GetAura(67855)->GetCaster();
                     if (caster->HasAura(67856)) permafrostCaster = caster->GetAura(67856)->GetCaster();
@@ -2418,7 +2418,7 @@ void AuraEffect::TriggerSpell(Unit * target, Unit * caster) const
             // Beacon of Light
             case 53563:
             {
-                Unit * triggerCaster = (Unit *)(GetBase()->GetOwner());
+                Unit* triggerCaster = (Unit* )(GetBase()->GetOwner());
                 triggerCaster->CastSpell(triggerTarget, triggeredSpellInfo, true, 0, this, triggerCaster->GetGUID());
                 return;
             }
@@ -2437,7 +2437,7 @@ void AuraEffect::TriggerSpell(Unit * target, Unit * caster) const
 
     if (triggeredSpellInfo)
     {
-        Unit * triggerCaster = GetTriggeredSpellCaster(triggeredSpellInfo, caster, triggerTarget);
+        Unit* triggerCaster = GetTriggeredSpellCaster(triggeredSpellInfo, caster, triggerTarget);
         triggerCaster->CastSpell(triggerTarget, triggeredSpellInfo, true, NULL, this);
         sLog->outDebug(LOG_FILTER_SPELLS_AURAS, "AuraEffect::TriggerSpell: Spell %u Trigger %u", GetId(), triggeredSpellInfo->Id);
     }
@@ -2450,7 +2450,7 @@ void AuraEffect::TriggerSpell(Unit * target, Unit * caster) const
     }
 }
 
-void AuraEffect::TriggerSpellWithValue(Unit * target, Unit * caster) const
+void AuraEffect::TriggerSpellWithValue(Unit* target, Unit* caster) const
 {
     if (!caster || !target)
         return;
@@ -2461,7 +2461,7 @@ void AuraEffect::TriggerSpellWithValue(Unit * target, Unit * caster) const
     SpellEntry const *triggeredSpellInfo = sSpellStore.LookupEntry(triggerSpellId);
     if (triggeredSpellInfo)
     {
-        Unit * triggerCaster = GetTriggeredSpellCaster(triggeredSpellInfo, caster, triggerTarget);
+        Unit* triggerCaster = GetTriggeredSpellCaster(triggeredSpellInfo, caster, triggerTarget);
 
         // generic casting code with custom spells and target/caster customs
         int32  basepoints0 = GetAmount();
@@ -2485,7 +2485,7 @@ bool AuraEffect::IsAffectedOnSpell(SpellEntry const *spell) const
     return false;
 }
 
-void AuraEffect::CleanupTriggeredSpells(Unit * target)
+void AuraEffect::CleanupTriggeredSpells(Unit* target)
 {
     uint32 tSpellId = m_spellProto->EffectTriggerSpell[GetEffIndex()];
     if (!tSpellId)
@@ -2507,7 +2507,7 @@ void AuraEffect::CleanupTriggeredSpells(Unit * target)
     target->RemoveAurasDueToSpell(tSpellId, GetCasterGUID());
 }
 
-void AuraEffect::HandleShapeshiftBoosts(Unit * target, bool apply) const
+void AuraEffect::HandleShapeshiftBoosts(Unit* target, bool apply) const
 {
     uint32 spellId = 0;
     uint32 spellId2 = 0;
@@ -2714,7 +2714,7 @@ void AuraEffect::HandleShapeshiftBoosts(Unit * target, bool apply) const
             target->RemoveAurasDueToSpell(spellId2);
 
         // Improved Barkskin - apply/remove armor bonus due to shapeshift
-        if (Player *pl=target->ToPlayer())
+        if (Player* pl=target->ToPlayer())
         {
             if (pl->HasSpell(63410) || pl->HasSpell(63411))
             {
@@ -2747,7 +2747,7 @@ void AuraEffect::HandleModInvisibilityDetect(AuraApplication const * aurApp, uin
     if (!(mode & AURA_EFFECT_HANDLE_REAL))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
     InvisibilityType type = InvisibilityType(GetMiscValue());
 
     if (apply)
@@ -2771,7 +2771,7 @@ void AuraEffect::HandleModInvisibility(AuraApplication const * aurApp, uint8 mod
     if (!(mode & AURA_EFFECT_HANDLE_SEND_FOR_CLIENT_MASK))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
     InvisibilityType type = InvisibilityType(GetMiscValue());
 
     if (apply)
@@ -2827,7 +2827,7 @@ void AuraEffect::HandleModStealthDetect(AuraApplication const * aurApp, uint8 mo
     if (!(mode & AURA_EFFECT_HANDLE_REAL))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
     StealthType type = StealthType(GetMiscValue());
 
     if (apply)
@@ -2851,7 +2851,7 @@ void AuraEffect::HandleModStealth(AuraApplication const * aurApp, uint8 mode, bo
     if (!(mode & AURA_EFFECT_HANDLE_SEND_FOR_CLIENT_MASK))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
     StealthType type = StealthType(GetMiscValue());
 
     if (apply)
@@ -2895,7 +2895,7 @@ void AuraEffect::HandleModStealthLevel(AuraApplication const * aurApp, uint8 mod
     if (!(mode & AURA_EFFECT_HANDLE_REAL))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
     StealthType type = StealthType(GetMiscValue());
 
     if (apply)
@@ -2911,7 +2911,7 @@ void AuraEffect::HandleSpiritOfRedemption(AuraApplication const * aurApp, uint8 
     if (!(mode & AURA_EFFECT_HANDLE_REAL))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (target->GetTypeId() != TYPEID_PLAYER)
         return;
@@ -2941,7 +2941,7 @@ void AuraEffect::HandleAuraGhost(AuraApplication const * aurApp, uint8 mode, boo
     if (!(mode & AURA_EFFECT_HANDLE_SEND_FOR_CLIENT_MASK))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (target->GetTypeId() != TYPEID_PLAYER)
         return;
@@ -2968,7 +2968,7 @@ void AuraEffect::HandlePhase(AuraApplication const * aurApp, uint8 mode, bool ap
     if (!(mode & AURA_EFFECT_HANDLE_REAL))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     // no-phase is also phase state so same code for apply and remove
     uint32 newPhase = 0;
@@ -3026,7 +3026,7 @@ void AuraEffect::HandleAuraModShapeshift(AuraApplication const * aurApp, uint8 m
     if (!(mode & AURA_EFFECT_HANDLE_REAL))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     uint32 modelid = 0;
     Powers PowerType = POWER_MANA;
@@ -3281,7 +3281,7 @@ void AuraEffect::HandleAuraTransform(AuraApplication const * aurApp, uint8 mode,
     if (!(mode & AURA_EFFECT_HANDLE_SEND_FOR_CLIENT_MASK))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (apply)
     {
@@ -3504,7 +3504,7 @@ void AuraEffect::HandleAuraModScale(AuraApplication const * aurApp, uint8 mode, 
     if (!(mode & AURA_EFFECT_HANDLE_CHANGE_AMOUNT_SEND_FOR_CLIENT_MASK))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     target->ApplyPercentModFloatValue(OBJECT_FIELD_SCALE_X, (float)GetAmount(), apply);
 }
@@ -3514,11 +3514,11 @@ void AuraEffect::HandleAuraCloneCaster(AuraApplication const * aurApp, uint8 mod
     if (!(mode & AURA_EFFECT_HANDLE_SEND_FOR_CLIENT_MASK))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (apply)
     {
-        Unit * caster = GetCaster();
+        Unit* caster = GetCaster();
         if (!caster || caster == target)
             return;
         // What must be cloned? at least display and scale
@@ -3544,7 +3544,7 @@ void AuraEffect::HandleFeignDeath(AuraApplication const * aurApp, uint8 mode, bo
     if (!(mode & AURA_EFFECT_HANDLE_REAL))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (target->GetTypeId() != TYPEID_PLAYER)
         return;
@@ -3621,7 +3621,7 @@ void AuraEffect::HandleModUnattackable(AuraApplication const * aurApp, uint8 mod
     if (!(mode & AURA_EFFECT_HANDLE_SEND_FOR_CLIENT_MASK))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (apply)
     {
@@ -3646,7 +3646,7 @@ void AuraEffect::HandleAuraModDisarm(AuraApplication const * aurApp, uint8 mode,
     if (!(mode & AURA_EFFECT_HANDLE_REAL))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     AuraType type = GetAuraType();
 
@@ -3707,7 +3707,7 @@ void AuraEffect::HandleAuraModSilence(AuraApplication const * aurApp, uint8 mode
     if (!(mode & AURA_EFFECT_HANDLE_REAL))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (apply)
     {
@@ -3734,7 +3734,7 @@ void AuraEffect::HandleAuraModPacify(AuraApplication const * aurApp, uint8 mode,
     if (!(mode & AURA_EFFECT_HANDLE_SEND_FOR_CLIENT_MASK))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (apply)
         target->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PACIFIED);
@@ -3752,7 +3752,7 @@ void AuraEffect::HandleAuraModPacifyAndSilence(AuraApplication const * aurApp, u
     if (!(mode & AURA_EFFECT_HANDLE_SEND_FOR_CLIENT_MASK))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     // Vengeance of the Blue Flight (TODO: REMOVE THIS!)
     if (m_spellProto->Id == 45839)
@@ -3777,7 +3777,7 @@ void AuraEffect::HandleAuraAllowOnlyAbility(AuraApplication const * aurApp, uint
     if (!(mode & AURA_EFFECT_HANDLE_SEND_FOR_CLIENT_MASK))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (target->GetTypeId() == TYPEID_PLAYER)
     {
@@ -3802,7 +3802,7 @@ void AuraEffect::HandleAuraTrackCreatures(AuraApplication const * aurApp, uint8 
     if (!(mode & AURA_EFFECT_HANDLE_SEND_FOR_CLIENT_MASK))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (target->GetTypeId() != TYPEID_PLAYER)
         return;
@@ -3815,7 +3815,7 @@ void AuraEffect::HandleAuraTrackResources(AuraApplication const * aurApp, uint8 
     if (!(mode & AURA_EFFECT_HANDLE_SEND_FOR_CLIENT_MASK))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (target->GetTypeId() != TYPEID_PLAYER)
         return;
@@ -3828,7 +3828,7 @@ void AuraEffect::HandleAuraTrackStealthed(AuraApplication const * aurApp, uint8 
     if (!(mode & AURA_EFFECT_HANDLE_SEND_FOR_CLIENT_MASK))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (target->GetTypeId() != TYPEID_PLAYER)
         return;
@@ -3847,7 +3847,7 @@ void AuraEffect::HandleAuraModStalked(AuraApplication const * aurApp, uint8 mode
     if (!(mode & AURA_EFFECT_HANDLE_SEND_FOR_CLIENT_MASK))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     // used by spells: Hunter's Mark, Mind Vision, Syndicate Tracker (MURP) DND
     if (apply)
@@ -3867,7 +3867,7 @@ void AuraEffect::HandleAuraUntrackable(AuraApplication const * aurApp, uint8 mod
     if (!(mode & AURA_EFFECT_HANDLE_SEND_FOR_CLIENT_MASK))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (apply)
         target->SetByteFlag(UNIT_FIELD_BYTES_1, 3, UNIT_BYTE1_FLAG_UNTRACKABLE);
@@ -3889,7 +3889,7 @@ void AuraEffect::HandleAuraModPetTalentsPoints(AuraApplication const * aurApp, u
     if (!(mode & AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (target->GetTypeId() != TYPEID_PLAYER)
         return;
@@ -3901,7 +3901,7 @@ void AuraEffect::HandleAuraModPetTalentsPoints(AuraApplication const * aurApp, u
 
 void AuraEffect::HandleAuraModSkill(AuraApplication const * aurApp, uint8 /*mode*/, bool apply) const
 {
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (target->GetTypeId() != TYPEID_PLAYER)
         return;
@@ -3923,7 +3923,7 @@ void AuraEffect::HandleAuraMounted(AuraApplication const * aurApp, uint8 mode, b
     if (!(mode & AURA_EFFECT_HANDLE_SEND_FOR_CLIENT_MASK))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (apply)
     {
@@ -3978,7 +3978,7 @@ void AuraEffect::HandleAuraAllowFlight(AuraApplication const * aurApp, uint8 mod
     if (!(mode & AURA_EFFECT_HANDLE_SEND_FOR_CLIENT_MASK))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (!apply)
     {
@@ -3990,7 +3990,7 @@ void AuraEffect::HandleAuraAllowFlight(AuraApplication const * aurApp, uint8 mod
     if (target->GetTypeId() == TYPEID_UNIT)
         target->SetFlying(apply);
 
-    if (Player *plr = target->m_movedPlayer)
+    if (Player* plr = target->m_movedPlayer)
     {
         // allow fly
         WorldPacket data;
@@ -4009,7 +4009,7 @@ void AuraEffect::HandleAuraWaterWalk(AuraApplication const * aurApp, uint8 mode,
     if (!(mode & AURA_EFFECT_HANDLE_SEND_FOR_CLIENT_MASK))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (!(apply))
     {
@@ -4033,7 +4033,7 @@ void AuraEffect::HandleAuraFeatherFall(AuraApplication const * aurApp, uint8 mod
     if (!(mode & AURA_EFFECT_HANDLE_SEND_FOR_CLIENT_MASK))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (!(apply))
     {
@@ -4061,7 +4061,7 @@ void AuraEffect::HandleAuraHover(AuraApplication const * aurApp, uint8 mode, boo
     if (!(mode & AURA_EFFECT_HANDLE_SEND_FOR_CLIENT_MASK))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (!(apply))
     {
@@ -4085,7 +4085,7 @@ void AuraEffect::HandleWaterBreathing(AuraApplication const * aurApp, uint8 mode
     if (!(mode & AURA_EFFECT_HANDLE_SEND_FOR_CLIENT_MASK))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     // update timers in client
     if (target->GetTypeId() == TYPEID_PLAYER)
@@ -4097,7 +4097,7 @@ void AuraEffect::HandleForceMoveForward(AuraApplication const * aurApp, uint8 mo
     if (!(mode & AURA_EFFECT_HANDLE_SEND_FOR_CLIENT_MASK))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (apply)
         target->SetFlag(UNIT_FIELD_FLAGS_2, UNIT_FLAG2_FORCE_MOVE);
@@ -4119,7 +4119,7 @@ void AuraEffect::HandleModThreat(AuraApplication const * aurApp, uint8 mode, boo
     if (!(mode & AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
     for (int32 i = 0; i < MAX_SPELL_SCHOOL; ++i)
         if (GetMiscValue() & (1 << i))
             ApplyPercentModFloatVar(target->m_threatModifier[i], float(GetAmount()), apply);
@@ -4130,12 +4130,12 @@ void AuraEffect::HandleAuraModTotalThreat(AuraApplication const * aurApp, uint8 
     if (!(mode & AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (!target->isAlive() || target->GetTypeId() != TYPEID_PLAYER)
         return;
 
-    Unit * caster = GetCaster();
+    Unit* caster = GetCaster();
     if (!caster || !caster->isAlive())
         return;
 
@@ -4147,12 +4147,12 @@ void AuraEffect::HandleModTaunt(AuraApplication const * aurApp, uint8 mode, bool
     if (!(mode & AURA_EFFECT_HANDLE_REAL))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (!target->isAlive() || !target->CanHaveThreatList())
         return;
 
-    Unit * caster = GetCaster();
+    Unit* caster = GetCaster();
     if (!caster || !caster->isAlive())
         return;
 
@@ -4174,7 +4174,7 @@ void AuraEffect::HandleModConfuse(AuraApplication const * aurApp, uint8 mode, bo
     if (!(mode & AURA_EFFECT_HANDLE_REAL))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     target->SetControlled(apply, UNIT_STAT_CONFUSED);
 }
@@ -4184,7 +4184,7 @@ void AuraEffect::HandleModFear(AuraApplication const * aurApp, uint8 mode, bool 
     if (!(mode & AURA_EFFECT_HANDLE_REAL))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     target->SetControlled(apply, UNIT_STAT_FLEEING);
 }
@@ -4194,7 +4194,7 @@ void AuraEffect::HandleAuraModStun(AuraApplication const * aurApp, uint8 mode, b
     if (!(mode & AURA_EFFECT_HANDLE_REAL))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     target->SetControlled(apply, UNIT_STAT_STUNNED);
 }
@@ -4204,7 +4204,7 @@ void AuraEffect::HandleAuraModRoot(AuraApplication const * aurApp, uint8 mode, b
     if (!(mode & AURA_EFFECT_HANDLE_REAL))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     target->SetControlled(apply, UNIT_STAT_ROOT);
 }
@@ -4214,7 +4214,7 @@ void AuraEffect::HandlePreventFleeing(AuraApplication const * aurApp, uint8 mode
     if (!(mode & AURA_EFFECT_HANDLE_REAL))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     Unit::AuraEffectList const& fearAuras = target->GetAuraEffectsByType(SPELL_AURA_MOD_FEAR);
     if (!fearAuras.empty())
@@ -4230,9 +4230,9 @@ void AuraEffect::HandleModPossess(AuraApplication const * aurApp, uint8 mode, bo
     if (!(mode & AURA_EFFECT_HANDLE_REAL))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
-    Unit * caster = GetCaster();
+    Unit* caster = GetCaster();
     if (caster && caster->GetTypeId() == TYPEID_UNIT)
     {
         HandleModCharm(aurApp, mode, apply);
@@ -4297,9 +4297,9 @@ void AuraEffect::HandleModCharm(AuraApplication const * aurApp, uint8 mode, bool
     if (!(mode & AURA_EFFECT_HANDLE_REAL))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
-    Unit * caster = GetCaster();
+    Unit* caster = GetCaster();
 
     if (apply)
         target->SetCharmedBy(caster, CHARM_TYPE_CHARM, aurApp);
@@ -4312,9 +4312,9 @@ void AuraEffect::HandleCharmConvert(AuraApplication const * aurApp, uint8 mode, 
     if (!(mode & AURA_EFFECT_HANDLE_REAL))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
-    Unit * caster = GetCaster();
+    Unit* caster = GetCaster();
 
     if (apply)
         target->SetCharmedBy(caster, CHARM_TYPE_CONVERT, aurApp);
@@ -4331,12 +4331,12 @@ void AuraEffect::HandleAuraControlVehicle(AuraApplication const * aurApp, uint8 
     if (!(mode & AURA_EFFECT_HANDLE_REAL))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (!target->IsVehicle())
         return;
 
-    Unit * caster = GetCaster();
+    Unit* caster = GetCaster();
 
     if (!caster || caster == target)
         return;
@@ -4368,7 +4368,7 @@ void AuraEffect::HandleAuraModIncreaseSpeed(AuraApplication const * aurApp, uint
     if (!(mode & AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     target->UpdateSpeed(MOVE_RUN, true);
 }
@@ -4383,7 +4383,7 @@ void AuraEffect::HandleAuraModIncreaseFlightSpeed(AuraApplication const * aurApp
     if (!(mode & AURA_EFFECT_HANDLE_CHANGE_AMOUNT_SEND_FOR_CLIENT_MASK))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     // Enable Fly mode for flying mounts
     if (GetAuraType() == SPELL_AURA_MOD_INCREASE_MOUNTED_FLIGHT_SPEED)
@@ -4391,7 +4391,7 @@ void AuraEffect::HandleAuraModIncreaseFlightSpeed(AuraApplication const * aurApp
         // do not remove unit flag if there are more than this auraEffect of that kind on unit on unit
         if (mode & AURA_EFFECT_HANDLE_SEND_FOR_CLIENT_MASK && (apply || (!target->HasAuraType(SPELL_AURA_MOD_INCREASE_MOUNTED_FLIGHT_SPEED) && !target->HasAuraType(SPELL_AURA_FLY))))
         {
-            if (Player *plr = target->m_movedPlayer)
+            if (Player* plr = target->m_movedPlayer)
             {
                 WorldPacket data;
                 if (apply)
@@ -4425,7 +4425,7 @@ void AuraEffect::HandleAuraModIncreaseSwimSpeed(AuraApplication const * aurApp, 
     if (!(mode & AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     target->UpdateSpeed(MOVE_SWIM, true);
 }
@@ -4435,7 +4435,7 @@ void AuraEffect::HandleAuraModDecreaseSpeed(AuraApplication const * aurApp, uint
     if (!(mode & AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     target->UpdateSpeed(MOVE_RUN, true);
     target->UpdateSpeed(MOVE_SWIM, true);
@@ -4450,7 +4450,7 @@ void AuraEffect::HandleAuraModUseNormalSpeed(AuraApplication const * aurApp, uin
     if (!(mode & AURA_EFFECT_HANDLE_REAL))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     target->UpdateSpeed(MOVE_RUN,  true);
     target->UpdateSpeed(MOVE_SWIM, true);
@@ -4466,7 +4466,7 @@ void AuraEffect::HandleModStateImmunityMask(AuraApplication const * aurApp, uint
     if (!(mode & AURA_EFFECT_HANDLE_REAL))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     std::list <AuraType> immunity_list;
     if (GetMiscValue() & (1<<10))
@@ -4515,7 +4515,7 @@ void AuraEffect::HandleModMechanicImmunity(AuraApplication const * aurApp, uint8
     if (!(mode & AURA_EFFECT_HANDLE_REAL))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
     uint32 mechanic;
 
     switch (GetId())
@@ -4565,7 +4565,7 @@ void AuraEffect::HandleAuraModEffectImmunity(AuraApplication const * aurApp, uin
     if (!(mode & AURA_EFFECT_HANDLE_REAL))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     // when removing flag aura, handle flag drop
     if (!(apply) && target->GetTypeId() == TYPEID_PLAYER
@@ -4594,7 +4594,7 @@ void AuraEffect::HandleAuraModStateImmunity(AuraApplication const * aurApp, uint
     if (!(mode & AURA_EFFECT_HANDLE_REAL))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if ((apply) && GetSpellProto()->AttributesEx & SPELL_ATTR1_DISPEL_AURAS_ON_IMMUNITY)
         target->RemoveAurasByType(AuraType(GetMiscValue()), 0 , GetBase());
@@ -4611,7 +4611,7 @@ void AuraEffect::HandleAuraModSchoolImmunity(AuraApplication const * aurApp, uin
     if (!(mode & AURA_EFFECT_HANDLE_REAL))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if ((apply) && GetMiscValue() == SPELL_SCHOOL_MASK_NORMAL)
         target->RemoveAurasWithInterruptFlags(AURA_INTERRUPT_FLAG_IMMUNE_OR_LOST_SELECTION);
@@ -4678,7 +4678,7 @@ void AuraEffect::HandleAuraModDmgImmunity(AuraApplication const * aurApp, uint8 
     if (!(mode & AURA_EFFECT_HANDLE_REAL))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     target->ApplySpellImmune(GetId(), IMMUNITY_DAMAGE, GetMiscValue(), apply);
 }
@@ -4688,7 +4688,7 @@ void AuraEffect::HandleAuraModDispelImmunity(AuraApplication const * aurApp, uin
     if (!(mode & AURA_EFFECT_HANDLE_REAL))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     target->ApplySpellDispelImmunity(m_spellProto, DispelType(GetMiscValue()), (apply));
 }
@@ -4706,7 +4706,7 @@ void AuraEffect::HandleAuraModResistanceExclusive(AuraApplication const * aurApp
     if (!(mode & (AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK | AURA_EFFECT_HANDLE_STAT)))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     for (int8 x = SPELL_SCHOOL_NORMAL; x < MAX_SPELL_SCHOOL; x++)
     {
@@ -4728,7 +4728,7 @@ void AuraEffect::HandleAuraModResistance(AuraApplication const * aurApp, uint8 m
     if (!(mode & (AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK | AURA_EFFECT_HANDLE_STAT)))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     for (int8 x = SPELL_SCHOOL_NORMAL; x < MAX_SPELL_SCHOOL; x++)
     {
@@ -4746,7 +4746,7 @@ void AuraEffect::HandleAuraModBaseResistancePCT(AuraApplication const * aurApp, 
     if (!(mode & (AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK | AURA_EFFECT_HANDLE_STAT)))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     // only players have base stats
     if (target->GetTypeId() != TYPEID_PLAYER)
@@ -4770,7 +4770,7 @@ void AuraEffect::HandleModResistancePercent(AuraApplication const * aurApp, uint
     if (!(mode & (AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK | AURA_EFFECT_HANDLE_STAT)))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     for (int8 i = SPELL_SCHOOL_NORMAL; i < MAX_SPELL_SCHOOL; i++)
     {
@@ -4791,7 +4791,7 @@ void AuraEffect::HandleModBaseResistance(AuraApplication const * aurApp, uint8 m
     if (!(mode & (AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK | AURA_EFFECT_HANDLE_STAT)))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     // only players have base stats
     if (target->GetTypeId() != TYPEID_PLAYER)
@@ -4813,7 +4813,7 @@ void AuraEffect::HandleModTargetResistance(AuraApplication const * aurApp, uint8
     if (!(mode & (AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK | AURA_EFFECT_HANDLE_STAT)))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     // applied to damage as HandleNoImmediateEffect in Unit::CalcAbsorbResist and Unit::CalcArmorReducedDamage
 
@@ -4835,7 +4835,7 @@ void AuraEffect::HandleAuraModStat(AuraApplication const * aurApp, uint8 mode, b
     if (!(mode & (AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK | AURA_EFFECT_HANDLE_STAT)))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (GetMiscValue() < -2 || GetMiscValue() > 4)
     {
@@ -4861,7 +4861,7 @@ void AuraEffect::HandleModPercentStat(AuraApplication const * aurApp, uint8 mode
     if (!(mode & (AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK | AURA_EFFECT_HANDLE_STAT)))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (GetMiscValue() < -1 || GetMiscValue() > 4)
     {
@@ -4885,7 +4885,7 @@ void AuraEffect::HandleModSpellDamagePercentFromStat(AuraApplication const * aur
     if (!(mode & (AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK | AURA_EFFECT_HANDLE_STAT)))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (target->GetTypeId() != TYPEID_PLAYER)
         return;
@@ -4901,7 +4901,7 @@ void AuraEffect::HandleModSpellHealingPercentFromStat(AuraApplication const * au
     if (!(mode & (AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK | AURA_EFFECT_HANDLE_STAT)))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (target->GetTypeId() != TYPEID_PLAYER)
         return;
@@ -4915,7 +4915,7 @@ void AuraEffect::HandleModSpellDamagePercentFromAttackPower(AuraApplication cons
     if (!(mode & (AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK | AURA_EFFECT_HANDLE_STAT)))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (target->GetTypeId() != TYPEID_PLAYER)
         return;
@@ -4931,7 +4931,7 @@ void AuraEffect::HandleModSpellHealingPercentFromAttackPower(AuraApplication con
     if (!(mode & (AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK | AURA_EFFECT_HANDLE_STAT)))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (target->GetTypeId() != TYPEID_PLAYER)
         return;
@@ -4945,7 +4945,7 @@ void AuraEffect::HandleModHealingDone(AuraApplication const * aurApp, uint8 mode
     if (!(mode & (AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK | AURA_EFFECT_HANDLE_STAT)))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (target->GetTypeId() != TYPEID_PLAYER)
         return;
@@ -4959,7 +4959,7 @@ void AuraEffect::HandleModTotalPercentStat(AuraApplication const * aurApp, uint8
     if (!(mode & (AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK | AURA_EFFECT_HANDLE_STAT)))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (GetMiscValue() < -1 || GetMiscValue() > 4)
     {
@@ -4991,7 +4991,7 @@ void AuraEffect::HandleAuraModResistenceOfStatPercent(AuraApplication const * au
     if (!(mode & (AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK | AURA_EFFECT_HANDLE_STAT)))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (target->GetTypeId() != TYPEID_PLAYER)
         return;
@@ -5013,7 +5013,7 @@ void AuraEffect::HandleAuraModExpertise(AuraApplication const * aurApp, uint8 mo
     if (!(mode & (AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK | AURA_EFFECT_HANDLE_STAT)))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (target->GetTypeId() != TYPEID_PLAYER)
         return;
@@ -5030,7 +5030,7 @@ void AuraEffect::HandleModPowerRegen(AuraApplication const * aurApp, uint8 mode,
     if (!(mode & (AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK | AURA_EFFECT_HANDLE_STAT)))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (target->GetTypeId() != TYPEID_PLAYER)
         return;
@@ -5051,7 +5051,7 @@ void AuraEffect::HandleModManaRegen(AuraApplication const * aurApp, uint8 mode, 
     if (!(mode & (AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK | AURA_EFFECT_HANDLE_STAT)))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (target->GetTypeId() != TYPEID_PLAYER)
         return;
@@ -5065,7 +5065,7 @@ void AuraEffect::HandleAuraModIncreaseHealth(AuraApplication const * aurApp, uin
     if (!(mode & (AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK | AURA_EFFECT_HANDLE_STAT)))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (apply)
     {
@@ -5087,7 +5087,7 @@ void AuraEffect::HandleAuraModIncreaseMaxHealth(AuraApplication const * aurApp, 
     if (!(mode & (AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK | AURA_EFFECT_HANDLE_STAT)))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     uint32 oldhealth = target->GetHealth();
     double healthPercentage = (double)oldhealth / (double)target->GetMaxHealth();
@@ -5110,7 +5110,7 @@ void AuraEffect::HandleAuraModIncreaseEnergy(AuraApplication const * aurApp, uin
     if (!(mode & (AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK | AURA_EFFECT_HANDLE_STAT)))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     Powers powerType = Powers(GetMiscValue());
     // do not check power type, we can always modify the maximum
@@ -5143,7 +5143,7 @@ void AuraEffect::HandleAuraModIncreaseEnergyPercent(AuraApplication const * aurA
     if (!(mode & (AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK | AURA_EFFECT_HANDLE_STAT)))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     Powers powerType = Powers(GetMiscValue());
     // do not check power type, we can always modify the maximum
@@ -5163,7 +5163,7 @@ void AuraEffect::HandleAuraModIncreaseHealthPercent(AuraApplication const * aurA
     if (!(mode & (AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK | AURA_EFFECT_HANDLE_STAT)))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     // Unit will keep hp% after MaxHealth being modified if unit is alive.
     float percent = target->GetHealthPct();
@@ -5177,7 +5177,7 @@ void AuraEffect::HandleAuraIncreaseBaseHealthPercent(AuraApplication const * aur
     if (!(mode & (AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK | AURA_EFFECT_HANDLE_STAT)))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     target->HandleStatModifier(UNIT_MOD_HEALTH, BASE_PCT, float(GetAmount()), apply);
 }
@@ -5191,7 +5191,7 @@ void AuraEffect::HandleAuraModParryPercent(AuraApplication const * aurApp, uint8
     if (!(mode & (AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK | AURA_EFFECT_HANDLE_STAT)))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (target->GetTypeId() != TYPEID_PLAYER)
         return;
@@ -5204,7 +5204,7 @@ void AuraEffect::HandleAuraModDodgePercent(AuraApplication const * aurApp, uint8
     if (!(mode & (AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK | AURA_EFFECT_HANDLE_STAT)))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (target->GetTypeId() != TYPEID_PLAYER)
         return;
@@ -5217,7 +5217,7 @@ void AuraEffect::HandleAuraModBlockPercent(AuraApplication const * aurApp, uint8
     if (!(mode & (AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK | AURA_EFFECT_HANDLE_STAT)))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (target->GetTypeId() != TYPEID_PLAYER)
         return;
@@ -5235,7 +5235,7 @@ void AuraEffect::HandleAuraModWeaponCritPercent(AuraApplication const * aurApp, 
     if (!(mode & (AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK | AURA_EFFECT_HANDLE_STAT)))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (target->GetTypeId() != TYPEID_PLAYER)
         return;
@@ -5265,7 +5265,7 @@ void AuraEffect::HandleModHitChance(AuraApplication const * aurApp, uint8 mode, 
     if (!(mode & (AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK | AURA_EFFECT_HANDLE_STAT)))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (target->GetTypeId() == TYPEID_PLAYER)
     {
@@ -5284,7 +5284,7 @@ void AuraEffect::HandleModSpellHitChance(AuraApplication const * aurApp, uint8 m
     if (!(mode & (AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK | AURA_EFFECT_HANDLE_STAT)))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (target->GetTypeId() == TYPEID_PLAYER)
         target->ToPlayer()->UpdateSpellHitChances();
@@ -5297,7 +5297,7 @@ void AuraEffect::HandleModSpellCritChance(AuraApplication const * aurApp, uint8 
     if (!(mode & (AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK | AURA_EFFECT_HANDLE_STAT)))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (target->GetTypeId() == TYPEID_PLAYER)
         target->ToPlayer()->UpdateAllSpellCritChances();
@@ -5310,7 +5310,7 @@ void AuraEffect::HandleModSpellCritChanceShool(AuraApplication const * aurApp, u
     if (!(mode & (AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK | AURA_EFFECT_HANDLE_STAT)))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (target->GetTypeId() != TYPEID_PLAYER)
         return;
@@ -5325,7 +5325,7 @@ void AuraEffect::HandleAuraModCritPct(AuraApplication const * aurApp, uint8 mode
     if (!(mode & (AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK | AURA_EFFECT_HANDLE_STAT)))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (target->GetTypeId() != TYPEID_PLAYER)
     {
@@ -5350,7 +5350,7 @@ void AuraEffect::HandleModCastingSpeed(AuraApplication const * aurApp, uint8 mod
     if (!(mode & (AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK | AURA_EFFECT_HANDLE_STAT)))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     target->ApplyCastTimePercentMod((float)GetAmount(), apply);
 }
@@ -5360,7 +5360,7 @@ void AuraEffect::HandleModMeleeRangedSpeedPct(AuraApplication const * aurApp, ui
     if (!(mode & (AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK | AURA_EFFECT_HANDLE_STAT)))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     target->ApplyAttackTimePercentMod(BASE_ATTACK, (float)GetAmount(), apply);
     target->ApplyAttackTimePercentMod(OFF_ATTACK, (float)GetAmount(), apply);
@@ -5372,7 +5372,7 @@ void AuraEffect::HandleModCombatSpeedPct(AuraApplication const * aurApp, uint8 m
     if (!(mode & (AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK | AURA_EFFECT_HANDLE_STAT)))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     target->ApplyCastTimePercentMod(float(m_amount), apply);
     target->ApplyAttackTimePercentMod(BASE_ATTACK, float(GetAmount()), apply);
@@ -5385,7 +5385,7 @@ void AuraEffect::HandleModAttackSpeed(AuraApplication const * aurApp, uint8 mode
     if (!(mode & (AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK | AURA_EFFECT_HANDLE_STAT)))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     target->ApplyAttackTimePercentMod(BASE_ATTACK, (float)GetAmount(), apply);
     target->UpdateDamagePhysical(BASE_ATTACK);
@@ -5396,7 +5396,7 @@ void AuraEffect::HandleModMeleeSpeedPct(AuraApplication const * aurApp, uint8 mo
     if (!(mode & (AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK | AURA_EFFECT_HANDLE_STAT)))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     target->ApplyAttackTimePercentMod(BASE_ATTACK,   (float)GetAmount(), apply);
     target->ApplyAttackTimePercentMod(OFF_ATTACK,    (float)GetAmount(), apply);
@@ -5407,7 +5407,7 @@ void AuraEffect::HandleAuraModRangedHaste(AuraApplication const * aurApp, uint8 
     if (!(mode & (AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK | AURA_EFFECT_HANDLE_STAT)))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     target->ApplyAttackTimePercentMod(RANGED_ATTACK, (float)GetAmount(), apply);
 }
@@ -5417,7 +5417,7 @@ void AuraEffect::HandleRangedAmmoHaste(AuraApplication const * aurApp, uint8 mod
     if (!(mode & (AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK | AURA_EFFECT_HANDLE_STAT)))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (target->GetTypeId() != TYPEID_PLAYER)
         return;
@@ -5434,7 +5434,7 @@ void AuraEffect::HandleModRating(AuraApplication const * aurApp, uint8 mode, boo
     if (!(mode & (AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK | AURA_EFFECT_HANDLE_STAT)))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (target->GetTypeId() != TYPEID_PLAYER)
         return;
@@ -5449,7 +5449,7 @@ void AuraEffect::HandleModRatingFromStat(AuraApplication const * aurApp, uint8 m
     if (!(mode & (AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK | AURA_EFFECT_HANDLE_STAT)))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (target->GetTypeId() != TYPEID_PLAYER)
         return;
@@ -5469,7 +5469,7 @@ void AuraEffect::HandleAuraModAttackPower(AuraApplication const * aurApp, uint8 
     if (!(mode & (AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK | AURA_EFFECT_HANDLE_STAT)))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     target->HandleStatModifier(UNIT_MOD_ATTACK_POWER, TOTAL_VALUE, float(GetAmount()), apply);
 }
@@ -5479,7 +5479,7 @@ void AuraEffect::HandleAuraModRangedAttackPower(AuraApplication const * aurApp, 
     if (!(mode & (AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK | AURA_EFFECT_HANDLE_STAT)))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if ((target->getClassMask() & CLASSMASK_WAND_USERS) != 0)
         return;
@@ -5492,7 +5492,7 @@ void AuraEffect::HandleAuraModAttackPowerPercent(AuraApplication const * aurApp,
     if (!(mode & (AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK | AURA_EFFECT_HANDLE_STAT)))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     //UNIT_FIELD_ATTACK_POWER_MULTIPLIER = multiplier - 1
     target->HandleStatModifier(UNIT_MOD_ATTACK_POWER, TOTAL_PCT, float(GetAmount()), apply);
@@ -5503,7 +5503,7 @@ void AuraEffect::HandleAuraModRangedAttackPowerPercent(AuraApplication const * a
     if (!(mode & (AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK | AURA_EFFECT_HANDLE_STAT)))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if ((target->getClassMask() & CLASSMASK_WAND_USERS) != 0)
         return;
@@ -5517,7 +5517,7 @@ void AuraEffect::HandleAuraModRangedAttackPowerOfStatPercent(AuraApplication con
     if (!(mode & (AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK | AURA_EFFECT_HANDLE_STAT)))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     // Recalculate bonus
     if (target->GetTypeId() == TYPEID_PLAYER && !(target->getClassMask() & CLASSMASK_WAND_USERS))
@@ -5534,7 +5534,7 @@ void AuraEffect::HandleAuraModAttackPowerOfArmor(AuraApplication const * aurApp,
     if (!(mode & (AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK | AURA_EFFECT_HANDLE_STAT)))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     // Recalculate bonus
     if (target->GetTypeId() == TYPEID_PLAYER)
@@ -5548,7 +5548,7 @@ void AuraEffect::HandleModDamageDone(AuraApplication const * aurApp, uint8 mode,
     if (!(mode & (AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK | AURA_EFFECT_HANDLE_STAT)))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     // apply item specific bonuses for already equipped weapon
     if (target->GetTypeId() == TYPEID_PLAYER)
@@ -5646,7 +5646,7 @@ void AuraEffect::HandleModOffhandDamagePercent(AuraApplication const * aurApp, u
     if (!(mode & (AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK | AURA_EFFECT_HANDLE_STAT)))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     target->HandleStatModifier(UNIT_MOD_DAMAGE_OFFHAND, TOTAL_PCT, float(GetAmount()), apply);
 }
@@ -5656,7 +5656,7 @@ void AuraEffect::HandleShieldBlockValue(AuraApplication const * aurApp, uint8 mo
     if (!(mode & (AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK | AURA_EFFECT_HANDLE_STAT)))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     BaseModType modType = FLAT_MOD;
     if (GetAuraType() == SPELL_AURA_MOD_SHIELD_BLOCKVALUE_PCT)
@@ -5675,7 +5675,7 @@ void AuraEffect::HandleModPowerCostPCT(AuraApplication const * aurApp, uint8 mod
     if (!(mode & AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     float amount = CalculatePctN(1.0f, GetAmount());
     for (int i = 0; i < MAX_SPELL_SCHOOL; ++i)
@@ -5688,7 +5688,7 @@ void AuraEffect::HandleModPowerCost(AuraApplication const * aurApp, uint8 mode, 
     if (!(mode & AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     for (int i = 0; i < MAX_SPELL_SCHOOL; ++i)
         if (GetMiscValue() & (1<<i))
@@ -5700,7 +5700,7 @@ void AuraEffect::HandleArenaPreparation(AuraApplication const * aurApp, uint8 mo
     if (!(mode & AURA_EFFECT_HANDLE_REAL))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (apply)
         target->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PREPARATION);
@@ -5718,7 +5718,7 @@ void AuraEffect::HandleNoReagentUseAura(AuraApplication const * aurApp, uint8 mo
     if (!(mode & AURA_EFFECT_HANDLE_REAL))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (target->GetTypeId() != TYPEID_PLAYER)
         return;
@@ -5738,7 +5738,7 @@ void AuraEffect::HandleAuraRetainComboPoints(AuraApplication const * aurApp, uin
     if (!(mode & AURA_EFFECT_HANDLE_REAL))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (target->GetTypeId() != TYPEID_PLAYER)
         return;
@@ -5759,9 +5759,9 @@ void AuraEffect::HandleAuraDummy(AuraApplication const * aurApp, uint8 mode, boo
     if (!(mode & AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
-    Unit * caster = GetCaster();
+    Unit* caster = GetCaster();
 
     if (mode & AURA_EFFECT_HANDLE_REAL)
     {
@@ -5804,7 +5804,7 @@ void AuraEffect::HandleAuraDummy(AuraApplication const * aurApp, uint8 mode, boo
                     break;
                 case 34026:   // kill command
                 {
-                    Unit * pet = target->GetGuardianPet();
+                    Unit* pet = target->GetGuardianPet();
                     if (!pet)
                         break;
 
@@ -5898,7 +5898,7 @@ void AuraEffect::HandleAuraDummy(AuraApplication const * aurApp, uint8 mode, boo
                     break;
                 case 52916: // Honor Among Thieves
                     if (target->GetTypeId() == TYPEID_PLAYER)
-                        if (Unit * spellTarget = ObjectAccessor::GetUnit(*target, target->ToPlayer()->GetComboTarget()))
+                        if (Unit* spellTarget = ObjectAccessor::GetUnit(*target, target->ToPlayer()->GetComboTarget()))
                             target->CastSpell(spellTarget, 51699, true);
                    break;
                 case 28832: // Mark of Korth'azz
@@ -6140,7 +6140,7 @@ void AuraEffect::HandleAuraDummy(AuraApplication const * aurApp, uint8 mode, boo
                     if (!caster)
                         break;
 
-                    Unit *owner = caster->GetOwner();
+                    Unit* owner = caster->GetOwner();
                     if (owner && owner->GetTypeId() == TYPEID_PLAYER)
                     {
                         if (apply)
@@ -6156,7 +6156,7 @@ void AuraEffect::HandleAuraDummy(AuraApplication const * aurApp, uint8 mode, boo
                     if (!caster)
                         break;
 
-                    Unit *owner = caster->GetOwner();
+                    Unit* owner = caster->GetOwner();
                     if (owner && owner->GetTypeId() == TYPEID_PLAYER)
                     {
                         if (apply)
@@ -6364,13 +6364,13 @@ void AuraEffect::HandleChannelDeathItem(AuraApplication const * aurApp, uint8 mo
 
     if (!(apply))
     {
-        Unit * caster = GetCaster();
+        Unit* caster = GetCaster();
 
         if (!caster || caster->GetTypeId() != TYPEID_PLAYER)
             return;
 
-        Player *plCaster = caster->ToPlayer();
-        Unit *target = aurApp->GetTarget();
+        Player* plCaster = caster->ToPlayer();
+        Unit* target = aurApp->GetTarget();
 
         if (target->getDeathState() != JUST_DIED)
             return;
@@ -6429,9 +6429,9 @@ void AuraEffect::HandleBindSight(AuraApplication const * aurApp, uint8 mode, boo
     if (!(mode & AURA_EFFECT_HANDLE_REAL))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
-    Unit * caster = GetCaster();
+    Unit* caster = GetCaster();
 
     if (!caster || caster->GetTypeId() != TYPEID_PLAYER)
         return;
@@ -6444,7 +6444,7 @@ void AuraEffect::HandleForceReaction(AuraApplication const * aurApp, uint8 mode,
     if (!(mode & AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (target->GetTypeId() != TYPEID_PLAYER)
         return;
@@ -6467,7 +6467,7 @@ void AuraEffect::HandleAuraEmpathy(AuraApplication const * aurApp, uint8 mode, b
     if (!(mode & AURA_EFFECT_HANDLE_REAL))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (target->GetTypeId() != TYPEID_UNIT)
         return;
@@ -6489,7 +6489,7 @@ void AuraEffect::HandleAuraModFaction(AuraApplication const * aurApp, uint8 mode
     if (!(mode & AURA_EFFECT_HANDLE_REAL))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (apply)
     {
@@ -6510,7 +6510,7 @@ void AuraEffect::HandleComprehendLanguage(AuraApplication const * aurApp, uint8 
     if (!(mode & AURA_EFFECT_HANDLE_SEND_FOR_CLIENT_MASK))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (apply)
         target->SetFlag(UNIT_FIELD_FLAGS_2, UNIT_FLAG2_COMPREHEND_LANG);
@@ -6528,12 +6528,12 @@ void AuraEffect::HandleAuraConvertRune(AuraApplication const * aurApp, uint8 mod
     if (!(mode & AURA_EFFECT_HANDLE_REAL))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (target->GetTypeId() != TYPEID_PLAYER)
         return;
 
-    Player *plr = (Player*)target;
+    Player* plr = (Player*)target;
 
     if (plr->getClass() != CLASS_DEATH_KNIGHT)
         return;
@@ -6562,11 +6562,11 @@ void AuraEffect::HandleAuraLinked(AuraApplication const * aurApp, uint8 mode, bo
     if (!(mode & AURA_EFFECT_HANDLE_REAL))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (apply)
     {
-        Unit * caster = GetTriggeredSpellCaster(m_spellProto, GetCaster(), target);
+        Unit* caster = GetTriggeredSpellCaster(m_spellProto, GetCaster(), target);
 
         if (!caster)
             return;
@@ -6585,7 +6585,7 @@ void AuraEffect::HandleAuraOpenStable(AuraApplication const * aurApp, uint8 mode
     if (!(mode & AURA_EFFECT_HANDLE_REAL))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (target->GetTypeId() != TYPEID_PLAYER || !target->IsInWorld())
         return;
@@ -6641,7 +6641,7 @@ void AuraEffect::HandleAuraOverrideSpells(AuraApplication const * aurApp, uint8 
     if (!(mode & AURA_EFFECT_HANDLE_REAL))
         return;
 
-    Player * target = aurApp->GetTarget()->ToPlayer();
+    Player* target = aurApp->GetTarget()->ToPlayer();
 
     if (!target || !target->IsInWorld())
         return;
@@ -6671,7 +6671,7 @@ void AuraEffect::HandleAuraSetVehicle(AuraApplication const * aurApp, uint8 mode
     if (!(mode & AURA_EFFECT_HANDLE_REAL))
         return;
 
-    Unit * target = aurApp->GetTarget();
+    Unit* target = aurApp->GetTarget();
 
     if (target->GetTypeId() != TYPEID_PLAYER || !target->IsInWorld())
         return;

@@ -55,8 +55,8 @@ class Corpse : public WorldObject, public GridObject<Corpse>
         void AddToWorld();
         void RemoveFromWorld();
 
-        bool Create(uint32 guidlow, Map *map);
-        bool Create(uint32 guidlow, Player *owner);
+        bool Create(uint32 guidlow, Map* map);
+        bool Create(uint32 guidlow, Player* owner);
 
         void SaveToDB();
         bool LoadFromDB(uint32 guid, Field *fields);

@@ -144,7 +144,7 @@ void GameObject::RemoveFromWorld()
         // Possible crash at access to deleted GO in Unit::m_gameobj
         if (uint64 owner_guid = GetOwnerGUID())
         {
-            if (Unit * owner = GetOwner())
+            if (Unit* owner = GetOwner())
                 owner->RemoveGameObject(this, false);
             else
                 sLog->outError("Delete GameObject (GUID: %u Entry: %u) that have references in not found creature %u GO list. Crash possible later.", GetGUIDLow(), GetGOInfo()->entry, GUID_LOPART(owner_guid));
@@ -154,7 +154,7 @@ void GameObject::RemoveFromWorld()
     }
 }
 
-bool GameObject::Create(uint32 guidlow, uint32 name_id, Map *map, uint32 phaseMask, float x, float y, float z, float ang, float rotation0, float rotation1, float rotation2, float rotation3, uint32 animprogress, GOState go_state, uint32 artKit)
+bool GameObject::Create(uint32 guidlow, uint32 name_id, Map* map, uint32 phaseMask, float x, float y, float z, float ang, float rotation0, float rotation1, float rotation2, float rotation3, uint32 animprogress, GOState go_state, uint32 artKit)
 {
     ASSERT(map);
     SetMap(map);
@@ -609,7 +609,7 @@ void GameObject::Delete()
 {
     SetLootState(GO_NOT_READY);
     if (GetOwnerGUID())
-        if (Unit * owner = GetOwner())
+        if (Unit* owner = GetOwner())
             owner->RemoveGameObject(this, false);
 
     ASSERT (!GetOwnerGUID());
@@ -708,7 +708,7 @@ void GameObject::SaveToDB(uint32 mapid, uint8 spawnMask, uint32 phaseMask)
     WorldDatabase.CommitTransaction(trans);
 }
 
-bool GameObject::LoadFromDB(uint32 guid, Map *map)
+bool GameObject::LoadFromDB(uint32 guid, Map* map)
 {
     GameObjectData const* data = sObjectMgr->GetGOData(guid);
 
@@ -874,7 +874,7 @@ void GameObject::Respawn()
     }
 }
 
-bool GameObject::ActivateToQuest(Player *pTarget) const
+bool GameObject::ActivateToQuest(Player* pTarget) const
 {
     if (pTarget->HasQuestForGO(GetEntry()))
         return true;
@@ -934,7 +934,7 @@ void GameObject::TriggeringLinkedGameObject(uint32 trapEntry, Unit* target)
         range = GetSpellMaxRangeForHostile(srentry);
     else
         // get owner to check hostility of GameObject
-        if (Unit *owner = GetOwner())
+        if (Unit* owner = GetOwner())
             range = (float)owner->GetSpellMaxRangeForTarget(target, srentry);
         else
             // if no owner assume that object is hostile to target
@@ -1676,7 +1676,7 @@ bool GameObject::IsInRange(float x, float y, float z, float radius) const
         && dz < info->maxZ + radius && dz > info->minZ - radius;
 }
 
-void GameObject::TakenDamage(uint32 damage, Unit *who)
+void GameObject::TakenDamage(uint32 damage, Unit* who)
 {
     if (!m_goValue->building.health)
         return;

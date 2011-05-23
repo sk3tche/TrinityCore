@@ -28,7 +28,7 @@ CreatureGroupInfoType   CreatureGroupMap;
 
 void CreatureGroupManager::AddCreatureToGroup(uint32 groupId, Creature *member)
 {
-    Map *map = member->FindMap();
+    Map* map = member->FindMap();
     if (!map)
         return;
 
@@ -57,7 +57,7 @@ void CreatureGroupManager::RemoveCreatureFromGroup(CreatureGroup *group, Creatur
 
     if (group->isEmpty())
     {
-        Map *map = member->FindMap();
+        Map* map = member->FindMap();
         if (!map)
             return;
 
@@ -175,7 +175,7 @@ void CreatureGroup::RemoveMember(Creature *member)
     member->SetFormation(NULL);
 }
 
-void CreatureGroup::MemberAttackStart(Creature *member, Unit *target)
+void CreatureGroup::MemberAttackStart(Creature *member, Unit* target)
 {
     uint8 groupAI = CreatureGroupMap[member->GetDBTableGUIDLow()]->groupAI;
     if (!groupAI)

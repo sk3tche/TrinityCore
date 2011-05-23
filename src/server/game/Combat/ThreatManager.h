@@ -165,7 +165,7 @@ class ThreatContainer
 
         HostileReference* addThreat(Unit* pVictim, float fThreat);
 
-        void modifyThreatPercent(Unit *pVictim, int32 iPercent);
+        void modifyThreatPercent(Unit* pVictim, int32 iPercent);
 
         HostileReference* selectNextVictim(Creature* pAttacker, HostileReference* pCurrentVictim);
 
@@ -189,16 +189,16 @@ class ThreatManager
     public:
         friend class HostileReference;
 
-        explicit ThreatManager(Unit *pOwner);
+        explicit ThreatManager(Unit* pOwner);
 
         ~ThreatManager() { clearReferences(); }
 
         void clearReferences();
 
         void addThreat(Unit* pVictim, float fThreat, SpellSchoolMask schoolMask = SPELL_SCHOOL_MASK_NORMAL, SpellEntry const *threatSpell = NULL);
-        void modifyThreatPercent(Unit *pVictim, int32 iPercent);
+        void modifyThreatPercent(Unit* pVictim, int32 iPercent);
 
-        float getThreat(Unit *pVictim, bool pAlsoSearchOfflineList = false);
+        float getThreat(Unit* pVictim, bool pAlsoSearchOfflineList = false);
 
         bool isThreatListEmpty() { return iThreatContainer.empty(); }
 
@@ -213,7 +213,7 @@ class ThreatManager
         Unit* getHostilTarget();
 
         void tauntApply(Unit* pTaunter);
-        void tauntFadeOut(Unit *pTaunter);
+        void tauntFadeOut(Unit* pTaunter);
 
         void setCurrentVictim(HostileReference* pHostileReference);
 
@@ -248,7 +248,7 @@ class ThreatManager
         ThreatContainer& getOnlineContainer() { return iThreatContainer; }
         ThreatContainer& getOfflineContainer() { return iThreatOfflineContainer; }
     private:
-        void _addThreat(Unit *pVictim, float fThreat);
+        void _addThreat(Unit* pVictim, float fThreat);
 
         HostileReference* iCurrentVictim;
         Unit* iOwner;

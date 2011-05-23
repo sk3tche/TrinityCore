@@ -112,7 +112,7 @@ void WorldSession::HandleSendMail(WorldPacket & recv_data)
         return;
     }
 
-    Player *receive = sObjectMgr->GetPlayer(rc);
+    Player* receive = sObjectMgr->GetPlayer(rc);
 
     uint32 rc_team = 0;
     uint8 mails_count = 0;                                  //do not allow to send to one player more than 100 mails
@@ -301,7 +301,7 @@ void WorldSession::HandleMailMarkAsRead(WorldPacket & recv_data)
     if (!GetPlayer()->GetGameObjectIfCanInteractWith(mailbox, GAMEOBJECT_TYPE_MAILBOX))
         return;
 
-    Player *pl = _player;
+    Player* pl = _player;
     Mail *m = pl->GetMail(mailId);
     if (m)
     {
@@ -353,7 +353,7 @@ void WorldSession::HandleMailReturnToSender(WorldPacket & recv_data)
     if (!GetPlayer()->GetGameObjectIfCanInteractWith(mailbox, GAMEOBJECT_TYPE_MAILBOX))
         return;
 
-    Player *pl = _player;
+    Player* pl = _player;
     Mail *m = pl->GetMail(mailId);
     if (!m || m->state == MAIL_STATE_DELETED || m->deliver_time > time(NULL))
     {
@@ -440,7 +440,7 @@ void WorldSession::HandleMailTakeItem(WorldPacket & recv_data)
         if (m->COD > 0)                                     //if there is COD, take COD money from player and send them to sender by mail
         {
             uint64 sender_guid = MAKE_NEW_GUID(m->sender, 0, HIGHGUID_PLAYER);
-            Player *receive = sObjectMgr->GetPlayer(sender_guid);
+            Player* receive = sObjectMgr->GetPlayer(sender_guid);
 
             uint32 sender_accId = 0;
 
@@ -504,7 +504,7 @@ void WorldSession::HandleMailTakeMoney(WorldPacket & recv_data)
     if (!GetPlayer()->GetGameObjectIfCanInteractWith(mailbox, GAMEOBJECT_TYPE_MAILBOX))
         return;
 
-    Player *pl = _player;
+    Player* pl = _player;
 
     Mail* m = pl->GetMail(mailId);
     if (!m || m->state == MAIL_STATE_DELETED || m->deliver_time > time(NULL))
@@ -661,7 +661,7 @@ void WorldSession::HandleMailCreateTextItem(WorldPacket & recv_data)
     if (!GetPlayer()->GetGameObjectIfCanInteractWith(mailbox, GAMEOBJECT_TYPE_MAILBOX))
         return;
 
-    Player *pl = _player;
+    Player* pl = _player;
 
     Mail* m = pl->GetMail(mailId);
     if (!m || (m->body.empty() && !m->mailTemplateId) || m->state == MAIL_STATE_DELETED || m->deliver_time > time(NULL))

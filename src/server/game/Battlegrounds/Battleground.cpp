@@ -124,7 +124,7 @@ template<class Do>
 void Battleground::BroadcastWorker(Do& _do)
 {
     for (BattlegroundPlayerMap::const_iterator itr = m_Players.begin(); itr != m_Players.end(); ++itr)
-        if (Player *plr = ObjectAccessor::FindPlayer(MAKE_NEW_GUID(itr->first, 0, HIGHGUID_PLAYER)))
+        if (Player* plr = ObjectAccessor::FindPlayer(MAKE_NEW_GUID(itr->first, 0, HIGHGUID_PLAYER)))
             _do(plr);
 }
 
@@ -301,7 +301,7 @@ inline void Battleground::_ProcessRessurect(uint32 diff)
                 Creature *sh = NULL;
                 for (std::vector<uint64>::const_iterator itr2 = (itr->second).begin(); itr2 != (itr->second).end(); ++itr2)
                 {
-                    Player *plr = sObjectMgr->GetPlayer(*itr2);
+                    Player* plr = sObjectMgr->GetPlayer(*itr2);
                     if (!plr)
                         continue;
 
@@ -332,7 +332,7 @@ inline void Battleground::_ProcessRessurect(uint32 diff)
     {
         for (std::vector<uint64>::const_iterator itr = m_ResurrectQueue.begin(); itr != m_ResurrectQueue.end(); ++itr)
         {
-            Player *plr = sObjectMgr->GetPlayer(*itr);
+            Player* plr = sObjectMgr->GetPlayer(*itr);
             if (!plr)
                 continue;
             plr->ResurrectPlayer(1.0f);
@@ -397,7 +397,7 @@ inline void Battleground::_ProcessJoin(uint32 diff)
     {
         m_ResetStatTimer = 0;
         for (BattlegroundPlayerMap::const_iterator itr = GetPlayers().begin(); itr != GetPlayers().end(); ++itr)
-            if (Player *plr = sObjectMgr->GetPlayer(itr->first))
+            if (Player* plr = sObjectMgr->GetPlayer(itr->first))
                 plr->ResetAllPowers();
     }
 
@@ -445,7 +445,7 @@ inline void Battleground::_ProcessJoin(uint32 diff)
         {
             // TODO : add arena sound PlaySoundToAll(SOUND_ARENA_START);
             for (BattlegroundPlayerMap::const_iterator itr = GetPlayers().begin(); itr != GetPlayers().end(); ++itr)
-                if (Player *plr = sObjectMgr->GetPlayer(itr->first))
+                if (Player* plr = sObjectMgr->GetPlayer(itr->first))
                 {
                     // BG Status packet
                     WorldPacket status;
@@ -567,7 +567,7 @@ void Battleground::SendPacketToAll(WorldPacket *packet)
             player->GetSession()->SendPacket(packet);
 }
 
-void Battleground::SendPacketToTeam(uint32 TeamID, WorldPacket *packet, Player *sender, bool self)
+void Battleground::SendPacketToTeam(uint32 TeamID, WorldPacket *packet, Player* sender, bool self)
 {
     for (BattlegroundPlayerMap::const_iterator itr = m_Players.begin(); itr != m_Players.end(); ++itr)
         if (Player* player = _GetPlayerForTeam(TeamID, itr, "SendPacketToTeam"))
@@ -893,7 +893,7 @@ void Battleground::RemovePlayerAtLeave(const uint64& guid, bool Transport, bool 
 
     RemovePlayerFromResurrectQueue(guid);
 
-    Player *plr = sObjectMgr->GetPlayer(guid);
+    Player* plr = sObjectMgr->GetPlayer(guid);
 
     // should remove spirit of redemption
     if (plr && plr->HasAuraType(SPELL_AURA_SPIRIT_OF_REDEMPTION))
@@ -1338,7 +1338,7 @@ void Battleground::AddPlayerToResurrectQueue(const uint64& npc_guid, const uint6
 {
     m_ReviveQueue[npc_guid].push_back(player_guid);
 
-    Player *plr = sObjectMgr->GetPlayer(player_guid);
+    Player* plr = sObjectMgr->GetPlayer(player_guid);
     if (!plr)
         return;
 
@@ -1354,7 +1354,7 @@ void Battleground::RemovePlayerFromResurrectQueue(const uint64& player_guid)
             if (*itr2 == player_guid)
             {
                 (itr->second).erase(itr2);
-                if (Player *plr = sObjectMgr->GetPlayer(player_guid))
+                if (Player* plr = sObjectMgr->GetPlayer(player_guid))
                     plr->RemoveAurasDueToSpell(SPELL_WAITING_FOR_RESURRECT);
                 return;
             }
@@ -1367,7 +1367,7 @@ bool Battleground::AddObject(uint32 type, uint32 entry, float x, float y, float 
     // If the assert is called, means that m_BgObjects must be resized!
     ASSERT(type < m_BgObjects.size());
 
-    Map *map = GetBgMap();
+    Map* map = GetBgMap();
     if (!map)
         return false;
     // Must be created this way, adding to godatamap would add it to the base map of the instance
@@ -1624,7 +1624,7 @@ void Battleground::SendWarningToAll(int32 entry, ...)
     data << msg.c_str();
     data << (uint8)0;
     for (BattlegroundPlayerMap::const_iterator itr = m_Players.begin(); itr != m_Players.end(); ++itr)
-        if (Player *plr = ObjectAccessor::FindPlayer(MAKE_NEW_GUID(itr->first, 0, HIGHGUID_PLAYER)))
+        if (Player* plr = ObjectAccessor::FindPlayer(MAKE_NEW_GUID(itr->first, 0, HIGHGUID_PLAYER)))
             if (plr->GetSession())
                 plr->GetSession()->SendPacket(&data);
 }

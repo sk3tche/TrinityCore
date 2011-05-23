@@ -78,14 +78,14 @@ void CombatAI::Reset()
     events.Reset();
 }
 
-void CombatAI::JustDied(Unit *killer)
+void CombatAI::JustDied(Unit* killer)
 {
     for (SpellVct::iterator i = spells.begin(); i != spells.end(); ++i)
         if (AISpellInfo[*i].condition == AICOND_DIE)
             me->CastSpell(killer, *i, true);
 }
 
-void CombatAI::EnterCombat(Unit *who)
+void CombatAI::EnterCombat(Unit* who)
 {
     for (SpellVct::iterator i = spells.begin(); i != spells.end(); ++i)
     {
@@ -131,7 +131,7 @@ void CasterAI::InitializeAI()
         m_attackDist = MELEE_RANGE;
 }
 
-void CasterAI::EnterCombat(Unit *who)
+void CasterAI::EnterCombat(Unit* who)
 {
     if (spells.empty())
         return;
@@ -189,7 +189,7 @@ ArchorAI::ArchorAI(Creature *c) : CreatureAI(c)
     me->m_SightDistance = me->m_CombatDistance;
 }
 
-void ArchorAI::AttackStart(Unit *who)
+void ArchorAI::AttackStart(Unit* who)
 {
     if (!who)
         return;
@@ -234,7 +234,7 @@ TurretAI::TurretAI(Creature *c) : CreatureAI(c)
     me->m_SightDistance = me->m_CombatDistance;
 }
 
-bool TurretAI::CanAIAttack(const Unit * /*who*/) const
+bool TurretAI::CanAIAttack(const Unit* /*who*/) const
 {
     // TODO: use one function to replace it
     if (!me->IsWithinCombatRange(me->getVictim(), me->m_CombatDistance)
@@ -243,7 +243,7 @@ bool TurretAI::CanAIAttack(const Unit * /*who*/) const
     return true;
 }
 
-void TurretAI::AttackStart(Unit *who)
+void TurretAI::AttackStart(Unit* who)
 {
     if (who)
         me->Attack(who, false);
@@ -272,12 +272,12 @@ AOEAI::AOEAI(Creature *c) : CreatureAI(c)
     me->SetDisplayId(11686);//invisible model, around a size of a player
 }
 
-bool AOEAI::CanAIAttack(const Unit * /*who*/) const
+bool AOEAI::CanAIAttack(const Unit* /*who*/) const
 {
     return false;
 }
 
-void AOEAI::AttackStart(Unit * /*who*/)
+void AOEAI::AttackStart(Unit* /*who*/)
 {
 }
 

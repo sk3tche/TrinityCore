@@ -41,7 +41,7 @@ char const* petTypeSuffix[MAX_PET_TYPE] =
 
 #define PET_XP_FACTOR 0.05f
 
-Pet::Pet(Player *owner, PetType type) : Guardian(NULL, owner),
+Pet::Pet(Player* owner, PetType type) : Guardian(NULL, owner),
 m_resetTalentsCost(0), m_resetTalentsTime(0), m_usedTalentCount(0),
 m_removed(false), m_owner(owner), m_happinessTimer(7500), m_petType(type),
 m_duration(0), m_auraRaidUpdateMask(0), m_loading(false), m_declinedname(NULL)
@@ -170,7 +170,7 @@ bool Pet::LoadPetFromDB(Player* owner, uint32 petentry, uint32 petnumber, bool c
         return false;
     }
 
-    Map *map = owner->GetMap();
+    Map* map = owner->GetMap();
     uint32 guid = sObjectMgr->GenerateLowGuid(HIGHGUID_PET);
     if (!Create(guid, map, owner->GetPhaseMask(), petentry, pet_number))
         return false;
@@ -774,7 +774,7 @@ bool Pet::CreateBaseAtCreature(Creature* creature)
     return true;
 }
 
-bool Pet::CreateBaseAtCreatureInfo(CreatureTemplate const* cinfo, Unit * owner)
+bool Pet::CreateBaseAtCreatureInfo(CreatureTemplate const* cinfo, Unit* owner)
 {
     if (!CreateBaseAtTamed(cinfo, owner->GetMap(), owner->GetPhaseMask()))
         return false;
@@ -787,7 +787,7 @@ bool Pet::CreateBaseAtCreatureInfo(CreatureTemplate const* cinfo, Unit * owner)
     return true;
 }
 
-bool Pet::CreateBaseAtTamed(CreatureTemplate const * cinfo, Map * map, uint32 phaseMask)
+bool Pet::CreateBaseAtTamed(CreatureTemplate const * cinfo, Map* map, uint32 phaseMask)
 {
     sLog->outDebug(LOG_FILTER_PETS, "Pet::CreateBaseForTamed");
     uint32 guid=sObjectMgr->GenerateLowGuid(HIGHGUID_PET);
@@ -1568,7 +1568,7 @@ void Pet::InitPetCreateSpells()
 
 bool Pet::resetTalents(bool no_cost)
 {
-    Unit *owner = GetOwner();
+    Unit* owner = GetOwner();
     if (!owner || owner->GetTypeId() != TYPEID_PLAYER)
         return false;
 
@@ -1584,7 +1584,7 @@ bool Pet::resetTalents(bool no_cost)
     if (!pet_family || pet_family->petTalentType < 0)
         return false;
 
-    Player *player = owner->ToPlayer();
+    Player* player = owner->ToPlayer();
 
     uint8 level = getLevel();
     uint32 talentPointsForLevel = GetMaxTalentPointsForLevel(level);
@@ -1750,7 +1750,7 @@ void Pet::InitTalentForLevel()
 
     SetFreeTalentPoints(talentPointsForLevel - m_usedTalentCount);
 
-    Unit *owner = GetOwner();
+    Unit* owner = GetOwner();
     if (!owner || owner->GetTypeId() != TYPEID_PLAYER)
         return;
 
@@ -1780,7 +1780,7 @@ uint8 Pet::GetMaxTalentPointsForLevel(uint8 level)
 {
     uint8 points = (level >= 20) ? ((level - 16) / 4) : 0;
     // Mod points from owner SPELL_AURA_MOD_PET_TALENT_POINTS
-    if (Unit *owner = GetOwner())
+    if (Unit* owner = GetOwner())
         points+=owner->GetTotalAuraModifier(SPELL_AURA_MOD_PET_TALENT_POINTS);
     return points;
 }
@@ -1853,7 +1853,7 @@ bool Pet::IsPermanentPetFor(Player* owner)
     }
 }
 
-bool Pet::Create(uint32 guidlow, Map *map, uint32 phaseMask, uint32 Entry, uint32 pet_number)
+bool Pet::Create(uint32 guidlow, Map* map, uint32 phaseMask, uint32 Entry, uint32 pet_number)
 {
     ASSERT(map);
     SetMap(map);

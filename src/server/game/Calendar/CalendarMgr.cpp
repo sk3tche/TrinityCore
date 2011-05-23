@@ -49,7 +49,7 @@ void CalendarMgr::AppendInvitesToCalendarPacketForPlayer(WorldPacket &data, Play
     data.put<uint32>(p_counter, counter);             // update number of invites
 }
 
-void CalendarMgr::AppendEventsToCalendarPacketForPlayer(WorldPacket &data, Player *player)
+void CalendarMgr::AppendEventsToCalendarPacketForPlayer(WorldPacket &data, Player* player)
 {
     // TODO: There's gotta be a better way to do this
     size_t p_counter = data.wpos();

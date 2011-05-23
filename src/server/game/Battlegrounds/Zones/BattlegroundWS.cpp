@@ -142,20 +142,20 @@ void BattlegroundWS::Update(uint32 diff)
             m_FlagSpellForceTimer += diff;
             if (m_FlagDebuffState == 0 && m_FlagSpellForceTimer >= 600000)  //10 minutes
             {
-                if (Player * plr = sObjectMgr->GetPlayer(m_FlagKeepers[0]))
+                if (Player* plr = sObjectMgr->GetPlayer(m_FlagKeepers[0]))
                     plr->CastSpell(plr, WS_SPELL_FOCUSED_ASSAULT, true);
-                if (Player * plr = sObjectMgr->GetPlayer(m_FlagKeepers[1]))
+                if (Player* plr = sObjectMgr->GetPlayer(m_FlagKeepers[1]))
                     plr->CastSpell(plr, WS_SPELL_FOCUSED_ASSAULT, true);
                 m_FlagDebuffState = 1;
             }
             else if (m_FlagDebuffState == 1 && m_FlagSpellForceTimer >= 900000) //15 minutes
             {
-                if (Player * plr = sObjectMgr->GetPlayer(m_FlagKeepers[0]))
+                if (Player* plr = sObjectMgr->GetPlayer(m_FlagKeepers[0]))
                 {
                     plr->RemoveAurasDueToSpell(WS_SPELL_FOCUSED_ASSAULT);
                     plr->CastSpell(plr, WS_SPELL_BRUTAL_ASSAULT, true);
                 }
-                if (Player * plr = sObjectMgr->GetPlayer(m_FlagKeepers[1]))
+                if (Player* plr = sObjectMgr->GetPlayer(m_FlagKeepers[1]))
                 {
                     plr->RemoveAurasDueToSpell(WS_SPELL_FOCUSED_ASSAULT);
                     plr->CastSpell(plr, WS_SPELL_BRUTAL_ASSAULT, true);
@@ -204,7 +204,7 @@ void BattlegroundWS::StartingEventOpenDoors()
     StartTimedAchievement(ACHIEVEMENT_TIMED_TYPE_EVENT, WS_EVENT_START_BATTLE);
 }
 
-void BattlegroundWS::AddPlayer(Player *plr)
+void BattlegroundWS::AddPlayer(Player* plr)
 {
     Battleground::AddPlayer(plr);
     //create score and add it to map, default values are set in constructor
@@ -266,7 +266,7 @@ void BattlegroundWS::RespawnFlagAfterDrop(uint32 team)
     m_BothFlagsKept = false;
 }
 
-void BattlegroundWS::EventPlayerCapturedFlag(Player *Source)
+void BattlegroundWS::EventPlayerCapturedFlag(Player* Source)
 {
     if (GetStatus() != STATUS_IN_PROGRESS)
         return;
@@ -353,7 +353,7 @@ void BattlegroundWS::EventPlayerCapturedFlag(Player *Source)
     }
 }
 
-void BattlegroundWS::EventPlayerDroppedFlag(Player *Source)
+void BattlegroundWS::EventPlayerDroppedFlag(Player* Source)
 {
     if (GetStatus() != STATUS_IN_PROGRESS)
     {
@@ -439,7 +439,7 @@ void BattlegroundWS::EventPlayerDroppedFlag(Player *Source)
     }
 }
 
-void BattlegroundWS::EventPlayerClickedOnFlag(Player *Source, GameObject* target_obj)
+void BattlegroundWS::EventPlayerClickedOnFlag(Player* Source, GameObject* target_obj)
 {
     if (GetStatus() != STATUS_IN_PROGRESS)
         return;
@@ -561,7 +561,7 @@ void BattlegroundWS::EventPlayerClickedOnFlag(Player *Source, GameObject* target
     Source->RemoveAurasWithInterruptFlags(AURA_INTERRUPT_FLAG_ENTER_PVP_COMBAT);
 }
 
-void BattlegroundWS::RemovePlayer(Player *plr, uint64 guid)
+void BattlegroundWS::RemovePlayer(Player* plr, uint64 guid)
 {
     // sometimes flag aura not removed :(
     if (IsAllianceFlagPickedup() && m_FlagKeepers[BG_TEAM_ALLIANCE] == guid)
@@ -604,7 +604,7 @@ void BattlegroundWS::UpdateTeamScore(uint32 team)
         UpdateWorldState(BG_WS_FLAG_CAPTURES_HORDE, GetTeamScore(team));
 }
 
-void BattlegroundWS::HandleAreaTrigger(Player *Source, uint32 Trigger)
+void BattlegroundWS::HandleAreaTrigger(Player* Source, uint32 Trigger)
 {
     // this is wrong way to implement these things. On official it done by gameobject spell cast.
     if (GetStatus() != STATUS_IN_PROGRESS)
@@ -749,7 +749,7 @@ void BattlegroundWS::EndBattleground(uint32 winner)
     Battleground::EndBattleground(winner);
 }
 
-void BattlegroundWS::HandleKillPlayer(Player *player, Player *killer)
+void BattlegroundWS::HandleKillPlayer(Player* player, Player* killer)
 {
     if (GetStatus() != STATUS_IN_PROGRESS)
         return;
@@ -759,7 +759,7 @@ void BattlegroundWS::HandleKillPlayer(Player *player, Player *killer)
     Battleground::HandleKillPlayer(player, killer);
 }
 
-void BattlegroundWS::UpdatePlayerScore(Player *Source, uint32 type, uint32 value, bool doAddHonor)
+void BattlegroundWS::UpdatePlayerScore(Player* Source, uint32 type, uint32 value, bool doAddHonor)
 {
 
     BattlegroundScoreMap::iterator itr = m_PlayerScores.find(Source->GetGUID());

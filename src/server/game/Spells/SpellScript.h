@@ -543,7 +543,7 @@ class AuraScript : public _SpellScript
         // returns object on which aura was casted, target for non-area auras, area aura source for area auras
         WorldObject * GetOwner() const;
         // returns owner if it's unit or unit derived object, NULL otherwise (only for persistent area auras NULL is returned)
-        Unit * GetUnitOwner() const;
+        Unit* GetUnitOwner() const;
         // returns owner if it's dynobj, NULL otherwise
         DynamicObject * GetDynobjOwner() const;
 
@@ -598,7 +598,7 @@ class AuraScript : public _SpellScript
         // returns currently processed target of an aura
         // Return value does not need to be NULL-checked, the only situation this will (always)
         // return NULL is when the call happens in an unsupported hook, in other cases, it is always valid
-        Unit * GetTarget() const;
+        Unit* GetTarget() const;
         // returns AuraApplication object of currently processed target
         AuraApplication const * GetTargetApplication() const;
 };

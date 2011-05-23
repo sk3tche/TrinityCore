@@ -298,7 +298,7 @@ void ArenaTeam::SetCaptain(const uint64& guid)
     CharacterDatabase.Execute(stmt);
 
     // Enable remove/promote buttons
-    Player *newCaptain = sObjectMgr->GetPlayer(guid);
+    Player* newCaptain = sObjectMgr->GetPlayer(guid);
     if (newCaptain)
     {
         newCaptain->SetArenaTeamInfoField(GetSlot(), ARENA_TEAM_MEMBER, 0);
@@ -318,7 +318,7 @@ void ArenaTeam::DelMember(uint64 guid, bool cleanDb)
         }
 
     // Inform player and remove arena team info from player data
-    if (Player *player = sObjectMgr->GetPlayer(guid))
+    if (Player* player = sObjectMgr->GetPlayer(guid))
     {
         player->GetSession()->SendArenaTeamCommandResult(ERR_ARENA_TEAM_QUIT_S, GetName(), "", 0);
         // delete all info regarding this team
@@ -348,7 +348,7 @@ void ArenaTeam::Disband(WorldSession* session)
     {
         BroadcastEvent(ERR_ARENA_TEAM_DISBANDED_S, 0, 2, session->GetPlayerName(), GetName(), "");
 
-        if (Player *player = session->GetPlayer())
+        if (Player* player = session->GetPlayer())
             sLog->outArena("Player: %s [GUID: %u] disbanded arena team type: %u [Id: %u].", player->GetName(), player->GetGUIDLow(), GetType(), GetId());
     }
 

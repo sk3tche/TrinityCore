@@ -103,7 +103,7 @@ bool ChatHandler::HandleSetSkillCommand(const char *args)
 
     int32 level = atol (level_p);
 
-    Player * target = getSelectedPlayer();
+    Player* target = getSelectedPlayer();
     if (!target)
     {
         SendSysMessage(LANG_NO_CHAR_SELECTED);
@@ -1368,7 +1368,7 @@ bool ChatHandler::HandleLookupFactionCommand(const char *args)
         return false;
 
     // Can be NULL at console call
-    Player *target = getSelectedPlayer ();
+    Player* target = getSelectedPlayer ();
 
     std::string namepart = args;
     std::wstring wnamepart;
@@ -1944,7 +1944,7 @@ bool ChatHandler::HandleReviveCommand(const char *args)
 
 bool ChatHandler::HandleAuraCommand(const char *args)
 {
-    Unit *target = getSelectedUnit();
+    Unit* target = getSelectedUnit();
     if (!target)
     {
         SendSysMessage(LANG_SELECT_CHAR_OR_CREATURE);
@@ -1963,7 +1963,7 @@ bool ChatHandler::HandleAuraCommand(const char *args)
 
 bool ChatHandler::HandleUnAuraCommand(const char *args)
 {
-    Unit *target = getSelectedUnit();
+    Unit* target = getSelectedUnit();
     if (!target)
     {
         SendSysMessage(LANG_SELECT_CHAR_OR_CREATURE);
@@ -2114,7 +2114,7 @@ bool ChatHandler::HandleExploreCheatCommand(const char *args)
 
     int flag = atoi((char*)args);
 
-    Player *chr = getSelectedPlayer();
+    Player* chr = getSelectedPlayer();
     if (chr == NULL)
     {
         SendSysMessage(LANG_NO_CHAR_SELECTED);
@@ -2280,7 +2280,7 @@ bool ChatHandler::HandleShowAreaCommand(const char *args)
     if (!*args)
         return false;
 
-    Player *chr = getSelectedPlayer();
+    Player* chr = getSelectedPlayer();
     if (chr == NULL)
     {
         SendSysMessage(LANG_NO_CHAR_SELECTED);
@@ -2311,7 +2311,7 @@ bool ChatHandler::HandleHideAreaCommand(const char *args)
     if (!*args)
         return false;
 
-    Player *chr = getSelectedPlayer();
+    Player* chr = getSelectedPlayer();
     if (chr == NULL)
     {
         SendSysMessage(LANG_NO_CHAR_SELECTED);
@@ -2367,7 +2367,7 @@ bool ChatHandler::HandleChangeWeather(const char *args)
     uint32 type = (uint32)atoi(px);                         //0 to 3, 0: fine, 1: rain, 2: snow, 3: sand
     float grade = (float)atof(py);                          //0 to 1, sending -1 is instand good weather
 
-    Player *player = m_session->GetPlayer();
+    Player* player = m_session->GetPlayer();
     uint32 zoneid = player->GetZoneId();
 
     Weather* wth = sWeatherMgr->FindWeather(zoneid);
@@ -2388,7 +2388,7 @@ bool ChatHandler::HandleChangeWeather(const char *args)
 
 bool ChatHandler::HandleListAurasCommand (const char * /*args*/)
 {
-    Unit *unit = getSelectedUnit();
+    Unit* unit = getSelectedUnit();
     if (!unit)
     {
         SendSysMessage(LANG_SELECT_CHAR_OR_CREATURE);
@@ -2608,7 +2608,7 @@ bool ChatHandler::HandleResetTalentsCommand(const char * args)
         Creature* creature = getSelectedCreature();
         if (!*args && creature && creature->isPet())
         {
-            Unit *owner = creature->GetOwner();
+            Unit* owner = creature->GetOwner();
             if (owner && owner->GetTypeId() == TYPEID_PLAYER && ((Pet *)creature)->IsPermanentPetFor(owner->ToPlayer()))
             {
                 ((Pet *)creature)->resetTalents(true);
@@ -4361,7 +4361,7 @@ bool ChatHandler::HandleSendMoneyCommand(const char *args)
 bool ChatHandler::HandleSendMessageCommand(const char *args)
 {
     ///- Find the player
-    Player *rPlayer;
+    Player* rPlayer;
     if (!extractPlayerTarget((char*)args, &rPlayer))
         return false;
 
@@ -4404,7 +4404,7 @@ bool ChatHandler::HandleChannelSetOwnership(const char *args)
     if (!channel || !argstr)
         return false;
 
-    Player *player = m_session->GetPlayer();
+    Player* player = m_session->GetPlayer();
     Channel *chn = NULL;
 
     if (ChannelMgr* cMgr = channelMgr(player->GetTeam()))
@@ -4465,7 +4465,7 @@ bool ChatHandler::HandlePlayAllCommand(const char *args)
 bool ChatHandler::HandleFreezeCommand(const char *args)
 {
     std::string name;
-    Player *player;
+    Player* player;
     char *TargetName = strtok((char*)args, " "); //get entered name
     if (!TargetName) //if no name entered use target
     {
@@ -4532,7 +4532,7 @@ bool ChatHandler::HandleFreezeCommand(const char *args)
 bool ChatHandler::HandleUnFreezeCommand(const char *args)
 {
     std::string name;
-    Player *player;
+    Player* player;
     char *TargetName = strtok((char*)args, " "); //get entered name
     if (!TargetName) //if no name entered use target
     {
@@ -4663,7 +4663,7 @@ bool ChatHandler::HandleGroupRemoveCommand(const char *args)
 
 bool ChatHandler::HandlePossessCommand(const char * /*args*/)
 {
-    Unit *pUnit = getSelectedUnit();
+    Unit* pUnit = getSelectedUnit();
     if (!pUnit)
         return false;
 
@@ -4673,7 +4673,7 @@ bool ChatHandler::HandlePossessCommand(const char * /*args*/)
 
 bool ChatHandler::HandleUnPossessCommand(const char * /*args*/)
 {
-    Unit *pUnit = getSelectedUnit();
+    Unit* pUnit = getSelectedUnit();
     if (!pUnit)
         pUnit = m_session->GetPlayer();
 
@@ -4684,7 +4684,7 @@ bool ChatHandler::HandleUnPossessCommand(const char * /*args*/)
 
 bool ChatHandler::HandleBindSightCommand(const char * /*args*/)
 {
-    Unit *pUnit = getSelectedUnit();
+    Unit* pUnit = getSelectedUnit();
     if (!pUnit)
         return false;
 

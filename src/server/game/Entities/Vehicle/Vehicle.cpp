@@ -27,7 +27,7 @@
 #include "CreatureAI.h"
 #include "ZoneScript.h"
 
-Vehicle::Vehicle(Unit *unit, VehicleEntry const *vehInfo, uint32 creatureEntry)
+Vehicle::Vehicle(Unit* unit, VehicleEntry const *vehInfo, uint32 creatureEntry)
 : me(unit), m_vehicleInfo(vehInfo), m_usableSeatNum(0), m_bonusHP(0), m_creatureEntry(creatureEntry)
 {
     for (uint32 i = 0; i < MAX_VEHICLE_SEATS; ++i)
@@ -184,7 +184,7 @@ bool Vehicle::HasEmptySeat(int8 seatId) const
     return !seat->second.passenger;
 }
 
-Unit *Vehicle::GetPassenger(int8 seatId) const
+Unit* Vehicle::GetPassenger(int8 seatId) const
 {
     SeatMap::const_iterator seat = m_Seats.find(seatId);
     if (seat == m_Seats.end())
@@ -268,7 +268,7 @@ void Vehicle::InstallAccessory(uint32 entry, int8 seatId, bool minion, uint8 typ
     }
 }
 
-bool Vehicle::AddPassenger(Unit *unit, int8 seatId)
+bool Vehicle::AddPassenger(Unit* unit, int8 seatId)
 {
     if (unit->GetVehicle() != this)
         return false;
@@ -338,7 +338,7 @@ bool Vehicle::AddPassenger(Unit *unit, int8 seatId)
         // hack: should be done by aura system
         if (VehicleScalingInfo const *scalingInfo = sObjectMgr->GetVehicleScalingInfo(m_vehicleInfo->m_ID))
         {
-            Player *plr = unit->ToPlayer();
+            Player* plr = unit->ToPlayer();
             float averageItemLevel = plr->GetAverageItemLevel();
             if (averageItemLevel < scalingInfo->baseItemLevel)
                 averageItemLevel = scalingInfo->baseItemLevel;
@@ -374,7 +374,7 @@ bool Vehicle::AddPassenger(Unit *unit, int8 seatId)
     return true;
 }
 
-void Vehicle::RemovePassenger(Unit *unit)
+void Vehicle::RemovePassenger(Unit* unit)
 {
     if (unit->GetVehicle() != this)
         return;
@@ -434,12 +434,12 @@ void Vehicle::RemovePassenger(Unit *unit)
 
 void Vehicle::RelocatePassengers(float x, float y, float z, float ang)
 {
-    Map *map = me->GetMap();
+    Map* map = me->GetMap();
     ASSERT(map != NULL);
 
     // not sure that absolute position calculation is correct, it must depend on vehicle orientation and pitch angle
     for (SeatMap::const_iterator itr = m_Seats.begin(); itr != m_Seats.end(); ++itr)
-        if (Unit *passenger = ObjectAccessor::GetUnit(*GetBase(), itr->second.passenger))
+        if (Unit* passenger = ObjectAccessor::GetUnit(*GetBase(), itr->second.passenger))
         {
             ASSERT(passenger->IsInWorld());
             ASSERT(passenger->IsOnVehicle(GetBase()));

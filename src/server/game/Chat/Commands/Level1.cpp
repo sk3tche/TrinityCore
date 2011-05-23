@@ -503,7 +503,7 @@ bool ChatHandler::HandleTaxiCheatCommand(const char* args)
 
     std::string argstr = (char*)args;
 
-    Player *chr = getSelectedPlayer();
+    Player* chr = getSelectedPlayer();
     if (!chr)
     {
         chr=m_session->GetPlayer();
@@ -793,7 +793,7 @@ bool ChatHandler::HandleGroupSummonCommand(const char* args)
 
     for (GroupReference *itr = grp->GetFirstMember(); itr != NULL; itr = itr->next())
     {
-        Player *pl = itr->getSource();
+        Player* pl = itr->getSource();
 
         if (!pl || pl == m_session->GetPlayer() || !pl->GetSession())
             continue;

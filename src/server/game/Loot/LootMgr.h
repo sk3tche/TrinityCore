@@ -357,9 +357,9 @@ struct Loot
 struct LootView
 {
     Loot &loot;
-    Player *viewer;
+    Player* viewer;
     PermissionTypes permission;
-    LootView(Loot &_loot, Player *_viewer, PermissionTypes _permission = ALL_PERMISSION)
+    LootView(Loot &_loot, Player* _viewer, PermissionTypes _permission = ALL_PERMISSION)
         : loot(_loot), viewer(_viewer), permission(_permission) {}
 };
 

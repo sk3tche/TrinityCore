@@ -29,7 +29,7 @@
 
 // Checks if player meets the condition
 // Can have CONDITION_SOURCE_TYPE_NONE && !mReferenceId if called from a special event (ie: eventAI)
-bool Condition::Meets(Player * player, Unit* invoker)
+bool Condition::Meets(Player* player, Unit* invoker)
 {
     if (!player)
     {
@@ -113,7 +113,7 @@ bool Condition::Meets(Player * player, Unit* invoker)
             break;
         case CONDITION_INSTANCE_DATA:
         {
-            Map *map = player->GetMap();
+            Map* map = player->GetMap();
             if (map && map->IsDungeon() && ((InstanceMap*)map)->GetInstanceScript())
                 condMeets = ((InstanceMap*)map)->GetInstanceScript()->GetData(mConditionValue1) == mConditionValue2;
             break;

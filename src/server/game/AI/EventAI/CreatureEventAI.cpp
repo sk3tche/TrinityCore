@@ -967,7 +967,7 @@ void CreatureEventAI::JustSummoned(Creature* pUnit)
     }
 }
 
-void CreatureEventAI::EnterCombat(Unit *enemy)
+void CreatureEventAI::EnterCombat(Unit* enemy)
 {
     //Check for on combat start events
     if (!m_bEmptyList)
@@ -999,7 +999,7 @@ void CreatureEventAI::EnterCombat(Unit *enemy)
     m_EventDiff = 0;
 }
 
-void CreatureEventAI::AttackStart(Unit *who)
+void CreatureEventAI::AttackStart(Unit* who)
 {
     if (!who)
         return;
@@ -1017,7 +1017,7 @@ void CreatureEventAI::AttackStart(Unit *who)
     }
 }
 
-void CreatureEventAI::MoveInLineOfSight(Unit *who)
+void CreatureEventAI::MoveInLineOfSight(Unit* who)
 {
     if (me->getVictim())
         return;

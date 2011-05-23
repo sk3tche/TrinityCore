@@ -189,7 +189,7 @@ bool ChatHandler::HandleItemMoveCommand(const char* args)
 //demorph player or unit
 bool ChatHandler::HandleDeMorphCommand(const char* /*args*/)
 {
-    Unit *target = getSelectedUnit();
+    Unit* target = getSelectedUnit();
     if (!target)
         target = m_session->GetPlayer();
 
@@ -740,7 +740,7 @@ bool ChatHandler::HandleWaterwalkCommand(const char* args)
     if (!*args)
         return false;
 
-    Player *player = getSelectedPlayer();
+    Player* player = getSelectedPlayer();
 
     if (!player)
     {
@@ -771,7 +771,7 @@ bool ChatHandler::HandleWaterwalkCommand(const char* args)
 
 bool ChatHandler::HandleCreatePetCommand(const char* /*args*/)
 {
-    Player *player = m_session->GetPlayer();
+    Player* player = m_session->GetPlayer();
     Creature *creatureTarget = getSelectedCreature();
 
     if (!creatureTarget || creatureTarget->isPet() || creatureTarget->GetTypeId() == TYPEID_PLAYER)
@@ -850,7 +850,7 @@ bool ChatHandler::HandlePetLearnCommand(const char* args)
     if (!*args)
         return false;
 
-    Player *plr = m_session->GetPlayer();
+    Player* plr = m_session->GetPlayer();
     Pet *pet = plr->GetPet();
 
     if (!pet)
@@ -893,7 +893,7 @@ bool ChatHandler::HandlePetUnlearnCommand(const char *args)
     if (!*args)
         return false;
 
-    Player *plr = m_session->GetPlayer();
+    Player* plr = m_session->GetPlayer();
     Pet *pet = plr->GetPet();
 
     if (!pet)
@@ -918,7 +918,7 @@ bool ChatHandler::HandlePetTpCommand(const char *args)
     if (!*args)
         return false;
 
-    Player *plr = m_session->GetPlayer();
+    Player* plr = m_session->GetPlayer();
     Pet *pet = plr->GetPet();
 
     if (!pet)

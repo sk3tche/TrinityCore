@@ -4520,7 +4520,7 @@ void ObjectMgr::LoadScripts(ScriptsType type)
 {
     uint32 oldMSTime = getMSTime();
 
-    ScriptMapMap *scripts = GetScriptsMapByType(type);
+    ScriptMapMap* scripts = GetScriptsMapByType(type);
     if (!scripts)
         return;
 
@@ -5468,7 +5468,7 @@ void ObjectMgr::ReturnOrDeleteOldMails(bool serverUp)
         m->checked = fields[7].GetUInt32();
         m->mailTemplateId = fields[8].GetInt16();
 
-        Player *pl = NULL;
+        Player* pl = NULL;
         if (serverUp)
             pl = GetPlayer((uint64)m->receiver);
 
@@ -8774,7 +8774,7 @@ uint32 ObjectMgr::GetScriptId(const char *name)
 
 void ObjectMgr::CheckScripts(ScriptsType type, std::set<int32>& ids)
 {
-    ScriptMapMap *scripts = GetScriptsMapByType(type);
+    ScriptMapMap* scripts = GetScriptsMapByType(type);
     if (!scripts)
         return;
     for (ScriptMapMap::const_iterator itrMM = scripts->begin(); itrMM != scripts->end(); ++itrMM)

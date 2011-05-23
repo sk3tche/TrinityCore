@@ -171,7 +171,7 @@ void Object::BuildMovementUpdateBlock(UpdateData * data, uint32 flags) const
     data->AddUpdateBlock(buf);
 }
 
-void Object::BuildCreateUpdateBlockForPlayer(UpdateData *data, Player *target) const
+void Object::BuildCreateUpdateBlockForPlayer(UpdateData *data, Player* target) const
 {
     if (!target)
         return;
@@ -246,7 +246,7 @@ void Object::SendUpdateToPlayer(Player* player)
     player->GetSession()->SendPacket(&packet);
 }
 
-void Object::BuildValuesUpdateBlockForPlayer(UpdateData *data, Player *target) const
+void Object::BuildValuesUpdateBlockForPlayer(UpdateData *data, Player* target) const
 {
     ByteBuffer buf(500);
 
@@ -267,7 +267,7 @@ void Object::BuildOutOfRangeUpdateBlock(UpdateData * data) const
     data->AddOutOfRangeGUID(GetGUID());
 }
 
-void Object::DestroyForPlayer(Player *target, bool anim) const
+void Object::DestroyForPlayer(Player* target, bool anim) const
 {
     ASSERT(target);
 
@@ -301,7 +301,7 @@ void Object::_BuildMovementUpdate(ByteBuffer * data, uint16 flags) const
         {
       //WPAssert(this->ToPlayer()->GetMotionMaster()->GetCurrentMovementGeneratorType() == FLIGHT_MOTION_TYPE);
 
-            Player *player = const_cast<Object*>(this)->ToPlayer();
+            Player* player = const_cast<Object*>(this)->ToPlayer();
             if (!player)
                 return;
 
@@ -450,7 +450,7 @@ void Object::_BuildMovementUpdate(ByteBuffer * data, uint16 flags) const
     // 0x4
     if (flags & UPDATEFLAG_HAS_TARGET)                       // packed guid (current target guid)
     {
-        if (Unit *victim = ((Unit*)this)->getVictim())
+        if (Unit* victim = ((Unit*)this)->getVictim())
             data->append(victim->GetPackGUID());
         else
             *data << uint8(0);
@@ -476,7 +476,7 @@ void Object::_BuildMovementUpdate(ByteBuffer * data, uint16 flags) const
     }
 }
 
-void Object::_BuildValuesUpdate(uint8 updatetype, ByteBuffer * data, UpdateMask *updateMask, Player *target) const
+void Object::_BuildValuesUpdate(uint8 updatetype, ByteBuffer * data, UpdateMask *updateMask, Player* target) const
 {
     if (!target)
         return;
@@ -754,7 +754,7 @@ void Object::ClearUpdateMask(bool remove)
     }
 }
 
-void Object::BuildFieldsUpdate(Player *pl, UpdateDataMapType &data_map) const
+void Object::BuildFieldsUpdate(Player* pl, UpdateDataMapType &data_map) const
 {
     UpdateDataMapType::iterator iter = data_map.find(pl);
 
@@ -1147,7 +1147,7 @@ bool Object::PrintIndexError(uint32 index, bool set) const
     return false;
 }
 
-bool Position::HasInLine(const Unit * const target, float distance, float width) const
+bool Position::HasInLine(const Unit* const target, float distance, float width) const
 {
     if (!HasInArc(M_PI, target) || !target->IsWithinDist3d(m_positionX, m_positionY, m_positionZ, distance))
         return false;
@@ -1609,7 +1609,7 @@ void WorldObject::MonsterTextEmote(const char* text, uint64 TargetGuid, bool IsB
 
 void WorldObject::MonsterWhisper(const char* text, uint64 receiver, bool IsBossWhisper)
 {
-    Player *player = sObjectMgr->GetPlayer(receiver);
+    Player* player = sObjectMgr->GetPlayer(receiver);
     if (!player || !player->GetSession())
         return;
 
@@ -1959,7 +1959,7 @@ void WorldObject::MonsterTextEmote(int32 textId, uint64 TargetGuid, bool IsBossE
 
 void WorldObject::MonsterWhisper(int32 textId, uint64 receiver, bool IsBossWhisper)
 {
-    Player *player = sObjectMgr->GetPlayer(receiver);
+    Player* player = sObjectMgr->GetPlayer(receiver);
     if (!player || !player->GetSession())
         return;
 
@@ -2017,7 +2017,7 @@ void WorldObject::SendObjectDeSpawnAnim(uint64 guid)
     SendMessageToSet(&data, true);
 }
 
-void WorldObject::SetMap(Map * map)
+void WorldObject::SetMap(Map* map)
 {
     ASSERT(map);
     ASSERT(!IsInWorld() || GetTypeId() == TYPEID_CORPSE);
@@ -2714,7 +2714,7 @@ void WorldObject::DestroyForNearbyPlayers()
     VisitNearbyWorldObject(GetVisibilityRange(), searcher);
     for (std::list<Player*>::const_iterator iter = targets.begin(); iter != targets.end(); ++iter)
     {
-        Player *plr = (*iter);
+        Player* plr = (*iter);
 
         if (plr == this)
             continue;
@@ -2777,7 +2777,7 @@ struct WorldObjectChangeAccumulator
             if (IS_PLAYER_GUID(guid))
             {
                 //Caster may be NULL if DynObj is in removelist
-                if (Player *caster = ObjectAccessor::FindPlayer(guid))
+                if (Player* caster = ObjectAccessor::FindPlayer(guid))
                     if (caster->GetUInt64Value(PLAYER_FARSIGHT) == iter->getSource()->GetGUID())
                         BuildPacket(caster);
             }

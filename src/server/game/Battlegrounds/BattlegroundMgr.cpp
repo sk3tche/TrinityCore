@@ -291,7 +291,7 @@ void BattlegroundMgr::BuildPvpLogDataPacket(WorldPacket *data, Battleground *bg)
         }
         else
         {
-            Player *plr = sObjectMgr->GetPlayer(itr2->first);
+            Player* plr = sObjectMgr->GetPlayer(itr2->first);
             uint32 team = bg->GetPlayerTeam(itr2->first);
             if (!team && plr)
                 team = plr->GetBGTeam();
@@ -423,7 +423,7 @@ void BattlegroundMgr::BuildPlayerLeftBattlegroundPacket(WorldPacket *data, const
     *data << uint64(guid);
 }
 
-void BattlegroundMgr::BuildPlayerJoinedBattlegroundPacket(WorldPacket *data, Player *plr)
+void BattlegroundMgr::BuildPlayerJoinedBattlegroundPacket(WorldPacket *data, Player* plr)
 {
     data->Initialize(SMSG_BATTLEGROUND_PLAYER_JOINED, 8);
     *data << uint64(plr->GetGUID());
@@ -501,7 +501,7 @@ Battleground * BattlegroundMgr::CreateNewBattleground(BattlegroundTypeId bgTypeI
 {
     // get the template BG
     Battleground *bg_template = GetBattlegroundTemplate(bgTypeId);
-    BattlegroundSelectionWeightMap *selectionWeights = NULL;
+    BattlegroundSelectionWeightMap* selectionWeights = NULL;
 
     if (!bg_template)
     {
@@ -880,7 +880,7 @@ void BattlegroundMgr::BuildBattlegroundListPacket(WorldPacket *data, const uint6
     }
 }
 
-void BattlegroundMgr::SendToBattleground(Player *pl, uint32 instanceId, BattlegroundTypeId bgTypeId)
+void BattlegroundMgr::SendToBattleground(Player* pl, uint32 instanceId, BattlegroundTypeId bgTypeId)
 {
     Battleground *bg = GetBattleground(instanceId, bgTypeId);
     if (bg)
@@ -901,7 +901,7 @@ void BattlegroundMgr::SendToBattleground(Player *pl, uint32 instanceId, Battlegr
     }
 }
 
-void BattlegroundMgr::SendAreaSpiritHealerQueryOpcode(Player *pl, Battleground *bg, const uint64& guid)
+void BattlegroundMgr::SendAreaSpiritHealerQueryOpcode(Player* pl, Battleground *bg, const uint64& guid)
 {
     WorldPacket data(SMSG_AREA_SPIRIT_HEALER_TIME, 12);
     uint32 time_ = 30000 - bg->GetLastResurrectTime();      // resurrect every 30 seconds

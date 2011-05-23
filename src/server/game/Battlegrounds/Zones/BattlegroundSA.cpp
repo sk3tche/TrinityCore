@@ -63,7 +63,7 @@ bool BattlegroundSA::ResetObjs()
 
     for (int i = BG_SA_BOAT_ONE; i <= BG_SA_BOAT_TWO; i++)
         for (BattlegroundPlayerMap::const_iterator itr = GetPlayers().begin(); itr != GetPlayers().end(); ++itr)
-            if (Player *plr = sObjectMgr->GetPlayer(itr->first))
+            if (Player* plr = sObjectMgr->GetPlayer(itr->first))
                 SendTransportsRemove(plr);
 
     uint32 atF = BG_SA_Factions[Attackers];
@@ -246,7 +246,7 @@ bool BattlegroundSA::ResetObjs()
 
     for (int i = BG_SA_BOAT_ONE; i <= BG_SA_BOAT_TWO; i++)
         for (BattlegroundPlayerMap::const_iterator itr = GetPlayers().begin(); itr != GetPlayers().end(); ++itr)
-            if (Player *plr = sObjectMgr->GetPlayer(itr->first))
+            if (Player* plr = sObjectMgr->GetPlayer(itr->first))
                 SendTransportInit(plr);
 
     TeleportPlayers();
@@ -433,7 +433,7 @@ void BattlegroundSA::FillInitialWorldStates(WorldPacket& data)
   data << uint32(BG_SA_LEFT_ATT_TOKEN_ALL) <<  ally_attacks;
 }
 
-void BattlegroundSA::AddPlayer(Player *plr)
+void BattlegroundSA::AddPlayer(Player* plr)
 {
     Battleground::AddPlayer(plr);
     //create score and add it to map, default values are set in constructor
@@ -469,7 +469,7 @@ void BattlegroundSA::RemovePlayer(Player* /*plr*/, uint64 /*guid*/)
 {
 }
 
-void BattlegroundSA::HandleAreaTrigger(Player * /*Source*/, uint32 /*Trigger*/)
+void BattlegroundSA::HandleAreaTrigger(Player* /*Source*/, uint32 /*Trigger*/)
 {
     // this is wrong way to implement these things. On official it done by gameobject spell cast.
     if (GetStatus() != STATUS_IN_PROGRESS)
@@ -494,7 +494,7 @@ void BattlegroundSA::TeleportPlayers()
 {
     for (BattlegroundPlayerMap::const_iterator itr = GetPlayers().begin(); itr != GetPlayers().end(); ++itr)
     {
-        if (Player *plr = sObjectMgr->GetPlayer(itr->first))
+        if (Player* plr = sObjectMgr->GetPlayer(itr->first))
         {
             // should remove spirit of redemption
             if (plr->HasAuraType(SPELL_AURA_SPIRIT_OF_REDEMPTION))
@@ -685,7 +685,7 @@ void BattlegroundSA::SendTime()
     UpdateWorldState(BG_SA_TIMER_SEC_DECS, ((end_of_round%60000)%10000)/1000);
 }
 
-void BattlegroundSA::EventPlayerClickedOnFlag(Player *Source, GameObject* target_obj)
+void BattlegroundSA::EventPlayerClickedOnFlag(Player* Source, GameObject* target_obj)
 {
     switch(target_obj->GetEntry())
     {
@@ -709,7 +709,7 @@ void BattlegroundSA::EventPlayerClickedOnFlag(Player *Source, GameObject* target
     };
 }
 
-void BattlegroundSA::CaptureGraveyard(BG_SA_Graveyards i, Player *Source)
+void BattlegroundSA::CaptureGraveyard(BG_SA_Graveyards i, Player* Source)
 {
     if (GraveyardStatus[i] == Attackers)
         return;
@@ -799,7 +799,7 @@ void BattlegroundSA::EventPlayerUsedGO(Player* Source, GameObject* object)
                 //Achievement Storm the Beach (1310)
                 for (BattlegroundPlayerMap::const_iterator itr = GetPlayers().begin(); itr != GetPlayers().end(); ++itr)
                 {
-                    if (Player *plr = sObjectMgr->GetPlayer(itr->first))
+                    if (Player* plr = sObjectMgr->GetPlayer(itr->first))
                         if (plr->GetTeamId() == Attackers)
                             plr->UpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_BE_SPELL_TARGET, 65246);
                 }
@@ -823,7 +823,7 @@ void BattlegroundSA::EventPlayerUsedGO(Player* Source, GameObject* object)
                 //Achievement Storm the Beach (1310)
                 for (BattlegroundPlayerMap::const_iterator itr = GetPlayers().begin(); itr != GetPlayers().end(); ++itr)
                 {
-                    if (Player *plr = sObjectMgr->GetPlayer(itr->first))
+                    if (Player* plr = sObjectMgr->GetPlayer(itr->first))
                         if (plr->GetTeamId() == Attackers && RoundScores[1].winner == Attackers)
                             plr->UpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_BE_SPELL_TARGET, 65246);
                 }
@@ -897,7 +897,7 @@ void BattlegroundSA::UpdateDemolisherSpawns()
     }
 }
 
-void BattlegroundSA::SendTransportInit(Player *player)
+void BattlegroundSA::SendTransportInit(Player* player)
 {
     if (m_BgObjects[BG_SA_BOAT_ONE] ||  m_BgObjects[BG_SA_BOAT_TWO])
     {
@@ -912,7 +912,7 @@ void BattlegroundSA::SendTransportInit(Player *player)
     }
 }
 
-void BattlegroundSA::SendTransportsRemove(Player * player)
+void BattlegroundSA::SendTransportsRemove(Player* player)
 {
     if (m_BgObjects[BG_SA_BOAT_ONE] ||  m_BgObjects[BG_SA_BOAT_TWO])
     {

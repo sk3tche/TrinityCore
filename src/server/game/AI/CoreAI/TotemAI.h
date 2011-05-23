@@ -31,8 +31,8 @@ class TotemAI : public CreatureAI
 
         explicit TotemAI(Creature *c);
 
-        void MoveInLineOfSight(Unit *);
-        void AttackStart(Unit *);
+        void MoveInLineOfSight(Unit* );
+        void AttackStart(Unit* );
         void EnterEvadeMode();
 
         void UpdateAI(const uint32);

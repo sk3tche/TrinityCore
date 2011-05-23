@@ -136,7 +136,7 @@ void WorldSession::HandlePetStopAttack(WorldPacket &recv_data)
     pet->AttackStop();
 }
 
-void WorldSession::HandlePetActionHelper(Unit *pet, uint64 guid1, uint16 spellid, uint16 flag, uint64 guid2)
+void WorldSession::HandlePetActionHelper(Unit* pet, uint64 guid1, uint16 spellid, uint16 flag, uint64 guid2)
 {
     CharmInfo *charmInfo = pet->GetCharmInfo();
     if (!charmInfo)
@@ -185,11 +185,11 @@ void WorldSession::HandlePetActionHelper(Unit *pet, uint64 guid1, uint16 spellid
                     }
 
                     // only place where pet can be player
-                    Unit *TargetUnit = ObjectAccessor::GetUnit(*_player, guid2);
+                    Unit* TargetUnit = ObjectAccessor::GetUnit(*_player, guid2);
                     if (!TargetUnit)
                         return;
 
-                    if (Unit *owner = pet->GetOwner())
+                    if (Unit* owner = pet->GetOwner())
                         if (!owner->canAttack(TargetUnit))
                             return;
 
@@ -332,7 +332,7 @@ void WorldSession::HandlePetActionHelper(Unit *pet, uint64 guid1, uint16 spellid
                     if (unit_target->GetTypeId() == TYPEID_PLAYER)
                         pet->SendUpdateToPlayer((Player*)unit_target);
                 }
-                else if (Unit *unit_target2 = spell->m_targets.getUnitTarget())
+                else if (Unit* unit_target2 = spell->m_targets.getUnitTarget())
                 {
                     pet->SetInFront(unit_target2);
                     if (unit_target2->GetTypeId() == TYPEID_PLAYER)
@@ -617,7 +617,7 @@ void WorldSession::HandlePetRename(WorldPacket & recv_data)
 
     pet->SetName(name);
 
-    Unit *owner = pet->GetOwner();
+    Unit* owner = pet->GetOwner();
     if (owner && (owner->GetTypeId() == TYPEID_PLAYER) && owner->ToPlayer()->GetGroup())
         owner->ToPlayer()->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_PET_NAME);
 

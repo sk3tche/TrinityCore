@@ -44,7 +44,7 @@ class CombatAI : public CreatureAI
         void InitializeAI();
         void Reset();
         void EnterCombat(Unit* who);
-        void JustDied(Unit *killer);
+        void JustDied(Unit* killer);
         void UpdateAI(const uint32 diff);
         static int Permissible(const Creature *);
     protected:
@@ -57,9 +57,9 @@ class CasterAI : public CombatAI
     public:
         explicit CasterAI(Creature *c) : CombatAI(c) { m_attackDist = MELEE_RANGE; }
         void InitializeAI();
-        void AttackStart(Unit * victim) { AttackStartCaster(victim, m_attackDist); }
+        void AttackStart(Unit* victim) { AttackStartCaster(victim, m_attackDist); }
         void UpdateAI(const uint32 diff);
-        void EnterCombat(Unit * /*who*/);
+        void EnterCombat(Unit* /*who*/);
     private:
         float m_attackDist;
 };
@@ -68,7 +68,7 @@ struct ArchorAI : public CreatureAI
 {
     public:
         explicit ArchorAI(Creature *c);
-        void AttackStart(Unit *who);
+        void AttackStart(Unit* who);
         void UpdateAI(const uint32 diff);
 
         static int Permissible(const Creature *);
@@ -80,8 +80,8 @@ struct TurretAI : public CreatureAI
 {
     public:
         explicit TurretAI(Creature *c);
-        bool CanAIAttack(const Unit *who) const;
-        void AttackStart(Unit *who);
+        bool CanAIAttack(const Unit* who) const;
+        void AttackStart(Unit* who);
         void UpdateAI(const uint32 diff);
 
         static int Permissible(const Creature *);
@@ -93,8 +93,8 @@ struct AOEAI : public CreatureAI
 {
     public:
         explicit AOEAI(Creature *c);
-        bool CanAIAttack(const Unit *who) const;
-        void AttackStart(Unit *who);
+        bool CanAIAttack(const Unit* who) const;
+        void AttackStart(Unit* who);
         void UpdateAI(const uint32 diff);
 
         static int Permissible(const Creature *);
@@ -109,8 +109,8 @@ struct VehicleAI : public CreatureAI
         void UpdateAI(const uint32 diff);
         static int Permissible(const Creature *);
         void Reset();
-        void MoveInLineOfSight(Unit *) {}
-        void AttackStart(Unit *) {}
+        void MoveInLineOfSight(Unit* ) {}
+        void AttackStart(Unit* ) {}
         void OnCharmed(bool apply);
 
     private:

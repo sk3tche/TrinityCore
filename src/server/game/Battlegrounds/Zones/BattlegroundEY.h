@@ -336,7 +336,7 @@ class BattlegroundEY : public Battleground
         void Update(uint32 diff);
 
         /* inherited from BattlegroundClass */
-        virtual void AddPlayer(Player *plr);
+        virtual void AddPlayer(Player* plr);
         virtual void StartingEventCloseDoors();
         virtual void StartingEventOpenDoors();
 
@@ -348,31 +348,31 @@ class BattlegroundEY : public Battleground
         void RespawnFlag(bool send_message);
         void RespawnFlagAfterDrop();
 
-        void RemovePlayer(Player *plr, uint64 guid);
+        void RemovePlayer(Player* plr, uint64 guid);
         void HandleBuffUse(uint64 const& buff_guid);
-        void HandleAreaTrigger(Player *Source, uint32 Trigger);
-        void HandleKillPlayer(Player *player, Player *killer);
+        void HandleAreaTrigger(Player* Source, uint32 Trigger);
+        void HandleKillPlayer(Player* player, Player* killer);
         virtual WorldSafeLocsEntry const* GetClosestGraveYard(Player* player);
         virtual bool SetupBattleground();
         virtual void Reset();
         void UpdateTeamScore(uint32 Team);
         void EndBattleground(uint32 winner);
-        void UpdatePlayerScore(Player *Source, uint32 type, uint32 value, bool doAddHonor = true);
+        void UpdatePlayerScore(Player* Source, uint32 type, uint32 value, bool doAddHonor = true);
         virtual void FillInitialWorldStates(WorldPacket& data);
         void SetDroppedFlagGUID(uint64 guid)       { m_DroppedFlagGUID = guid;}
         uint64 GetDroppedFlagGUID() const          { return m_DroppedFlagGUID;}
 
         /* Battleground Events */
-        virtual void EventPlayerClickedOnFlag(Player *Source, GameObject* target_obj);
-        virtual void EventPlayerDroppedFlag(Player *Source);
+        virtual void EventPlayerClickedOnFlag(Player* Source, GameObject* target_obj);
+        virtual void EventPlayerDroppedFlag(Player* Source);
 
         /* achievement req. */
         bool IsAllNodesConrolledByTeam(uint32 team) const;
     private:
-        void EventPlayerCapturedFlag(Player *Source, uint32 BgObjectType);
-        void EventPlayerCapturedFlag(Player * /*Source*/) {}
-        void EventTeamCapturedPoint(Player *Source, uint32 Point);
-        void EventTeamLostPoint(Player *Source, uint32 Point);
+        void EventPlayerCapturedFlag(Player* Source, uint32 BgObjectType);
+        void EventPlayerCapturedFlag(Player* /*Source*/) {}
+        void EventTeamCapturedPoint(Player* Source, uint32 Point);
+        void EventTeamLostPoint(Player* Source, uint32 Point);
         void UpdatePointsCount(uint32 Team);
         void UpdatePointsIcons(uint32 Team, uint32 Point);
 

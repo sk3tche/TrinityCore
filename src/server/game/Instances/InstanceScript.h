@@ -130,7 +130,7 @@ class InstanceScript : public ZoneScript
 
         virtual ~InstanceScript() {}
 
-        Map *instance;
+        Map* instance;
 
         //On creation, NOT load.
         virtual void Initialize() {}

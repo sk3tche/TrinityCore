@@ -260,8 +260,8 @@ class Map : public GridRefManager<NGridType>
             return false;
         }
 
-        virtual bool Add(Player *);
-        virtual void Remove(Player *, bool);
+        virtual bool Add(Player* );
+        virtual void Remove(Player* , bool);
         template<class T> void Add(T *);
         template<class T> void Remove(T *, bool);
 
@@ -272,7 +272,7 @@ class Map : public GridRefManager<NGridType>
         //function for setting up visibility distance for maps on per-type/per-Id basis
         virtual void InitVisibilityDistance();
 
-        void PlayerRelocation(Player *, float x, float y, float z, float orientation);
+        void PlayerRelocation(Player* , float x, float y, float z, float orientation);
         void CreatureRelocation(Creature *creature, float x, float y, float z, float ang, bool respawnRelocationOnFail = true);
 
         template<class T, class CONTAINER> void Visit(const Cell& cell, TypeContainerVisitor<T, CONTAINER> &visitor);
@@ -426,7 +426,7 @@ class Map : public GridRefManager<NGridType>
         template<class NOTIFIER> void VisitGrid(const float &x, const float &y, float radius, NOTIFIER &notifier);
         CreatureGroupHolderType CreatureGroupHolder;
 
-        void UpdateIteratorBack(Player *player);
+        void UpdateIteratorBack(Player* player);
 
         TempSummon* SummonCreature(uint32 entry, Position const& pos, SummonPropertiesEntry const* properties = NULL, uint32 duration = 0, Unit* summoner = NULL, uint32 spellId = 0, uint32 vehId = 0);
         Creature* GetCreature(uint64 guid);
@@ -442,14 +442,14 @@ class Map : public GridRefManager<NGridType>
         void LoadMapAndVMap(int gx, int gy);
         void LoadVMap(int gx, int gy);
         void LoadMap(int gx, int gy, bool reload = false);
-        GridMap *GetGrid(float x, float y);
+        GridMap* GetGrid(float x, float y);
 
         void SetTimer(uint32 t) { i_gridExpiry = t < MIN_GRID_DELAY ? MIN_GRID_DELAY : t; }
 
-        void SendInitSelf(Player * player);
+        void SendInitSelf(Player* player);
 
-        void SendInitTransports(Player * player);
-        void SendRemoveTransports(Player * player);
+        void SendInitTransports(Player* player);
+        void SendRemoveTransports(Player* player);
 
         bool CreatureCellRelocation(Creature *creature, Cell new_cell);
 
@@ -517,7 +517,7 @@ class Map : public GridRefManager<NGridType>
         Map* m_parentMap;
 
         NGridType* i_grids[MAX_NUMBER_OF_GRIDS][MAX_NUMBER_OF_GRIDS];
-        GridMap *GridMaps[MAX_NUMBER_OF_GRIDS][MAX_NUMBER_OF_GRIDS];
+        GridMap* GridMaps[MAX_NUMBER_OF_GRIDS][MAX_NUMBER_OF_GRIDS];
         std::bitset<TOTAL_NUMBER_OF_CELLS_PER_MAP*TOTAL_NUMBER_OF_CELLS_PER_MAP> marked_cells;
 
         //these functions used to process player/mob aggro reactions and
@@ -581,14 +581,14 @@ class InstanceMap : public Map
     public:
         InstanceMap(uint32 id, time_t, uint32 InstanceId, uint8 SpawnMode, Map* _parent);
         ~InstanceMap();
-        bool Add(Player *);
-        void Remove(Player *, bool);
+        bool Add(Player* );
+        void Remove(Player* , bool);
         void Update(const uint32&);
         void CreateInstanceData(bool load);
         bool Reset(uint8 method);
         uint32 GetScriptId() { return i_script_id; }
         InstanceScript* GetInstanceScript() { return i_data; }
-        void PermBindAllPlayers(Player *player);
+        void PermBindAllPlayers(Player* player);
         void UnloadAll();
         bool CanEnter(Player* player);
         void SendResetWarnings(uint32 timeLeft) const;
@@ -611,8 +611,8 @@ class BattlegroundMap : public Map
         BattlegroundMap(uint32 id, time_t, uint32 InstanceId, Map* _parent, uint8 spawnMode);
         ~BattlegroundMap();
 
-        bool Add(Player *);
-        void Remove(Player *, bool);
+        bool Add(Player* );
+        void Remove(Player* , bool);
         bool CanEnter(Player* player);
         void SetUnload();
         //void UnloadAll(bool pForce);

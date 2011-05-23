@@ -545,7 +545,7 @@ void WorldSession::HandlePetitionSignOpcode(WorldPacket & recv_data)
         SendPacket(&data);
 
         // update for owner if online
-        if (Player *owner = sObjectMgr->GetPlayer(ownerguid))
+        if (Player* owner = sObjectMgr->GetPlayer(ownerguid))
             owner->GetSession()->SendPacket(&data);
         return;
     }
@@ -568,7 +568,7 @@ void WorldSession::HandlePetitionSignOpcode(WorldPacket & recv_data)
     //    item->SetUInt32Value(ITEM_FIELD_ENCHANTMENT_1_1+1, signs);
 
     // update for owner if online
-    if (Player *owner = sObjectMgr->GetPlayer(ownerguid))
+    if (Player* owner = sObjectMgr->GetPlayer(ownerguid))
         owner->GetSession()->SendPacket(&data);
 }
 
@@ -589,7 +589,7 @@ void WorldSession::HandlePetitionDeclineOpcode(WorldPacket & recv_data)
     Field *fields = result->Fetch();
     ownerguid = MAKE_NEW_GUID(fields[0].GetUInt32(), 0, HIGHGUID_PLAYER);
 
-    Player *owner = sObjectMgr->GetPlayer(ownerguid);
+    Player* owner = sObjectMgr->GetPlayer(ownerguid);
     if (owner)                                               // petition owner online
     {
         WorldPacket data(MSG_PETITION_DECLINE, 8);
@@ -606,7 +606,7 @@ void WorldSession::HandleOfferPetitionOpcode(WorldPacket & recv_data)
     uint8 signs = 0;
     uint64 petitionguid, plguid;
     uint32 type, junk;
-    Player *player;
+    Player* player;
     recv_data >> junk;                                      // this is not petition type!
     recv_data >> petitionguid;                              // petition guid
     recv_data >> plguid;                                    // player guid

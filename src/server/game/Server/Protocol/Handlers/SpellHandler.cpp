@@ -569,12 +569,12 @@ void WorldSession::HandleMirrorImageDataRequest(WorldPacket & recv_data)
     recv_data >> guid;
 
     // Get unit for which data is needed by client
-    Unit *unit = ObjectAccessor::GetObjectInWorld(guid, (Unit*)NULL);
+    Unit* unit = ObjectAccessor::GetObjectInWorld(guid, (Unit*)NULL);
     if (!unit)
         return;
 
     // Get creator of the unit
-    Unit *creator = ObjectAccessor::GetObjectInWorld(unit->GetCreatorGUID(), (Unit*)NULL);
+    Unit* creator = ObjectAccessor::GetObjectInWorld(unit->GetCreatorGUID(), (Unit*)NULL);
     if (!creator)
         return;
 
@@ -583,7 +583,7 @@ void WorldSession::HandleMirrorImageDataRequest(WorldPacket & recv_data)
     data << uint32(creator->GetDisplayId());
     if (creator->GetTypeId() == TYPEID_PLAYER)
     {
-        Player * pCreator = creator->ToPlayer();
+        Player* pCreator = creator->ToPlayer();
         data << uint8(pCreator->getRace());
         data << uint8(pCreator->getGender());
         data << uint8(pCreator->getClass());

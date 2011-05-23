@@ -113,7 +113,7 @@ class Vehicle
     friend class WorldSession;
 
     public:
-        explicit Vehicle(Unit *unit, VehicleEntry const *vehInfo, uint32 creatureEntry);
+        explicit Vehicle(Unit* unit, VehicleEntry const *vehInfo, uint32 creatureEntry);
         virtual ~Vehicle();
 
         void Install();
@@ -121,18 +121,18 @@ class Vehicle
         void Reset(bool evading = false);
         void InstallAllAccessories(bool evading);
 
-        Unit *GetBase() const { return me; }
+        Unit* GetBase() const { return me; }
         VehicleEntry const *GetVehicleInfo() const { return m_vehicleInfo; }
         uint32 const& GetCreatureEntry() const { return m_creatureEntry; }
 
         bool HasEmptySeat(int8 seatId) const;
-        Unit *GetPassenger(int8 seatId) const;
+        Unit* GetPassenger(int8 seatId) const;
         int8 GetNextEmptySeat(int8 seatId, bool next) const;
         uint8 GetAvailableSeatCount() const;
 
-        bool AddPassenger(Unit *passenger, int8 seatId = -1);
+        bool AddPassenger(Unit* passenger, int8 seatId = -1);
         void EjectPassenger(Unit* passenger, Unit* controller);
-        void RemovePassenger(Unit *passenger);
+        void RemovePassenger(Unit* passenger);
         void RelocatePassengers(float x, float y, float z, float ang);
         void RemoveAllPassengers();
         void Dismiss();
@@ -149,7 +149,7 @@ class Vehicle
         void InitMovementInfoForBase();
 
     protected:
-        Unit *me;
+        Unit* me;
         VehicleEntry const *m_vehicleInfo;
         uint32 m_usableSeatNum;         // Number of seats that match VehicleSeatEntry::UsableByPlayer, used for proper display flags
         uint32 m_bonusHP;

@@ -69,7 +69,7 @@ struct OutdoorPvPData;
 #define VISIBLE_RANGE       (166.0f)                        //MAX visible range (size of grid)
 
 // Generic scripting text function.
-void DoScriptText(int32 textEntry, WorldObject* pSource, Unit *pTarget = NULL);
+void DoScriptText(int32 textEntry, WorldObject* pSource, Unit* pTarget = NULL);
 
 /*
     TODO: Add more script type classes.
@@ -928,15 +928,15 @@ class ScriptMgr
 
     public: /* PlayerScript */
 
-        void OnPVPKill(Player *killer, Player *killed);
-        void OnCreatureKill(Player *killer, Creature *killed);
-        void OnPlayerKilledByCreature(Creature *killer, Player *killed);
-        void OnPlayerLevelChanged(Player *player, uint8 newLevel);
-        void OnPlayerFreeTalentPointsChanged(Player *player, uint32 newPoints);
-        void OnPlayerTalentsReset(Player *player, bool no_cost);
-        void OnPlayerMoneyChanged(Player *player, int32& amount);
-        void OnGivePlayerXP(Player *player, uint32& amount, Unit *victim);
-        void OnPlayerReputationChange(Player *player, uint32 factionID, int32& standing, bool incremental);
+        void OnPVPKill(Player* killer, Player* killed);
+        void OnCreatureKill(Player* killer, Creature *killed);
+        void OnPlayerKilledByCreature(Creature *killer, Player* killed);
+        void OnPlayerLevelChanged(Player* player, uint8 newLevel);
+        void OnPlayerFreeTalentPointsChanged(Player* player, uint32 newPoints);
+        void OnPlayerTalentsReset(Player* player, bool no_cost);
+        void OnPlayerMoneyChanged(Player* player, int32& amount);
+        void OnGivePlayerXP(Player* player, uint32& amount, Unit* victim);
+        void OnPlayerReputationChange(Player* player, uint32 factionID, int32& standing, bool incremental);
         void OnPlayerDuelRequest(Player* target, Player* challenger);
         void OnPlayerDuelStart(Player* player1, Player* player2);
         void OnPlayerDuelEnd(Player* winner, Player* loser, DuelCompleteType type);
@@ -955,8 +955,8 @@ class ScriptMgr
         void OnPlayerBindToInstance(Player* player, Difficulty difficulty, uint32 mapid, bool permanent);
 
     public: /* GuildScript */
-        void OnGuildAddMember(Guild *guild, Player *player, uint8& plRank);
-        void OnGuildRemoveMember(Guild *guild, Player *player, bool isDisbanding, bool isKicked);
+        void OnGuildAddMember(Guild *guild, Player* player, uint8& plRank);
+        void OnGuildRemoveMember(Guild *guild, Player* player, bool isDisbanding, bool isKicked);
         void OnGuildMOTDChanged(Guild *guild, const std::string& newMotd);
         void OnGuildInfoChanged(Guild *guild, const std::string& newInfo);
         void OnGuildCreate(Guild *guild, Player* leader, const std::string& name);

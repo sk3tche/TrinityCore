@@ -212,7 +212,7 @@ class WorldSession
         char const* GetPlayerName() const;
         void SetSecurity(AccountTypes security) { _security = security; }
         std::string const& GetRemoteAddress() { return m_Address; }
-        void SetPlayer(Player *plr);
+        void SetPlayer(Player* plr);
         uint8 Expansion() const { return m_expansion; }
 
         /// Session in auth.queue currently
@@ -318,7 +318,7 @@ class WorldSession
         void SendNotInArenaTeamPacket(uint8 type);
         void SendPetitionShowList(uint64 guid);
 
-        void BuildPartyMemberStatsChangedPacket(Player *player, WorldPacket *data);
+        void BuildPartyMemberStatsChangedPacket(Player* player, WorldPacket *data);
 
         void DoLootRelease(uint64 lguid);
 
@@ -332,7 +332,7 @@ class WorldSession
 
         uint32 GetLatency() const { return m_latency; }
         void SetLatency(uint32 latency) { m_latency = latency; }
-        uint32 getDialogStatus(Player *pPlayer, Object* questgiver, uint32 defstatus);
+        uint32 getDialogStatus(Player* pPlayer, Object* questgiver, uint32 defstatus);
 
         time_t m_timeOutTime;
         void UpdateTimeOutTime(uint32 diff)
@@ -702,7 +702,7 @@ class WorldSession
         //Pet
         void HandlePetAction(WorldPacket & recv_data);
         void HandlePetStopAttack(WorldPacket& recv_data);
-        void HandlePetActionHelper(Unit *pet, uint64 guid1, uint16 spellid, uint16 flag, uint64 guid2);
+        void HandlePetActionHelper(Unit* pet, uint64 guid1, uint16 spellid, uint16 flag, uint64 guid2);
         void HandlePetNameQuery(WorldPacket & recv_data);
         void HandlePetSetAction(WorldPacket & recv_data);
         void HandlePetAbandon(WorldPacket & recv_data);
@@ -890,7 +890,7 @@ class WorldSession
         std::set<uint32> _allowedCharsToLogin;
 
         uint32 m_GUIDLow;                                   // set loggined or recently logout player (while m_playerRecentlyLogout set)
-        Player *_player;
+        Player* _player;
         WorldSocket *m_Socket;
         std::string m_Address;
 

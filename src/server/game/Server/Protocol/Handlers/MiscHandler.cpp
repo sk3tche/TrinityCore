@@ -1221,7 +1221,7 @@ void WorldSession::HandleInspectOpcode(WorldPacket& recv_data)
 
     _player->SetSelection(guid);
 
-    Player *plr = sObjectMgr->GetPlayer(guid);
+    Player* plr = sObjectMgr->GetPlayer(guid);
     if (!plr)                                                // wrong player
         return;
 
@@ -1250,7 +1250,7 @@ void WorldSession::HandleInspectHonorStatsOpcode(WorldPacket& recv_data)
     uint64 guid;
     recv_data >> guid;
 
-    Player *player = sObjectMgr->GetPlayer(guid);
+    Player* player = sObjectMgr->GetPlayer(guid);
 
     if (!player)
     {
@@ -1322,7 +1322,7 @@ void WorldSession::HandleWhoisOpcode(WorldPacket& recv_data)
         return;
     }
 
-    Player *plr = sObjectMgr->GetPlayer(charname.c_str());
+    Player* plr = sObjectMgr->GetPlayer(charname.c_str());
 
     if (!plr)
     {
@@ -1524,7 +1524,7 @@ void WorldSession::HandleSetDungeonDifficultyOpcode(WorldPacket & recv_data)
         return;
 
     // cannot reset while in an instance
-    Map *map = _player->GetMap();
+    Map* map = _player->GetMap();
     if (map && map->IsDungeon())
     {
         sLog->outError("WorldSession::HandleSetDungeonDifficultyOpcode: player %d tried to reset the instance while inside!", _player->GetGUIDLow());
@@ -1582,7 +1582,7 @@ void WorldSession::HandleSetRaidDifficultyOpcode(WorldPacket & recv_data)
     }
 
     // cannot reset while in an instance
-    Map *map = _player->GetMap();
+    Map* map = _player->GetMap();
     if (map && map->IsDungeon())
     {
         sLog->outError("WorldSession::HandleSetRaidDifficultyOpcode: player %d tried to reset the instance while inside!", _player->GetGUIDLow());
@@ -1691,7 +1691,7 @@ void WorldSession::HandleQueryInspectAchievements(WorldPacket & recv_data)
     uint64 guid;
     recv_data.readPackGUID(guid);
 
-    Player *player = sObjectMgr->GetPlayer(guid);
+    Player* player = sObjectMgr->GetPlayer(guid);
     if (!player)
         return;
 

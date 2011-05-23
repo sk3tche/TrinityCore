@@ -527,7 +527,7 @@ private:
         virtual InventoryResult _CanStore(Item* pItem, bool swap) = 0;
 
         Guild* m_pGuild;
-        Player *m_pPlayer;
+        Player* m_pPlayer;
         uint8 m_container;
         uint8 m_slotId;
         Item* m_pItem;
@@ -649,7 +649,7 @@ public:
     void BroadcastWorker(Do& _do, Player* except = NULL)
     {
         for (Members::iterator itr = m_members.begin(); itr != m_members.end(); ++itr)
-            if (Player *player = itr->second->FindPlayer())
+            if (Player* player = itr->second->FindPlayer())
                 if (player != except)
                     _do(player);
     }

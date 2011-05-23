@@ -79,7 +79,7 @@ class SmartAI : public CreatureAI
         void JustReachedHome();
 
         // Called for reaction at enter to combat if not in combat yet (enemy can be NULL)
-        void EnterCombat(Unit *enemy);
+        void EnterCombat(Unit* enemy);
 
         // Called for reaction at stopping attack at no attackers or targets
         void EnterEvadeMode();
@@ -94,10 +94,10 @@ class SmartAI : public CreatureAI
         void JustSummoned(Creature* pUnit);
 
         // Tell creature to attack and follow the victim
-        void AttackStart(Unit *who);
+        void AttackStart(Unit* who);
 
-        // Called if IsVisible(Unit *who) is true at each *who move, reaction at visibility zone enter
-        void MoveInLineOfSight(Unit *who);
+        // Called if IsVisible(Unit* who) is true at each *who move, reaction at visibility zone enter
+        void MoveInLineOfSight(Unit* who);
 
         // Called when hit by a spell
         void SpellHit(Unit* pUnit, const SpellEntry* pSpell);
@@ -124,7 +124,7 @@ class SmartAI : public CreatureAI
         void IsSummonedBy(Unit* summoner);
 
         // Called at any Damage to any victim (before damage apply)
-        void DamageDealt(Unit * done_to, uint32 & damage, DamageEffectType /*damagetype*/);
+        void DamageDealt(Unit* done_to, uint32 & damage, DamageEffectType /*damagetype*/);
 
         // Called when a summoned creature dissapears (UnSommoned)
         void SummonedCreatureDespawn(Creature* unit);

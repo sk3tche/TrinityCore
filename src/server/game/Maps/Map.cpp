@@ -338,7 +338,7 @@ Map::EnsureGridCreated(const GridPair &p)
 }
 
 void
-Map::EnsureGridLoadedAtEnter(const Cell &cell, Player *player)
+Map::EnsureGridLoadedAtEnter(const Cell &cell, Player* player)
 {
     EnsureGridLoaded(cell);
     NGridType *grid = getNGrid(cell.GridX(), cell.GridY());
@@ -391,7 +391,7 @@ void Map::LoadGrid(float x, float y)
     EnsureGridLoaded(cell);
 }
 
-bool Map::Add(Player *player)
+bool Map::Add(Player* player)
 {
     // Check if we are adding to correct map
     ASSERT (player->GetMap() == this);
@@ -657,7 +657,7 @@ void Map::ProcessRelocationNotifies(const uint32 & diff)
     }
 }
 
-void Map::Remove(Player *player, bool remove)
+void Map::Remove(Player* player, bool remove)
 {
     player->RemoveFromWorld();
     SendRemoveTransports(player);
@@ -724,7 +724,7 @@ Map::Remove(T *obj, bool remove)
 }
 
 void
-Map::PlayerRelocation(Player *player, float x, float y, float z, float orientation)
+Map::PlayerRelocation(Player* player, float x, float y, float z, float orientation)
 {
     ASSERT(player);
 
@@ -1526,7 +1526,7 @@ inline ZLiquidStatus GridMap::getLiquidStatus(float x, float y, float z, uint8 R
     return LIQUID_MAP_ABOVE_WATER;
 }
 
-inline GridMap *Map::GetGrid(float x, float y)
+inline GridMap* Map::GetGrid(float x, float y)
 {
     // half opt method
     int gx=(int)(32-x/SIZE_OF_GRIDS);                       //grid x
@@ -1542,7 +1542,7 @@ float Map::GetHeight(float x, float y, float z, bool pUseVmaps, float maxSearchD
 {
     // find raw .map surface under Z coordinates
     float mapHeight;
-    if (GridMap *gmap = const_cast<Map*>(this)->GetGrid(x, y))
+    if (GridMap* gmap = const_cast<Map*>(this)->GetGrid(x, y))
     {
         float _mapheight = gmap->getHeight(x, y);
 
@@ -1651,7 +1651,7 @@ bool Map::GetAreaInfo(float x, float y, float z, uint32 &flags, int32 &adtId, in
     if (vmgr->getAreaInfo(GetId(), x, y, vmap_z, flags, adtId, rootId, groupId))
     {
         // check if there's terrain between player height and object height
-        if(GridMap *gmap = const_cast<Map*>(this)->GetGrid(x, y))
+        if(GridMap* gmap = const_cast<Map*>(this)->GetGrid(x, y))
         {
             float _mapheight = gmap->getHeight(x, y);
             // z + 2.0f condition taken from GetHeight(), not sure if it's such a great choice...
@@ -1685,7 +1685,7 @@ uint16 Map::GetAreaFlag(float x, float y, float z, bool *isOutdoors) const
         areaflag = atEntry->exploreFlag;
     else
     {
-        if (GridMap *gmap = const_cast<Map*>(this)->GetGrid(x, y))
+        if (GridMap* gmap = const_cast<Map*>(this)->GetGrid(x, y))
             areaflag = gmap->getArea(x, y);
         // this used while not all *.map files generated (instances)
         else
@@ -1704,7 +1704,7 @@ uint16 Map::GetAreaFlag(float x, float y, float z, bool *isOutdoors) const
 
 uint8 Map::GetTerrainType(float x, float y) const
 {
-    if (GridMap *gmap = const_cast<Map*>(this)->GetGrid(x, y))
+    if (GridMap* gmap = const_cast<Map*>(this)->GetGrid(x, y))
         return gmap->getTerrainType(x, y);
     else
         return 0;
@@ -1866,7 +1866,7 @@ void Map::UpdateObjectsVisibilityFor(Player* player, Cell cell, CellPair cellpai
     notifier.SendToSelf();
 }
 
-void Map::SendInitSelf(Player * player)
+void Map::SendInitSelf(Player* player)
 {
     sLog->outDetail("Creating player data for himself %u", player->GetGUIDLow());
 
@@ -1898,7 +1898,7 @@ void Map::SendInitSelf(Player * player)
     player->GetSession()->SendPacket(&packet);
 }
 
-void Map::SendInitTransports(Player * player)
+void Map::SendInitTransports(Player* player)
 {
     // Hack to send out transports
     MapManager::TransportMap& tmap = sMapMgr->m_TransportsByMap;
@@ -1925,7 +1925,7 @@ void Map::SendInitTransports(Player * player)
     player->GetSession()->SendPacket(&packet);
 }
 
-void Map::SendRemoveTransports(Player * player)
+void Map::SendRemoveTransports(Player* player)
 {
     // Hack to send out transports
     MapManager::TransportMap& tmap = sMapMgr->m_TransportsByMap;
@@ -2198,7 +2198,7 @@ void InstanceMap::InitVisibilityDistance()
 /*
     Do map specific checks to see if the player can enter
 */
-bool InstanceMap::CanEnter(Player *player)
+bool InstanceMap::CanEnter(Player* player)
 {
     if (player->GetMapRef().getTarget() == this)
     {
@@ -2236,7 +2236,7 @@ bool InstanceMap::CanEnter(Player *player)
 
     if (!playerList.isEmpty())
         for (PlayerList::const_iterator i = playerList.begin(); i != playerList.end(); ++i)
-            if (Player *iPlayer = i->getSource())
+            if (Player* iPlayer = i->getSource())
             {
                 if (iPlayer->isGameMaster()) // bypass GMs
                     continue;
@@ -2260,7 +2260,7 @@ bool InstanceMap::CanEnter(Player *player)
 /*
     Do map specific checks and add the player to the map if successful.
 */
-bool InstanceMap::Add(Player *player)
+bool InstanceMap::Add(Player* player)
 {
     // TODO: Not sure about checking player level: already done in HandleAreaTriggerOpcode
     // GMs still can teleport player in instance.
@@ -2386,7 +2386,7 @@ void InstanceMap::Update(const uint32& t_diff)
         i_data->Update(t_diff);
 }
 
-void InstanceMap::Remove(Player *player, bool remove)
+void InstanceMap::Remove(Player* player, bool remove)
 {
     sLog->outDetail("MAP: Removing player '%s' from instance '%u' of map '%s' before relocating to another map", player->GetName(), GetInstanceId(), GetMapName());
     //if last player set unload timer
@@ -2471,7 +2471,7 @@ bool InstanceMap::Reset(uint8 method)
     return m_mapRefManager.isEmpty();
 }
 
-void InstanceMap::PermBindAllPlayers(Player *player)
+void InstanceMap::PermBindAllPlayers(Player* player)
 {
     if (!IsDungeon())
         return;
@@ -2583,7 +2583,7 @@ void BattlegroundMap::InitVisibilityDistance()
     m_VisibilityNotifyPeriod = World::GetVisibilityNotifyPeriodInBGArenas();
 }
 
-bool BattlegroundMap::CanEnter(Player * player)
+bool BattlegroundMap::CanEnter(Player* player)
 {
     if (player->GetMapRef().getTarget() == this)
     {
@@ -2600,7 +2600,7 @@ bool BattlegroundMap::CanEnter(Player * player)
     return Map::CanEnter(player);
 }
 
-bool BattlegroundMap::Add(Player * player)
+bool BattlegroundMap::Add(Player* player)
 {
     {
         ACE_GUARD_RETURN(ACE_Thread_Mutex, guard, Lock, false);
@@ -2613,7 +2613,7 @@ bool BattlegroundMap::Add(Player * player)
     return Map::Add(player);
 }
 
-void BattlegroundMap::Remove(Player *player, bool remove)
+void BattlegroundMap::Remove(Player* player, bool remove)
 {
     sLog->outDetail("MAP: Removing player '%s' from bg '%u' of map '%s' before relocating to another map", player->GetName(), GetInstanceId(), GetMapName());
     Map::Remove(player, remove);
@@ -2652,7 +2652,7 @@ Map::GetDynamicObject(uint64 guid)
     return ObjectAccessor::GetObjectInMap(guid, this, (DynamicObject*)NULL);
 }
 
-void Map::UpdateIteratorBack(Player *player)
+void Map::UpdateIteratorBack(Player* player)
 {
     if (m_mapRefIter == player->GetMapRef())
         m_mapRefIter = m_mapRefIter->nocheck_prev();

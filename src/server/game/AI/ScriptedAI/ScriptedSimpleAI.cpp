@@ -63,7 +63,7 @@ void SimpleAI::Reset()
 {
 }
 
-void SimpleAI::EnterCombat(Unit *who)
+void SimpleAI::EnterCombat(Unit* who)
 {
             //Reset cast timers
             if (Spell[0].First_Cast >= 0)
@@ -108,7 +108,7 @@ void SimpleAI::EnterCombat(Unit *who)
                 DoPlaySoundToSet(me, Aggro_Sound[random_text]);
 }
 
-void SimpleAI::KilledUnit(Unit *victim)
+void SimpleAI::KilledUnit(Unit* victim)
 {
     uint8 random_text = urand(0, 2);
 
@@ -123,7 +123,7 @@ void SimpleAI::KilledUnit(Unit *victim)
     if (!Kill_Spell)
         return;
 
-    Unit *pTarget = NULL;
+    Unit* pTarget = NULL;
 
     switch (Kill_Target_Type)
     {
@@ -152,7 +152,7 @@ void SimpleAI::KilledUnit(Unit *victim)
         DoCast(pTarget, Kill_Spell);
 }
 
-void SimpleAI::DamageTaken(Unit *killer, uint32 &damage)
+void SimpleAI::DamageTaken(Unit* killer, uint32 &damage)
 {
     //Return if damage taken won't kill us
     if (me->GetHealth() > damage)
@@ -171,7 +171,7 @@ void SimpleAI::DamageTaken(Unit *killer, uint32 &damage)
     if (!Death_Spell)
         return;
 
-    Unit *pTarget = NULL;
+    Unit* pTarget = NULL;
 
     switch (Death_Target_Type)
     {
@@ -222,7 +222,7 @@ void SimpleAI::UpdateAI(const uint32 diff)
             //Check Current spell
             if (!(Spell[i].InterruptPreviousCast && me->IsNonMeleeSpellCasted(false)))
             {
-                Unit *pTarget = NULL;
+                Unit* pTarget = NULL;
 
                 switch (Spell[i].Cast_Target_Type)
                 {

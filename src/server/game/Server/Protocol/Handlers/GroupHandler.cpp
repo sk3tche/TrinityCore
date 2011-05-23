@@ -73,7 +73,7 @@ void WorldSession::HandleGroupInviteOpcode(WorldPacket & recv_data)
         return;
     }
 
-    Player *player = sObjectMgr->GetPlayer(membername.c_str());
+    Player* player = sObjectMgr->GetPlayer(membername.c_str());
 
     // no player
     if (!player)
@@ -252,7 +252,7 @@ void WorldSession::HandleGroupDeclineOpcode(WorldPacket & /*recv_data*/)
     if (!group) return;
 
     // Remember leader if online (group pointer will be invalid if group gets disbanded)
-    Player *leader = sObjectMgr->GetPlayer(group->GetLeaderGUID());
+    Player* leader = sObjectMgr->GetPlayer(group->GetLeaderGUID());
 
     // uninvite, group can be deleted
     GetPlayer()->UninviteFromGroup();
@@ -370,7 +370,7 @@ void WorldSession::HandleGroupSetLeaderOpcode(WorldPacket & recv_data)
     uint64 guid;
     recv_data >> guid;
 
-    Player *player = sObjectMgr->GetPlayer(guid);
+    Player* player = sObjectMgr->GetPlayer(guid);
 
     /** error handling **/
     if (!player || !group->IsLeader(GetPlayer()->GetGUID()) || player->GetGroup() != group)
@@ -591,7 +591,7 @@ void WorldSession::HandleGroupChangeSubGroupOpcode(WorldPacket & recv_data)
     if (!group->HasFreeSlotSubGroup(groupNr))
         return;
 
-    Player *movedPlayer = sObjectMgr->GetPlayer(name.c_str());
+    Player* movedPlayer = sObjectMgr->GetPlayer(name.c_str());
     uint64 guid;
     if (movedPlayer)
     {
@@ -708,7 +708,7 @@ void WorldSession::HandleRaidReadyCheckFinishedOpcode(WorldPacket & /*recv_data*
     // Is any reaction need?
 }
 
-void WorldSession::BuildPartyMemberStatsChangedPacket(Player *player, WorldPacket *data)
+void WorldSession::BuildPartyMemberStatsChangedPacket(Player* player, WorldPacket *data)
 {
     uint32 mask = player->GetGroupUpdateFlag();
 
@@ -884,7 +884,7 @@ void WorldSession::HandleRequestPartyMemberStatsOpcode(WorldPacket &recv_data)
     uint64 Guid;
     recv_data >> Guid;
 
-    Player *player = HashMapHolder<Player>::Find(Guid);
+    Player* player = HashMapHolder<Player>::Find(Guid);
     if (!player)
     {
         WorldPacket data(SMSG_PARTY_MEMBER_STATS_FULL, 3+4+2);
