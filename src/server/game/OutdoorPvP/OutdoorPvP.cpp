@@ -477,7 +477,7 @@ bool OPvPCapturePoint::IsInsideObjective(Player* plr) const
     return m_activePlayers[plr->GetTeamId()].find(plr) != m_activePlayers[plr->GetTeamId()].end();
 }
 
-bool OutdoorPvP::HandleCustomSpell(Player* plr, uint32 spellId, GameObject * go)
+bool OutdoorPvP::HandleCustomSpell(Player* plr, uint32 spellId, GameObject* go)
 {
     for (OPvPCapturePointMap::iterator itr = m_capturePoints.begin(); itr != m_capturePoints.end(); ++itr)
         if (itr->second->HandleCustomSpell(plr, spellId, go))
@@ -486,7 +486,7 @@ bool OutdoorPvP::HandleCustomSpell(Player* plr, uint32 spellId, GameObject * go)
     return false;
 }
 
-bool OPvPCapturePoint::HandleCustomSpell(Player* plr, uint32 /*spellId*/, GameObject * /*go*/)
+bool OPvPCapturePoint::HandleCustomSpell(Player* plr, uint32 /*spellId*/, GameObject* /*go*/)
 {
     if (!plr->IsOutdoorPvPActive())
         return false;
@@ -511,7 +511,7 @@ bool OutdoorPvP::HandleGossipOption(Player* plr, uint64 guid, uint32 id)
     return false;
 }
 
-bool OutdoorPvP::CanTalkTo(Player* plr, Creature* c, GossipMenuItems gso)
+bool OutdoorPvP::CanTalkTo(Player* plr, Creature* c, GossipMenuItems const& gso)
 {
     for (OPvPCapturePointMap::iterator itr = m_capturePoints.begin(); itr != m_capturePoints.end(); ++itr)
         if (itr->second->CanTalkTo(plr, c, gso))
@@ -534,7 +534,7 @@ bool OPvPCapturePoint::HandleGossipOption(Player* /*plr*/, uint64 /*guid*/, uint
     return false;
 }
 
-bool OPvPCapturePoint::CanTalkTo(Player* /*plr*/, Creature* /*c*/, GossipMenuItems /*gso*/)
+bool OPvPCapturePoint::CanTalkTo(Player* /*plr*/, Creature* /*c*/, GossipMenuItems const& /*gso*/)
 {
     return false;
 }

@@ -110,9 +110,9 @@ class OPvPCapturePoint
         // checks if player is in range of a capture credit marker
         bool IsInsideObjective(Player* plr) const;
 
-        virtual bool HandleCustomSpell(Player* plr, uint32 spellId, GameObject * go);
+        virtual bool HandleCustomSpell(Player *plr, uint32 spellId, GameObject* go);
 
-        virtual int32 HandleOpenGo(Player* plr, uint64 guid);
+        virtual int32 HandleOpenGo(Player *plr, uint64 guid);
 
         // returns true if the state of the objective has changed, in this case, the OutdoorPvP must send a world state ui update.
         virtual bool Update(uint32 diff);
@@ -123,9 +123,9 @@ class OPvPCapturePoint
 
         virtual void SendChangePhase();
 
-        virtual bool HandleGossipOption(Player* plr, uint64 guid, uint32 gossipid);
+        virtual bool HandleGossipOption(Player *plr, uint64 guid, uint32 gossipid);
 
-        virtual bool CanTalkTo(Player* plr, Creature* c, GossipMenuItems gso);
+        virtual bool CanTalkTo(Player* plr, Creature* c, GossipMenuItems const& gso);
 
         virtual bool HandleDropFlag(Player* plr, uint32 spellId);
 
@@ -211,17 +211,17 @@ class OutdoorPvP : public ZoneScript
         virtual bool HandleAreaTrigger(Player* plr, uint32 trigger);
 
         // called on custom spell
-        virtual bool HandleCustomSpell(Player* plr, uint32 spellId, GameObject * go);
+        virtual bool HandleCustomSpell(Player *plr, uint32 spellId, GameObject* go);
 
         // called on go use
-        virtual bool HandleOpenGo(Player* plr, uint64 guid);
+        virtual bool HandleOpenGo(Player *plr, uint64 guid);
 
         // setup stuff
         virtual bool SetupOutdoorPvP() {return true;}
 
         void OnGameObjectCreate(GameObject *go);
         void OnGameObjectRemove(GameObject *go);
-        void OnCreatureCreate(Creature* ) {}
+        void OnCreatureCreate(Creature *) {}
 
         // send world state update to all players present
         void SendUpdateWorldState(uint32 field, uint32 value);
@@ -243,9 +243,9 @@ class OutdoorPvP : public ZoneScript
 
         virtual bool HandleDropFlag(Player* plr, uint32 spellId);
 
-        virtual bool HandleGossipOption(Player* plr, uint64 guid, uint32 gossipid);
+        virtual bool HandleGossipOption(Player *plr, uint64 guid, uint32 gossipid);
 
-        virtual bool CanTalkTo(Player* plr, Creature* c, GossipMenuItems gso);
+        virtual bool CanTalkTo(Player* plr, Creature* c, GossipMenuItems const& gso);
 
         void TeamApplyBuff(TeamId team, uint32 spellId, uint32 spellId2 = 0);
 
@@ -285,7 +285,7 @@ class OutdoorPvP : public ZoneScript
 
         void RegisterZone(uint32 zoneid);
 
-        bool HasPlayer(Player* plr) const;
+        bool HasPlayer(Player *plr) const;
 
         void TeamCastSpell(TeamId team, int32 spellId);
 };

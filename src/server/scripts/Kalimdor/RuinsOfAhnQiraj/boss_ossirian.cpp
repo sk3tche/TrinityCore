@@ -41,25 +41,20 @@ enum Yells
 
 class boss_ossirian : public CreatureScript
 {
-public:
-    boss_ossirian() : CreatureScript("boss_ossirian") { }
+    public:
+        boss_ossirian() : CreatureScript("boss_ossirian") { }
 
-    CreatureAI* GetAI(Creature* pCreature) const
-    {
-        return new boss_ossirianAI (pCreature);
-    }
-
-    struct boss_ossirianAI : public ScriptedAI
-    {
-        boss_ossirianAI(Creature *c) : ScriptedAI(c)
+        struct boss_ossirianAI : public ScriptedAI
         {
-            pInstance = c->GetInstanceScript();
+            boss_ossirianAI(Creature* creature) : ScriptedAI(creature)
+            {
+            }
+        };
+
+        CreatureAI* GetAI(Creature* creature) const
+        {
+            return new boss_ossirianAI (creature);
         }
-
-        InstanceScript *pInstance;
-
-    };
-
 };
 
 void AddSC_boss_ossirian()

@@ -27,8 +27,7 @@
 #include "CreatureAI.h"
 #include "ZoneScript.h"
 
-Vehicle::Vehicle(Unit* unit, VehicleEntry const* vehInfo, uint32 creatureEntry)
-: me(unit), m_vehicleInfo(vehInfo), m_usableSeatNum(0), m_bonusHP(0), m_creatureEntry(creatureEntry)
+Vehicle::Vehicle(Unit* unit, VehicleEntry const* vehInfo, uint32 creatureEntry) : me(unit), m_vehicleInfo(vehInfo), m_usableSeatNum(0), m_bonusHP(0), m_creatureEntry(creatureEntry)
 {
     for (uint32 i = 0; i < MAX_VEHICLE_SEATS; ++i)
     {
@@ -39,28 +38,6 @@ Vehicle::Vehicle(Unit* unit, VehicleEntry const* vehInfo, uint32 creatureEntry)
                 if (veSeat->CanEnterOrExit())
                     ++m_usableSeatNum;
             }
-    }
-
-    // HACKY WAY, We must found a more generic way to handle this
-    // Set inmunities since db ones are rewritten with player's ones
-    switch (GetVehicleInfo()->m_ID)
-    {
-        case 160:
-            me->SetControlled(true, UNIT_STAT_ROOT);
-            me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
-            me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK_DEST, true);
-        case 158:
-            me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_HEAL, true);
-            me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_FEAR, true);
-            me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_PERIODIC_HEAL, true);
-            me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_STUN, true);
-            me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_ROOT, true);
-            me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_DECREASE_SPEED, true);
-            me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_CONFUSE, true);
-            me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true); // Death Grip jump effect
-            break;
-        default:
-            break;
     }
 
     InitMovementInfoForBase();
@@ -74,7 +51,7 @@ Vehicle::~Vehicle()
 
 void Vehicle::Install()
 {
-    if (Creature* pCreature = me->ToCreature())
+    if (Creature* creature = me->ToCreature())
     {
         switch (m_vehicleInfo->m_powerType)
         {
@@ -93,15 +70,12 @@ void Vehicle::Install()
             default:
                 for (uint32 i = 0; i < MAX_SPELL_VEHICLE; ++i)
                 {
-                    if (!pCreature->m_spells[i])
+                    if (!creature->m_spells[i])
                         continue;
 
-                    SpellEntry const* spellInfo = sSpellStore.LookupEntry(pCreature->m_spells[i]);
+                    SpellEntry const* spellInfo = sSpellStore.LookupEntry(creature->m_spells[i]);
                     if (!spellInfo)
                         continue;
-
-                    if (spellInfo->powerType == POWER_MANA)
-                        break;
 
                     if (spellInfo->powerType == POWER_ENERGY)
                     {
@@ -151,6 +125,7 @@ void Vehicle::Reset(bool evading /*= false*/)
     }
     else
     {
+        ApplyAllImmunities();
         InstallAllAccessories(evading);
         if (m_usableSeatNum)
             me->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_SPELLCLICK);
@@ -158,6 +133,59 @@ void Vehicle::Reset(bool evading /*= false*/)
 
     if (GetBase()->GetTypeId() == TYPEID_UNIT)
         sScriptMgr->OnReset(this);
+}
+
+void Vehicle::ApplyAllImmunities()
+{
+    // This couldn't be done in DB, because Vehicle's immunities are overriden by Player's ones
+
+    // Vehicles should be immune on Knockback, Deathgrip ...
+    me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
+    me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK_DEST, true);
+    me->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_GRIP, true);
+
+    // ... Fear, Snare, Root, Stun ...
+    me->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FEAR, true);
+    me->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SNARE, true);
+    me->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
+    me->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_STUN, true);
+    me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_STUN, true);
+    me->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISORIENTED, true);
+    me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_CONFUSE, true);
+
+    // Mechanical units & vehicles ( which are not Bosses, they have own immunities in DB ) should be also immune on healing ( exceptions in switch below )
+    if (me->ToCreature() && me->ToCreature()->GetCreatureInfo()->type == CREATURE_TYPE_MECHANICAL && !me->ToCreature()->isWorldBoss())
+    {
+        // Heal & dispel ...
+        me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_HEAL, true);
+        me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_PERIODIC_HEAL, true);
+
+        // ... Shield & Immunity grant spells ...
+        me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_SCHOOL_IMMUNITY, true);
+        me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_UNATTACKABLE, true);
+        me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_SCHOOL_ABSORB, true);
+        me->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SHIELD, true);
+        me->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_IMMUNE_SHIELD , true);
+
+        // ... Resistance, Split damage, Speed Increase, ...
+        me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_DAMAGE_SHIELD, true);
+        me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_SPLIT_DAMAGE_PCT, true);
+        me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_RESISTANCE, true);
+        me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_STAT, true);
+        me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_DAMAGE_PERCENT_TAKEN, true);
+        me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_INCREASE_SPEED, true);
+    }
+
+    // Different immunities for vehicles goes below
+    switch (GetVehicleInfo()->m_ID)
+    {
+        case 160:
+            me->SetControlled(true, UNIT_STAT_ROOT);
+            me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_DECREASE_SPEED, true);
+            break;
+        default:
+            break;
+    }
 }
 
 void Vehicle::RemoveAllPassengers()
@@ -241,7 +269,7 @@ void Vehicle::InstallAccessory(uint32 entry, int8 seatId, bool minion, uint8 typ
             passenger->ExitVehicle(); // this should not happen
     }
 
-    if (TempSummon *accessory = me->SummonCreature(entry, *me, TempSummonType(type), summonTime))
+    if (TempSummon* accessory = me->SummonCreature(entry, *me, TempSummonType(type), summonTime))
     {
         if (minion)
             accessory->AddUnitTypeMask(UNIT_MASK_ACCESSORY);
@@ -338,8 +366,8 @@ bool Vehicle::AddPassenger(Unit* unit, int8 seatId)
         // hack: should be done by aura system
         if (VehicleScalingInfo const* scalingInfo = sObjectMgr->GetVehicleScalingInfo(m_vehicleInfo->m_ID))
         {
-            Player* plr = unit->ToPlayer();
-            float averageItemLevel = plr->GetAverageItemLevel();
+            Player* player = unit->ToPlayer();
+            float averageItemLevel = player->GetAverageItemLevel();
             if (averageItemLevel < scalingInfo->baseItemLevel)
                 averageItemLevel = scalingInfo->baseItemLevel;
             averageItemLevel -= scalingInfo->baseItemLevel;
@@ -399,9 +427,7 @@ void Vehicle::RemovePassenger(Unit* unit)
 
     unit->ClearUnitState(UNIT_STAT_ONVEHICLE);
 
-    if (me->GetTypeId() == TYPEID_UNIT
-        && unit->GetTypeId() == TYPEID_PLAYER
-        && seat->first == 0 && seat->second.seatInfo->m_flags & VEHICLE_SEAT_FLAG_CAN_CONTROL)
+    if (me->GetTypeId() == TYPEID_UNIT && unit->GetTypeId() == TYPEID_PLAYER && seat->first == 0 && seat->second.seatInfo->m_flags & VEHICLE_SEAT_FLAG_CAN_CONTROL)
     {
         me->RemoveCharmedBy(unit);
 
@@ -474,7 +500,7 @@ void Vehicle::InitMovementInfoForBase()
     if (vehicleFlags & VEHICLE_FLAG_FULLSPEEDTURNING)
         me->AddExtraUnitMovementFlag(MOVEMENTFLAG2_FULL_SPEED_TURNING);
     if (vehicleFlags & VEHICLE_FLAG_ALLOW_PITCHING)
-        me->AddExtraUnitMovementFlag( MOVEMENTFLAG2_ALWAYS_ALLOW_PITCHING);
+        me->AddExtraUnitMovementFlag(MOVEMENTFLAG2_ALWAYS_ALLOW_PITCHING);
     if (vehicleFlags & VEHICLE_FLAG_FULLSPEEDPITCHING)
         me->AddExtraUnitMovementFlag(MOVEMENTFLAG2_FULL_SPEED_PITCHING);
 }

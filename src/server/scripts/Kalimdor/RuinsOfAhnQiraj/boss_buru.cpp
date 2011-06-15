@@ -33,24 +33,19 @@ enum Yells
 
 class boss_buru : public CreatureScript
 {
-public:
-    boss_buru() : CreatureScript("boss_buru") { }
+    public:
+        boss_buru() : CreatureScript("boss_buru") { }
 
-    CreatureAI* GetAI(Creature* pCreature) const
-    {
-        return new boss_buruAI (pCreature);
-    }
-
-    struct boss_buruAI : public ScriptedAI
-    {
-        boss_buruAI(Creature *c) : ScriptedAI(c)
+        struct boss_buruAI : public ScriptedAI
         {
-            pInstance = c->GetInstanceScript();
+            boss_buruAI(Creature* creature) : ScriptedAI(creature)
+            {
+            }
+        };
+        CreatureAI* GetAI(Creature* creature) const
+        {
+            return new boss_buruAI(creature);
         }
-
-        InstanceScript *pInstance;
-    };
-
 };
 
 void AddSC_boss_buru()

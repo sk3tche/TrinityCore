@@ -1089,9 +1089,9 @@ void ScriptMgr::OnPlayerKilledByCreature(Creature* killer, Player* killed)
     FOREACH_SCRIPT(PlayerScript)->OnPlayerKilledByCreature(killer, killed);
 }
 
-void ScriptMgr::OnPlayerLevelChanged(Player* player, uint8 newLevel)
+void ScriptMgr::OnPlayerLevelChanged(Player* player, uint8 oldLevel)
 {
-    FOREACH_SCRIPT(PlayerScript)->OnLevelChanged(player, newLevel);
+    FOREACH_SCRIPT(PlayerScript)->OnLevelChanged(player, oldLevel);
 }
 
 void ScriptMgr::OnPlayerFreeTalentPointsChanged(Player* player, uint32 points)
@@ -1119,7 +1119,7 @@ void ScriptMgr::OnPlayerReputationChange(Player* player, uint32 factionID, int32
     FOREACH_SCRIPT(PlayerScript)->OnReputationChange(player, factionID, standing, incremental);
 }
 
-void ScriptMgr::OnPlayerDuelRequest(Player* target, Player* challenger)
+void ScriptMgr::OnPlayerDuelRequest(Player *target, Player *challenger)
 {
     FOREACH_SCRIPT(PlayerScript)->OnDuelRequest(target, challenger);
 }
@@ -1129,7 +1129,7 @@ void ScriptMgr::OnPlayerDuelStart(Player* player1, Player* player2)
     FOREACH_SCRIPT(PlayerScript)->OnDuelStart(player1, player2);
 }
 
-void ScriptMgr::OnPlayerDuelEnd(Player* winner, Player* loser, DuelCompleteType type)
+void ScriptMgr::OnPlayerDuelEnd(Player *winner, Player *loser, DuelCompleteType type)
 {
     FOREACH_SCRIPT(PlayerScript)->OnDuelEnd(winner, loser, type);
 }
@@ -1169,7 +1169,7 @@ void ScriptMgr::OnPlayerTextEmote(Player* player, uint32 text_emote, uint32 emot
     FOREACH_SCRIPT(PlayerScript)->OnTextEmote(player, text_emote, emoteNum, guid);
 }
 
-void ScriptMgr::OnPlayerSpellCast(Player* player, Spell *spell, bool skipCheck)
+void ScriptMgr::OnPlayerSpellCast(Player* player, Spell* spell, bool skipCheck)
 {
     FOREACH_SCRIPT(PlayerScript)->OnSpellCast(player, spell, skipCheck);
 }
@@ -1200,32 +1200,32 @@ void ScriptMgr::OnPlayerBindToInstance(Player* player, Difficulty difficulty, ui
 }
 
 // Guild
-void ScriptMgr::OnGuildAddMember(Guild *guild, Player* player, uint8& plRank)
+void ScriptMgr::OnGuildAddMember(Guild* guild, Player* player, uint8& plRank)
 {
     FOREACH_SCRIPT(GuildScript)->OnAddMember(guild, player, plRank);
 }
 
-void ScriptMgr::OnGuildRemoveMember(Guild *guild, Player* player, bool isDisbanding, bool isKicked)
+void ScriptMgr::OnGuildRemoveMember(Guild* guild, Player* player, bool isDisbanding, bool isKicked)
 {
     FOREACH_SCRIPT(GuildScript)->OnRemoveMember(guild, player, isDisbanding, isKicked);
 }
 
-void ScriptMgr::OnGuildMOTDChanged(Guild *guild, const std::string& newMotd)
+void ScriptMgr::OnGuildMOTDChanged(Guild* guild, const std::string& newMotd)
 {
     FOREACH_SCRIPT(GuildScript)->OnMOTDChanged(guild, newMotd);
 }
 
-void ScriptMgr::OnGuildInfoChanged(Guild *guild, const std::string& newInfo)
+void ScriptMgr::OnGuildInfoChanged(Guild* guild, const std::string& newInfo)
 {
     FOREACH_SCRIPT(GuildScript)->OnInfoChanged(guild, newInfo);
 }
 
-void ScriptMgr::OnGuildCreate(Guild *guild, Player* leader, const std::string& name)
+void ScriptMgr::OnGuildCreate(Guild* guild, Player* leader, const std::string& name)
 {
     FOREACH_SCRIPT(GuildScript)->OnCreate(guild, leader, name);
 }
 
-void ScriptMgr::OnGuildDisband(Guild *guild)
+void ScriptMgr::OnGuildDisband(Guild* guild)
 {
     FOREACH_SCRIPT(GuildScript)->OnDisband(guild);
 }

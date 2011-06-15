@@ -14,14 +14,15 @@ typedef void(AuraEffect::*pAuraEffectHandler)(AuraApplication const* aurApp, uin
 class AuraEffect
 {
     friend void Aura::_InitEffects(uint8 effMask, Unit* caster, int32 *baseAmount);
+    friend Aura * Unit::_TryStackingOrRefreshingExistingAura(SpellEntry const* newAura, uint8 effMask, Unit* caster, int32* baseAmount, Item* castItem, uint64 casterGUID);
     friend Aura::~Aura();
     private:
         ~AuraEffect();
-        explicit AuraEffect(Aura* base, uint8 effIndex, int32 *baseAmount, Unit* caster);
+        explicit AuraEffect(Aura * base, uint8 effIndex, int32 *baseAmount, Unit* caster);
     public:
         Unit* GetCaster() const { return GetBase()->GetCaster(); }
         uint64 GetCasterGUID() const { return GetBase()->GetCasterGUID(); }
-        Aura* GetBase() const { return m_base; }
+        Aura * GetBase() const { return m_base; }
         void GetTargetList(std::list<Unit*> & targetList) const;
         void GetApplicationList(std::list<AuraApplication*> & applicationList) const;
 
@@ -41,14 +42,14 @@ class AuraEffect
         void SetPeriodicTimer(int32 periodicTimer) { m_periodicTimer = periodicTimer; }
 
         int32 CalculateAmount(Unit* caster);
-        void CalculatePeriodic(Unit* caster, bool create = false);
+        void CalculatePeriodic(Unit* caster, bool create = false, bool load = false);
         void CalculateSpellMod();
-        void ChangeAmount(int32 newAmount, bool mark = true);
+        void ChangeAmount(int32 newAmount, bool mark = true, bool onStackOrReapply = false);
         void RecalculateAmount() { if (!CanBeRecalculated()) return; ChangeAmount(CalculateAmount(GetCaster()), false); }
         void RecalculateAmount(Unit* caster) { if (!CanBeRecalculated()) return; ChangeAmount(CalculateAmount(caster), false); }
         bool CanBeRecalculated() const { return m_canBeRecalculated; }
         void SetCanBeRecalculated(bool val) { m_canBeRecalculated = val; }
-        void HandleEffect(AuraApplication const* aurApp, uint8 mode, bool apply);
+        void HandleEffect(AuraApplication * aurApp, uint8 mode, bool apply);
         void HandleEffect(Unit* target, uint8 mode, bool apply);
         void ApplySpellMod(Unit* target, bool apply);
 
@@ -61,9 +62,9 @@ class AuraEffect
 
         bool IsPeriodic() const { return m_isPeriodic; }
         void SetPeriodic(bool isPeriodic) { m_isPeriodic = isPeriodic; }
-        bool IsAffectedOnSpell(SpellEntry const* spell) const;
+        bool IsAffectedOnSpell(SpellEntry const *spell) const;
 
-        void SendTickImmune(Unit* target, Unit* caster) const;
+        void SendTickImmune(Unit* target, Unit *caster) const;
 
         void PeriodicTick(AuraApplication * aurApp, Unit* caster) const;
         void PeriodicDummyTick(Unit* target, Unit* caster) const;
@@ -75,7 +76,7 @@ class AuraEffect
         // add/remove SPELL_AURA_MOD_SHAPESHIFT (36) linked auras
         void HandleShapeshiftBoosts(Unit* target, bool apply) const;
     private:
-        Aura* const m_base;
+        Aura * const m_base;
 
         SpellEntry const* const m_spellProto;
         uint8 const m_effIndex;

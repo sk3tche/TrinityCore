@@ -934,7 +934,8 @@ void SmartScript::ProcessAction(SmartScriptHolder& e, Unit* unit, uint32 var0, u
                 return;
             for (ObjectList::const_iterator itr = targets->begin(); itr != targets->end(); ++itr)
             {
-                if (!IsUnit((*itr))) continue;
+                if (!IsUnit((*itr)))
+                    continue;
                 if (e.action.morphOrMount.creature || e.action.morphOrMount.model)
                 {
                     if (e.action.morphOrMount.creature > 0)
@@ -1294,7 +1295,7 @@ void SmartScript::ProcessAction(SmartScriptHolder& e, Unit* unit, uint32 var0, u
 
             for (ObjectList::const_iterator itr = targets->begin(); itr != targets->end(); ++itr)
                 if (IsPlayer(*itr))
-                    (*itr)->ToPlayer()->PlayerTalkClass->CloseGossip();
+                    (*itr)->ToPlayer()->PlayerTalkClass->SendCloseGossip();
 
             delete targets;
             break;
@@ -1692,6 +1693,45 @@ void SmartScript::ProcessAction(SmartScriptHolder& e, Unit* unit, uint32 var0, u
             for (ObjectList::const_iterator itr = targets->begin(); itr != targets->end(); ++itr)
                 if (IsGameObject(*itr))
                     (*itr)->ToGameObject()->SendCustomAnim(e.action.sendGoCustomAnim.anim);
+
+            delete targets;
+            break;
+        }
+        case SMART_ACTION_SET_DYNAMIC_FLAG:
+        {
+            ObjectList* targets = GetTargets(e, unit);
+            if (!targets)
+                return;
+
+            for (ObjectList::const_iterator itr = targets->begin(); itr != targets->end(); ++itr)
+                if (IsUnit(*itr))
+                    (*itr)->ToUnit()->SetUInt32Value(UNIT_DYNAMIC_FLAGS, e.action.unitFlag.flag);
+
+            delete targets;
+            break;
+        }
+        case SMART_ACTION_ADD_DYNAMIC_FLAG:
+        {
+            ObjectList* targets = GetTargets(e, unit);
+            if (!targets)
+                return;
+
+            for (ObjectList::const_iterator itr = targets->begin(); itr != targets->end(); ++itr)
+                if (IsUnit(*itr))
+                    (*itr)->ToUnit()->SetFlag(UNIT_DYNAMIC_FLAGS, e.action.unitFlag.flag);
+
+            delete targets;
+            break;
+        }
+        case SMART_ACTION_REMOVE_DYNAMIC_FLAG:
+        {
+            ObjectList* targets = GetTargets(e, unit);
+            if (!targets)
+                return;
+
+            for (ObjectList::const_iterator itr = targets->begin(); itr != targets->end(); ++itr)
+                if (IsUnit(*itr))
+                    (*itr)->ToUnit()->RemoveFlag(UNIT_DYNAMIC_FLAGS, e.action.unitFlag.flag);
 
             delete targets;
             break;

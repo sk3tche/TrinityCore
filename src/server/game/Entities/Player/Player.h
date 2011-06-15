@@ -353,10 +353,10 @@ struct Runes
 struct EnchantDuration
 {
     EnchantDuration() : item(NULL), slot(MAX_ENCHANTMENT_SLOT), leftduration(0) {};
-    EnchantDuration(Item * _item, EnchantmentSlot _slot, uint32 _leftduration) : item(_item), slot(_slot),
+    EnchantDuration(Item* _item, EnchantmentSlot _slot, uint32 _leftduration) : item(_item), slot(_slot),
         leftduration(_leftduration){ ASSERT(item); };
 
-    Item * item;
+    Item* item;
     EnchantmentSlot slot;
     uint32 leftduration;
 };
@@ -1103,6 +1103,7 @@ class Player : public Unit, public GridObject<Player>
         void SendTransferAborted(uint32 mapid, TransferAbortReason reason, uint8 arg = 0);
         void SendInstanceResetWarning(uint32 mapid, Difficulty difficulty, uint32 time);
 
+        bool CanInteractWithQuestGiver(Object* questGiver);
         Creature* GetNPCIfCanInteractWith(uint64 guid, uint32 npcflagmask);
         GameObject* GetGameObjectIfCanInteractWith(uint64 guid, GameobjectTypes type) const;
 
@@ -1273,7 +1274,7 @@ class Player : public Unit, public GridObject<Player>
         void AddRefundReference(uint32 it);
         void DeleteRefundReference(uint32 it);
 
-        void ApplyEquipCooldown(Item * pItem);
+        void ApplyEquipCooldown(Item* pItem);
         void SetAmmo(uint32 item);
         void RemoveAmmo();
         float GetAmmoDPS() const { return m_ammoDPS; }
@@ -1291,7 +1292,7 @@ class Player : public Unit, public GridObject<Player>
                                                             // in trade, auction, guild bank, mail....
         void MoveItemToInventory(ItemPosCountVec const& dest, Item* pItem, bool update, bool in_characterInventoryDB = false);
                                                             // in trade, guild bank, mail....
-        void RemoveItemDependentAurasAndCasts(Item * pItem);
+        void RemoveItemDependentAurasAndCasts(Item* pItem);
         void DestroyItem(uint8 bag, uint8 slot, bool update);
         void DestroyItemCount(uint32 item, uint32 count, bool update, bool unequip_check = false);
         void DestroyItemCount(Item* item, uint32& count, bool update);
@@ -1357,9 +1358,9 @@ class Player : public Unit, public GridObject<Player>
         /***                    GOSSIP SYSTEM                  ***/
         /*********************************************************/
 
-        void PrepareGossipMenu(WorldObject *pSource, uint32 menuId = 0, bool showQuests = false);
-        void SendPreparedGossip(WorldObject *pSource);
-        void OnGossipSelect(WorldObject *pSource, uint32 gossipListId, uint32 menuId);
+        void PrepareGossipMenu(WorldObject* source, uint32 menuId = 0, bool showQuests = false);
+        void SendPreparedGossip(WorldObject* source);
+        void OnGossipSelect(WorldObject* source, uint32 gossipListId, uint32 menuId);
 
         uint32 GetGossipTextId(uint32 menuId);
         uint32 GetGossipTextId(WorldObject *pSource);
@@ -1559,7 +1560,7 @@ class Player : public Unit, public GridObject<Player>
         uint8 GetComboPoints() { return m_comboPoints; }
         const uint64& GetComboTarget() const { return m_comboTarget; }
 
-        void AddComboPoints(Unit* target, int8 count, Spell * spell = NULL);
+        void AddComboPoints(Unit* target, int8 count, Spell* spell = NULL);
         void GainSpellComboPoints(int8 count);
         void ClearComboPoints();
         void SendComboPoints();
@@ -1678,11 +1679,11 @@ class Player : public Unit, public GridObject<Player>
         SpellCooldowns const& GetSpellCooldownMap() const { return m_spellCooldowns; }
 
         void AddSpellMod(SpellModifier* mod, bool apply);
-        bool IsAffectedBySpellmod(SpellEntry const* spellInfo, SpellModifier *mod, Spell * spell = NULL);
-        template <class T> T ApplySpellMod(uint32 spellId, SpellModOp op, T &basevalue, Spell * spell = NULL);
-        void RemoveSpellMods(Spell * spell);
-        void RestoreSpellMods(Spell *spell, uint32 ownerAuraId=0);
-        void DropModCharge(SpellModifier * mod, Spell * spell);
+        bool IsAffectedBySpellmod(SpellEntry const* spellInfo, SpellModifier* mod, Spell* spell = NULL);
+        template <class T> T ApplySpellMod(uint32 spellId, SpellModOp op, T &basevalue, Spell* spell = NULL);
+        void RemoveSpellMods(Spell* spell);
+        void RestoreSpellMods(Spell* spell, uint32 ownerAuraId=0);
+        void DropModCharge(SpellModifier* mod, Spell* spell);
         void SetSpellModTakingSpell(Spell* spell, bool apply);
 
         static uint32 const infinityCooldownDelay = MONTH;  // used for set "infinity cooldowns" for spells and check
@@ -1717,7 +1718,7 @@ class Player : public Unit, public GridObject<Player>
         void UpdatePotionCooldown(Spell* spell = NULL);
 
         // global cooldown
-        void AddGlobalCooldown(SpellEntry const* spellInfo, Spell *spell);
+        void AddGlobalCooldown(SpellEntry const *spellInfo, Spell* spell);
         bool HasGlobalCooldown(SpellEntry const* spellInfo) const;
         void RemoveGlobalCooldown(SpellEntry const* spellInfo);
 
@@ -2453,7 +2454,7 @@ class Player : public Unit, public GridObject<Player>
 
         uint32 GetChampioningFaction() const { return m_ChampioningFaction; }
         void SetChampioningFaction(uint32 faction) { m_ChampioningFaction = faction; }
-        Spell * m_spellModTakingSpell;
+        Spell* m_spellModTakingSpell;
 
         float GetAverageItemLevel();
         bool isDebugAreaTriggers;
@@ -2620,7 +2621,7 @@ class Player : public Unit, public GridObject<Player>
 
         SpellModList m_spellMods[MAX_SPELLMOD];
         //uint32 m_pad;
-//        Spell * m_spellModTakingSpell;  // Spell for which charges are dropped in spell::finish
+//        Spell* m_spellModTakingSpell;  // Spell for which charges are dropped in spell::finish
 
         EnchantDurationList m_enchantDuration;
         ItemDurationList m_itemDuration;

@@ -232,13 +232,13 @@ bool GameObject::Create(uint32 guidlow, uint32 name_id, Map* map, uint32 phaseMa
         case GAMEOBJECT_TYPE_TRAP:
             if (GetGOInfo()->trap.stealthed)
             {
-                m_stealth.AddFlag( STEALTH_TRAP);
+                m_stealth.AddFlag(STEALTH_TRAP);
                 m_stealth.AddValue(STEALTH_TRAP, 300);
             }
 
             if (GetGOInfo()->trap.invisible)
             {
-                m_invisibility.AddFlag( INVISIBILITY_TRAP);
+                m_invisibility.AddFlag(INVISIBILITY_TRAP);
                 m_invisibility.AddValue(INVISIBILITY_TRAP, 70);
             }
 
@@ -1523,10 +1523,10 @@ void GameObject::Use(Unit* user)
             if (player->CanUseBattlegroundObject())
             {
                 // in battleground check
-                Battleground *bg = player->GetBattleground();
+                Battleground* bg = player->GetBattleground();
                 if (!bg)
                     return;
-                if ( player->GetVehicle())
+                if (player->GetVehicle())
                     return;
                 // BG flag dropped
                 // WS:

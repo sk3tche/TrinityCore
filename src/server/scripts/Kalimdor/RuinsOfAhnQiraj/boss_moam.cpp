@@ -63,11 +63,11 @@ class boss_moam : public CreatureScript
 
             void Reset()
             {
-                BossAI::Reset();
+                _Reset();
                 me->SetPower(POWER_MANA, 0);
                 _isStonePhase = false;
-                _events.ScheduleEvent(EVENT_STONE_PHASE, 90000);
-                //_events.ScheduleEvent(EVENT_WIDE_SLASH, 11000);
+                events.ScheduleEvent(EVENT_STONE_PHASE, 90000);
+                //events.ScheduleEvent(EVENT_WIDE_SLASH, 11000);
             }
 
             void DamageTaken(Unit* /*attacker*/, uint32& /*damage*/)
@@ -86,12 +86,21 @@ class boss_moam : public CreatureScript
                     case ACTION_STONE_PHASE_END:
                     {
                         me->RemoveAurasDueToSpell(SPELL_ENERGIZE);
-                        _events.ScheduleEvent(EVENT_STONE_PHASE, 90000);
+                        events.ScheduleEvent(EVENT_STONE_PHASE, 90000);
                         _isStonePhase = false;
                         break;
                     }
                     case ACTION_STONE_PHASE_START:
                     {
+                        DoCast(me, SPELL_SUMMON_MANA_FIEND_1);
+                        DoCast(me, SPELL_SUMMON_MANA_FIEND_2);
+                        DoCast(me, SPELL_SUMMON_MANA_FIEND_3);
+                        DoCast(me, SPELL_ENERGIZE);
+                        events.ScheduleEvent(EVENT_STONE_PHASE_END, 90000);
+                        break;
+                    }
+                    default:
+                        break;
                         DoCast(me, SPELL_SUMMON_MANA_FIEND_1);
                         DoCast(me, SPELL_SUMMON_MANA_FIEND_2);
                         DoCast(me, SPELL_SUMMON_MANA_FIEND_3);
@@ -109,7 +118,7 @@ class boss_moam : public CreatureScript
                 if (!UpdateVictim())
                     return;
 
-                _events.Update(diff);
+                events.Update(diff);
 
                 if (me->GetPower(POWER_MANA) == me->GetMaxPower(POWER_MANA))
                 {
@@ -121,16 +130,16 @@ class boss_moam : public CreatureScript
 
                 if (_isStonePhase)
                 {
-                    if (_events.ExecuteEvent() == EVENT_STONE_PHASE_END)
+                    if (events.ExecuteEvent() == EVENT_STONE_PHASE_END)
                         DoAction(ACTION_STONE_PHASE_END);
                     return;
                 }
 
-                // Might mess up mana-drain channel?
+                // Messing up mana-drain channel
                 //if (me->HasUnitState(UNIT_STAT_CASTING))
                 //    return;
 
-                while (uint32 eventId = _events.ExecuteEvent())
+                while (uint32 eventId = events.ExecuteEvent())
                 {
                     switch (eventId)
                     {
@@ -168,23 +177,42 @@ class boss_moam : public CreatureScript
                     }
                 }
  
-                DoMeleeAttackIfReady();
+                            Trinity::RandomResizeList(targetList, 5);
             }
         private:
             EventMap _events;
             bool _isStonePhase;
         };
 
+                            for (std::list<Unit*>::iterator itr = targetList.begin(); itr != targetList.end(); ++itr)
+                                DoCast(*itr, SPELL_DRAIN_MANA);
+
+                            events.ScheduleEvent(EVENT_DRAIN_MANA, urand(5000,15000));
+                            break;
+                        }/*
+                        case EVENT_WIDE_SLASH:
+                            DoCast(me, SPELL_WIDE_SLASH);
+                            events.ScheduleEvent(EVENT_WIDE_SLASH, 11000);
+                            break;
+                        case EVENT_TRASH:
+                            DoCast(me, SPELL_TRASH);
+                            events.ScheduleEvent(EVENT_WIDE_SLASH, 16000);
+                            break;*/
+                        default:
+                            break;
+                    }
+                }
+ 
+                DoMeleeAttackIfReady();
+            }
+        private:
+            bool _isStonePhase;
+        };
+ 
         CreatureAI* GetAI(Creature* creature) const
         {
-            return new boss_moamAI (creature);
+            return new boss_moamAI(creature);
         }
-};
- 
-/*
-Needed?
-class spell_moam_energize : public SpellScriptLoader
-{
     public:
         spell_moam_energize() : SpellScriptLoader("spell_moam_energize") { }
 

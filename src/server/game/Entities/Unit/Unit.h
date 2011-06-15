@@ -372,7 +372,6 @@ enum AuraRemoveMode
 {
     AURA_REMOVE_NONE = 0,
     AURA_REMOVE_BY_DEFAULT = 1,       // scripted remove, remove by stack with aura with different ids and sc aura remove
-    AURA_REMOVE_BY_STACK,             // replace by aura with same id
     AURA_REMOVE_BY_CANCEL,
     AURA_REMOVE_BY_ENEMY_SPELL,       // dispel and absorb aura destroy
     AURA_REMOVE_BY_EXPIRE,            // aura duration has ended
@@ -585,14 +584,15 @@ enum UnitFlags
 // Value masks for UNIT_FIELD_FLAGS_2
 enum UnitFlags2
 {
-    UNIT_FLAG2_FEIGN_DEATH      = 0x00000001,
-    UNIT_FLAG2_UNK1             = 0x00000002,               // Hide unit model (show only player equip)
-    UNIT_FLAG2_COMPREHEND_LANG  = 0x00000008,
-    UNIT_FLAG2_MIRROR_IMAGE     = 0x00000010,
-    UNIT_FLAG2_FORCE_MOVE       = 0x00000040,
-    UNIT_FLAG2_DISARM_OFFHAND   = 0x00000080,
-    UNIT_FLAG2_DISARM_RANGED    = 0x00000400,               //this does not disable ranged weapon display (maybe additional flag needed?)
-    UNIT_FLAG2_REGENERATE_POWER = 0x00000800
+    UNIT_FLAG2_FEIGN_DEATH          = 0x00000001,
+    UNIT_FLAG2_UNK1                 = 0x00000002,   // Hide unit model (show only player equip)
+    UNIT_FLAG2_COMPREHEND_LANG      = 0x00000008,
+    UNIT_FLAG2_MIRROR_IMAGE         = 0x00000010,
+    UNIT_FLAG2_FORCE_MOVE           = 0x00000040,
+    UNIT_FLAG2_DISARM_OFFHAND       = 0x00000080,
+    UNIT_FLAG2_DISARM_RANGED        = 0x00000400,   // this does not disable ranged weapon display (maybe additional flag needed?)
+    UNIT_FLAG2_REGENERATE_POWER     = 0x00000800,
+    UNIT_FLAG2_ALLOW_CHEAT_SPELLS   = 0x00040000,   // allows casting spells with AttributesEx7 & SPELL_ATTR7_IS_CHEAT_SPELL
 };
 
 /// Non Player Character flags
@@ -1474,14 +1474,14 @@ class Unit : public WorldObject
         void EnergizeBySpell(Unit* victim, uint32 SpellID, uint32 Damage, Powers powertype);
         uint32 SpellNonMeleeDamageLog(Unit* victim, uint32 spellID, uint32 damage);
         void CastSpell(Unit* Victim, uint32 spellId, bool triggered, Item *castItem = NULL, AuraEffect const* triggeredByAura = NULL, uint64 originalCaster = 0);
-        void CastSpell(Unit* Victim, SpellEntry const* spellInfo, bool triggered, Item *castItem= NULL, AuraEffect const* triggeredByAura = NULL, uint64 originalCaster = 0);
-        void CastSpell(float x, float y, float z, uint32 spellId, bool triggered, Item *castItem = NULL, AuraEffect const* triggeredByAura = NULL, uint64 originalCaster = 0,  Unit* originalVictim = 0);
+        void CastSpell(Unit* Victim, SpellEntry const* spellInfo, bool triggered, Item* castItem= NULL, AuraEffect const* triggeredByAura = NULL, uint64 originalCaster = 0);
+        void CastSpell(float x, float y, float z, uint32 spellId, bool triggered, Item* castItem = NULL, AuraEffect const* triggeredByAura = NULL, uint64 originalCaster = 0,  Unit* originalVictim = 0);
         void CastCustomSpell(Unit* Victim, uint32 spellId, int32 const* bp0, int32 const* bp1, int32 const* bp2, bool triggered, Item *castItem= NULL, AuraEffect const* triggeredByAura = NULL, uint64 originalCaster = 0);
         void CastCustomSpell(uint32 spellId, SpellValueMod mod, int32 value, Unit* Victim = NULL, bool triggered = true, Item *castItem = NULL, AuraEffect const* triggeredByAura = NULL, uint64 originalCaster = 0);
         void CastCustomSpell(uint32 spellId, CustomSpellValues const &value, Unit* Victim = NULL, bool triggered = true, Item *castItem = NULL, AuraEffect const* triggeredByAura = NULL, uint64 originalCaster = 0);
         void CastSpell(GameObject *go, uint32 spellId, bool triggered, Item *castItem = NULL, AuraEffect* triggeredByAura = NULL, uint64 originalCaster = 0);
-        Aura* AddAura(uint32 spellId, Unit* target);
-        Aura* AddAura(SpellEntry const* spellInfo, uint8 effMask, Unit* target);
+        Aura * AddAura(uint32 spellId, Unit* target);
+        Aura * AddAura(SpellEntry const *spellInfo, uint8 effMask, Unit* target);
         void SetAuraStack(uint32 spellId, Unit* target, uint32 stack);
 
         bool IsDamageToThreatSpell(SpellEntry const* spellInfo) const;
@@ -1617,6 +1617,7 @@ class Unit : public WorldObject
         bool InitTamedPet(Pet* pet, uint8 level, uint32 spell_id);
 
         // aura apply/remove helpers - you should better not use these
+        Aura* _TryStackingOrRefreshingExistingAura(SpellEntry const* newAura, uint8 effMask, Unit* caster, int32* baseAmount = NULL, Item* castItem = NULL, uint64 casterGUID = 0);
         void _AddAura(UnitAura* aura, Unit* caster);
         AuraApplication * _CreateAuraApplication(Aura* aura, uint8 effMask);
         void _ApplyAuraEffect(Aura* aura, uint8 effIndex);
@@ -1649,7 +1650,6 @@ class Unit : public WorldObject
 
         void RemoveAurasDueToSpell(uint32 spellId, uint64 caster = 0, uint8 reqEffMask = 0, AuraRemoveMode removeMode = AURA_REMOVE_BY_DEFAULT);
         void RemoveAuraFromStack(uint32 spellId, uint64 caster = 0, AuraRemoveMode removeMode = AURA_REMOVE_BY_DEFAULT);
-        inline void RemoveAuraFromStack(AuraMap::iterator &iter, AuraRemoveMode removeMode, uint8 chargesRemoved = 1);
         void RemoveAurasDueToSpellByDispel(uint32 spellId, uint64 casterGUID, Unit* dispeller, uint8 chargesRemoved = 1);
         void RemoveAurasDueToSpellBySteal(uint32 spellId, uint64 casterGUID, Unit* stealer);
         void RemoveAurasDueToItemSpell(Item* castItem, uint32 spellId);
@@ -1749,7 +1749,7 @@ class Unit : public WorldObject
         float GetNegStat(Stats stat) const { return GetFloatValue(UNIT_FIELD_NEGSTAT0+stat); }
         float GetCreateStat(Stats stat) const { return m_createStats[stat]; }
 
-        void SetCurrentCastedSpell(Spell * pSpell);
+        void SetCurrentCastedSpell(Spell* pSpell);
         virtual void ProhibitSpellSchool(SpellSchoolMask /*idSchoolMask*/, uint32 /*unTimeMs*/) { }
         void InterruptSpell(CurrentSpellTypes spellType, bool withDelayed = true, bool withInstant = true);
         void FinishSpell(CurrentSpellTypes spellType, bool ok = true);
@@ -1905,9 +1905,9 @@ class Unit : public WorldObject
         float GetAPMultiplier(WeaponAttackType attType, bool normalized);
         void ModifyAuraState(AuraState flag, bool apply);
         uint32 BuildAuraStateUpdateForTarget(Unit* target) const;
-        bool HasAuraState(AuraState flag, SpellEntry const* spellProto = NULL, Unit const* Caster = NULL) const ;
+        bool HasAuraState(AuraState flag, SpellEntry const *spellProto = NULL, Unit const* Caster = NULL) const ;
         void UnsummonAllTotems();
-        Unit* SelectMagnetTarget(Unit* victim, SpellEntry const* spellInfo = NULL);
+        Unit* SelectMagnetTarget(Unit* victim, SpellEntry const *spellInfo = NULL);
         int32 SpellBaseDamageBonus(SpellSchoolMask schoolMask);
         int32 SpellBaseHealingBonus(SpellSchoolMask schoolMask);
         int32 SpellBaseDamageBonusForVictim(SpellSchoolMask schoolMask, Unit* victim);
@@ -1956,7 +1956,7 @@ class Unit : public WorldObject
         int32 CalculateSpellDamage(Unit const* target, SpellEntry const* spellProto, uint8 effect_index, int32 const* basePoints = NULL) const;
         int32 CalcSpellDuration(SpellEntry const* spellProto);
         int32 ModSpellDuration(SpellEntry const* spellProto, Unit const* target, int32 duration, bool positive);
-        void  ModSpellCastTime(SpellEntry const* spellProto, int32 & castTime, Spell * spell=NULL);
+        void  ModSpellCastTime(SpellEntry const* spellProto, int32 & castTime, Spell* spell=NULL);
         float CalculateLevelPenalty(SpellEntry const* spellProto) const;
 
         void addFollower(FollowerReference* pRef) { m_FollowingRefManager.insertFirst(pRef); }
@@ -2158,13 +2158,13 @@ class Unit : public WorldObject
 
         bool isAlwaysDetectableFor(WorldObject const* seer) const;
     private:
-        bool IsTriggeredAtSpellProcEvent(Unit* victim, Aura* aura, SpellEntry const* procSpell, uint32 procFlag, uint32 procExtra, WeaponAttackType attType, bool isVictim, bool active, SpellProcEventEntry const* & spellProcEvent);
+        bool IsTriggeredAtSpellProcEvent(Unit *pVictim, Aura * aura, SpellEntry const* procSpell, uint32 procFlag, uint32 procExtra, WeaponAttackType attType, bool isVictim, bool active, SpellProcEventEntry const *& spellProcEvent);
         bool HandleDummyAuraProc(Unit* victim, uint32 damage, AuraEffect* triggeredByAura, SpellEntry const* procSpell, uint32 procFlag, uint32 procEx, uint32 cooldown);
         bool HandleHasteAuraProc(Unit* victim, uint32 damage, AuraEffect* triggeredByAura, SpellEntry const* procSpell, uint32 procFlag, uint32 procEx, uint32 cooldown);
         bool HandleSpellCritChanceAuraProc(Unit* victim, uint32 damage, AuraEffect* triggredByAura, SpellEntry const* procSpell, uint32 procFlag, uint32 procEx, uint32 cooldown);
         bool HandleObsModEnergyAuraProc(Unit* victim, uint32 damage, AuraEffect* triggeredByAura, SpellEntry const* procSpell, uint32 procFlag, uint32 procEx, uint32 cooldown);
         bool HandleModDamagePctTakenAuraProc(Unit* victim, uint32 damage, AuraEffect* triggeredByAura, SpellEntry const* procSpell, uint32 procFlag, uint32 procEx, uint32 cooldown);
-        bool HandleAuraProc(Unit* victim, uint32 damage, Aura* triggeredByAura, SpellEntry const* procSpell, uint32 procFlag, uint32 procEx, uint32 cooldown, bool * handled);
+        bool HandleAuraProc(Unit *pVictim, uint32 damage, Aura* triggeredByAura, SpellEntry const* procSpell, uint32 procFlag, uint32 procEx, uint32 cooldown, bool * handled);
         bool HandleProcTriggerSpell(Unit* victim, uint32 damage, AuraEffect* triggeredByAura, SpellEntry const* procSpell, uint32 procFlag, uint32 procEx, uint32 cooldown);
         bool HandleOverrideClassScriptAuraProc(Unit* victim, uint32 damage, AuraEffect* triggeredByAura, SpellEntry const* procSpell, uint32 cooldown);
         bool HandleAuraRaidProcFromChargeWithValue(AuraEffect* triggeredByAura);

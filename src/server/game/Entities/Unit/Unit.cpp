@@ -53,6 +53,7 @@
 #include "TemporarySummon.h"
 #include "Vehicle.h"
 #include "Transport.h"
+#include "InstanceScript.h"
 
 #include <math.h>
 
@@ -561,19 +562,6 @@ void Unit::DealDamageMods(Unit* victim, uint32 &damage, uint32* absorb)
             return;
     }
 
-    //You don't lose health from damage taken from another player while in a sanctuary
-    //You still see it in the combat log though
-    if (victim != this && IsControlledByPlayer() && victim->IsControlledByPlayer())
-    {
-        const AreaTableEntry *area = GetAreaEntryByAreaID(victim->GetAreaId());
-        if (area && area->IsSanctuary())      //sanctuary
-        {
-            if (absorb)
-                *absorb += damage;
-            damage = 0;
-        }
-    }
-
     uint32 originalDamage = damage;
 
     if (absorb && originalDamage > damage)
@@ -844,7 +832,7 @@ void Unit::CastSpell(Unit* Victim, uint32 spellId, bool triggered, Item *castIte
     CastSpell(Victim, spellInfo, triggered, castItem, triggeredByAura, originalCaster);
 }
 
-void Unit::CastSpell(Unit* Victim, SpellEntry const* spellInfo, bool triggered, Item *castItem, AuraEffect const* triggeredByAura, uint64 originalCaster)
+void Unit::CastSpell(Unit* Victim, SpellEntry const* spellInfo, bool triggered, Item* castItem, AuraEffect const* triggeredByAura, uint64 originalCaster)
 {
     if (!spellInfo)
     {
@@ -865,7 +853,7 @@ void Unit::CastSpell(Unit* Victim, SpellEntry const* spellInfo, bool triggered, 
     if (!originalCaster && triggeredByAura)
         originalCaster = triggeredByAura->GetCasterGUID();
 
-    Spell *spell = new Spell(this, spellInfo, triggered, originalCaster);
+    Spell* spell = new Spell(this, spellInfo, triggered, originalCaster);
 
     spell->m_CastItem = castItem;
     spell->prepare(&targets, triggeredByAura);
@@ -905,7 +893,7 @@ void Unit::CastCustomSpell(uint32 spellId, CustomSpellValues const &value, Unit*
     if (!originalCaster && triggeredByAura)
         originalCaster = triggeredByAura->GetCasterGUID();
 
-    Spell *spell = new Spell(this, spellInfo, triggered, originalCaster);
+    Spell* spell = new Spell(this, spellInfo, triggered, originalCaster);
 
     if (castItem)
     {
@@ -936,7 +924,7 @@ void Unit::CastSpell(float x, float y, float z, uint32 spellId, bool triggered, 
     if (!originalCaster && triggeredByAura)
         originalCaster = triggeredByAura->GetCasterGUID();
 
-    Spell *spell = new Spell(this, spellInfo, triggered, originalCaster);
+    Spell* spell = new Spell(this, spellInfo, triggered, originalCaster);
 
     SpellCastTargets targets;
     targets.setDst(x, y, z, GetOrientation());
@@ -972,7 +960,7 @@ void Unit::CastSpell(GameObject *go, uint32 spellId, bool triggered, Item *castI
     if (!originalCaster && triggeredByAura)
         originalCaster = triggeredByAura->GetCasterGUID();
 
-    Spell *spell = new Spell(this, spellInfo, triggered, originalCaster);
+    Spell* spell = new Spell(this, spellInfo, triggered, originalCaster);
 
     SpellCastTargets targets;
     targets.setGOTarget(go);
@@ -1120,16 +1108,6 @@ void Unit::DealSpellDamage(SpellNonMeleeDamage *damageInfo, bool durabilityLoss)
     {
         sLog->outDebug(LOG_FILTER_UNITS, "Unit::DealSpellDamage have wrong damageInfo->SpellID: %u", damageInfo->SpellID);
         return;
-    }
-
-    //You don't lose health from damage taken from another player while in a sanctuary
-    //You still see it in the combat log though
-    if (victim != this && IsControlledByPlayer() && victim->IsControlledByPlayer())
-    {
-        const AreaTableEntry *area = GetAreaEntryByAreaID(victim->GetAreaId());
-
-        if (area && area->IsSanctuary())       // sanctuary
-            return;
     }
 
     // Call default DealDamage
@@ -1352,17 +1330,8 @@ void Unit::DealMeleeDamage(CalcDamageInfo *damageInfo, bool durabilityLoss)
     if (!victim->isAlive() || victim->HasUnitState(UNIT_STAT_IN_FLIGHT) || (victim->HasUnitState(UNIT_STAT_ONVEHICLE) && victim->GetVehicleBase() != this) || (victim->GetTypeId() == TYPEID_UNIT && victim->ToCreature()->IsInEvadeMode()))
         return;
 
-    //You don't lose health from damage taken from another player while in a sanctuary
-    //You still see it in the combat log though
-    if (victim != this && IsControlledByPlayer() && victim->IsControlledByPlayer())
-    {
-        const AreaTableEntry *area = GetAreaEntryByAreaID(victim->GetAreaId());
-        if (area && area->IsSanctuary())      // sanctuary
-            return;
-    }
-
     // Hmmmm dont like this emotes client must by self do all animations
-    if (damageInfo->HitInfo&HITINFO_CRITICALHIT)
+    if (damageInfo->HitInfo & HITINFO_CRITICALHIT)
         victim->HandleEmoteCommand(EMOTE_ONESHOT_WOUNDCRITICAL);
     if (damageInfo->blocked_amount && damageInfo->TargetState != VICTIMSTATE_BLOCKS)
         victim->HandleEmoteCommand(EMOTE_ONESHOT_PARRYSHIELD);
@@ -2926,7 +2895,7 @@ void Unit::_UpdateAutoRepeatSpell()
     }
 }
 
-void Unit::SetCurrentCastedSpell(Spell * pSpell)
+void Unit::SetCurrentCastedSpell(Spell* pSpell)
 {
     ASSERT(pSpell);                                         // NULL may be never passed here, use InterruptSpell or InterruptNonMeleeSpells
 
@@ -3004,7 +2973,7 @@ void Unit::InterruptSpell(CurrentSpellTypes spellType, bool withDelayed, bool wi
     ASSERT(spellType < CURRENT_MAX_SPELL);
 
     //sLog->outDebug(LOG_FILTER_UNITS, "Interrupt spell for unit %u.", GetEntry());
-    Spell *spell = m_currentSpells[spellType];
+    Spell* spell = m_currentSpells[spellType];
     if (spell
         && (withDelayed || spell->getState() != SPELL_STATE_DELAYED)
         && (withInstant || spell->GetCastTime() > 0))
@@ -3143,35 +3112,66 @@ void Unit::DeMorph()
     SetDisplayId(GetNativeDisplayId());
 }
 
+Aura* Unit::_TryStackingOrRefreshingExistingAura(SpellEntry const* newAura, uint8 effMask, Unit* caster, int32* baseAmount /*= NULL*/, Item* castItem /*= NULL*/, uint64 casterGUID /*= 0*/)
+{
+    ASSERT(casterGUID || caster);
+    if (!casterGUID)
+        casterGUID = caster->GetGUID();
+
+    // passive and Incanter's Absorption and auras with different type can stack with themselves any number of times
+    if (!IsPassiveSpell(newAura) && newAura->Id != 44413)
+    {
+        // check if cast item changed
+        uint64 castItemGUID = 0;
+        if (castItem)
+            castItemGUID = castItem->GetGUID();
+
+        // find current aura from spell and change it's stackamount, or refresh it's duration
+        if (Aura* foundAura = GetOwnedAura(newAura->Id, casterGUID, (sSpellMgr->GetSpellCustomAttr(newAura->Id) & SPELL_ATTR0_CU_ENCHANT_PROC) ? castItemGUID : 0, 0))
+        {
+            // effect masks do not match
+            // extremely rare case
+            // let's just recreate aura
+            if (effMask != foundAura->GetEffectMask())
+                return NULL;
+
+            // update basepoints with new values - effect amount will be recalculated in ModStackAmount
+            for (uint8 i = 0; i < MAX_SPELL_EFFECTS; ++i)
+            {
+                if (!foundAura->HasEffect(i))
+                    continue;
+
+                int bp;
+                if (baseAmount)
+                    bp = *(baseAmount + i);
+                else
+                    bp = foundAura->GetSpellProto()->EffectBasePoints[i];
+
+                int32* oldBP = const_cast<int32*>(&(foundAura->GetEffect(i)->m_baseAmount));
+                *oldBP = bp;
+            }
+
+            // correct cast item guid if needed
+            if (castItemGUID != foundAura->GetCastItemGUID())
+            {
+                uint64* oldGUID = const_cast<uint64 *>(&foundAura->m_castItemGuid);
+                *oldGUID = castItemGUID;
+            }
+
+            // try to increase stack amount
+            foundAura->ModStackAmount(1);
+            return foundAura;
+        }
+    }
+
+    return NULL;
+}
+
 void Unit::_AddAura(UnitAura* aura, Unit* caster)
 {
     ASSERT(!m_cleanupDone);
     m_ownedAuras.insert(AuraMap::value_type(aura->GetId(), aura));
 
-    // passive and Incanter's Absorption and auras with different type can stack with themselves any number of times
-    if (!aura->IsPassive() && aura->GetId() != 44413)
-    {
-        // find current aura from spell and change it's stackamount
-        if (Aura* foundAura = GetOwnedAura(aura->GetId(), aura->GetCasterGUID(), (sSpellMgr->GetSpellCustomAttr(aura->GetId()) & SPELL_ATTR0_CU_ENCHANT_PROC) ? aura->GetCastItemGUID() : 0, 0, aura))
-        {
-            if (aura->GetSpellProto()->StackAmount)
-                aura->ModStackAmount(foundAura->GetStackAmount());
-
-            // Update periodic timers from the previous aura
-            for (uint8 i = 0; i < MAX_SPELL_EFFECTS; ++i)
-            {
-                AuraEffect *existingEff = foundAura->GetEffect(i);
-                AuraEffect *newEff = aura->GetEffect(i);
-                if (!existingEff || !newEff)
-                    continue;
-                newEff->SetPeriodicTimer(existingEff->GetPeriodicTimer());
-            }
-
-            // Use the new one to replace the old one
-            // This is the only place where AURA_REMOVE_BY_STACK should be used
-            RemoveOwnedAura(foundAura, AURA_REMOVE_BY_STACK);
-        }
-    }
     _RemoveNoStackAurasDueToAura(aura);
 
     if (aura->IsRemoved())
@@ -3276,7 +3276,7 @@ void Unit::_ApplyAura(AuraApplication * aurApp, uint8 effMask)
     if (aurApp->GetRemoveMode())
         return;
 
-    aura->HandleAuraSpecificMods(aurApp, caster, true);
+    aura->HandleAuraSpecificMods(aurApp, caster, true, false);
 
     // apply effects of the aura
     for (uint8 i = 0 ; i < MAX_SPELL_EFFECTS; ++i)
@@ -3358,7 +3358,7 @@ void Unit::_UnapplyAura(AuraApplicationMap::iterator &i, AuraRemoveMode removeMo
     if (!auraStateFound)
         ModifyAuraState(auraState, false);
 
-    aura->HandleAuraSpecificMods(aurApp, caster, false);
+    aura->HandleAuraSpecificMods(aurApp, caster, false, false);
 
     // only way correctly remove all auras from list
     //if (removedAuras != m_removedAurasCount) new aura may be added
@@ -3648,22 +3648,16 @@ void Unit::RemoveAuraFromStack(uint32 spellId, uint64 caster, AuraRemoveMode rem
 {
     for (AuraMap::iterator iter = m_ownedAuras.lower_bound(spellId); iter != m_ownedAuras.upper_bound(spellId);)
     {
-        Aura const* aura = iter->second;
+        Aura* aura = iter->second;
         if ((aura->GetType() == UNIT_AURA_TYPE)
             && (!caster || aura->GetCasterGUID() == caster))
         {
-            RemoveAuraFromStack(iter, removeMode);
+            aura->ModStackAmount(-1,removeMode);
             return;
         }
         else
             ++iter;
     }
-}
-
-inline void Unit::RemoveAuraFromStack(AuraMap::iterator &iter, AuraRemoveMode removeMode, uint8 chargesRemoved/*= 1*/)
-{
-    if (iter->second->ModStackAmount(-chargesRemoved))
-        RemoveOwnedAura(iter, removeMode);
 }
 
 void Unit::RemoveAurasDueToSpellByDispel(uint32 spellId, uint64 casterGUID, Unit* dispeller, uint8 chargesRemoved/*= 1*/)
@@ -3674,12 +3668,9 @@ void Unit::RemoveAurasDueToSpellByDispel(uint32 spellId, uint64 casterGUID, Unit
         if (aura->GetCasterGUID() == casterGUID)
         {
             if (aura->GetSpellProto()->AttributesEx7 & SPELL_ATTR7_DISPEL_CHARGES)
-            {
-                for (uint8 i = 0; i < chargesRemoved; i++)
-                    aura->DropCharge();
-            }
+                aura->ModCharges(-chargesRemoved, AURA_REMOVE_BY_ENEMY_SPELL);
             else
-                RemoveAuraFromStack(iter, AURA_REMOVE_BY_ENEMY_SPELL, chargesRemoved);
+                aura->ModStackAmount(-chargesRemoved, AURA_REMOVE_BY_ENEMY_SPELL);
 
             switch (aura->GetSpellProto()->SpellFamilyName)
             {
@@ -3792,52 +3783,41 @@ void Unit::RemoveAurasDueToSpellBySteal(uint32 spellId, uint64 casterGUID, Unit*
             }
 
             bool stealCharge = aura->GetSpellProto()->AttributesEx7 & SPELL_ATTR7_DISPEL_CHARGES;
-            bool stealStack = aura->GetSpellProto()->StackAmount > 1;
-            int32 dur = (2*MINUTE*IN_MILLISECONDS < aura->GetDuration() || aura->GetDuration() < 0) ? 2*MINUTE*IN_MILLISECONDS : aura->GetDuration();
+            int32 dur = std::min(2*MINUTE*IN_MILLISECONDS, aura->GetDuration());
 
-            if (Aura* newAura = (stealCharge || stealStack) ? stealer->GetAura(aura->GetId(), aura->GetCasterGUID()) : NULL)
+            if (Aura* newAura = stealer->GetAura(aura->GetId(), aura->GetCasterGUID()))
             {
                 if (stealCharge)
-                {
-                    uint8 newCharges = newAura->GetCharges() + 1;
-                    uint8 maxCharges = newAura->GetSpellProto()->procCharges;
-                    // We must be able to steal as much charges as original caster can have
-                    if (caster)
-                        if (Player* modOwner = caster->GetSpellModOwner())
-                            modOwner->ApplySpellMod(aura->GetId(), SPELLMOD_CHARGES, maxCharges);
-                    newAura->SetCharges(maxCharges < newCharges ? maxCharges : newCharges);
-                }
+                    newAura->ModCharges(1);
                 else
-                {
-                    uint8 newStacks = newAura->GetStackAmount() + 1;
-                    uint8 maxStacks = newAura->GetSpellProto()->StackAmount;
-                    newAura->SetStackAmount(maxStacks < newStacks ? maxStacks : newStacks);
-                }
+                    newAura->ModStackAmount(1);
                 newAura->SetDuration(dur);
             }
             else
             {
-                bool isSingleTarget = aura->IsSingleTarget() && caster;
-                if (isSingleTarget)
+                // single target state must be removed before aura creation to preserve existing single target aura
+                if (aura->IsSingleTarget())
                     aura->UnregisterSingleTarget();
-                newAura = Aura::TryCreate(aura->GetSpellProto(), effMask, stealer, NULL, &baseDamage[0], NULL, aura->GetCasterGUID());
-                // strange but intended behaviour: Stolen single target auras won't be treated as single targeted
-                if (newAura && isSingleTarget)
+
+                if (newAura = Aura::TryRefreshStackOrCreate(aura->GetSpellProto(), effMask, stealer, NULL, &baseDamage[0], NULL, aura->GetCasterGUID()))
                 {
-                    aura->SetIsSingleTarget(true);
-                    caster->GetSingleCastAuras().push_back(aura);
-                    newAura->UnregisterSingleTarget();
+                    // created aura must not be single target aura,, so stealer won't loose it on recast
+                    if (newAura->IsSingleTarget())
+                    {
+                        newAura->UnregisterSingleTarget();
+                        // bring back single target aura status to the old aura
+                        aura->SetIsSingleTarget(true);
+                        caster->GetSingleCastAuras().push_back(aura);
+                    }
+                    newAura->SetLoadedState(dur, dur, stealCharge ? 1 : aura->GetCharges(), 1, recalculateMask, &damage[0]);
+                    newAura->ApplyForTargets();
                 }
-                if (!newAura)
-                    return;
-                newAura->SetLoadedState(dur, dur, stealCharge ? 1 : aura->GetCharges(), 1, recalculateMask, &damage[0]);
-                newAura->ApplyForTargets();
             }
 
             if (stealCharge)
-                aura->DropCharge();
+                aura->ModCharges(-1, AURA_REMOVE_BY_ENEMY_SPELL);
             else
-                RemoveAuraFromStack(iter, AURA_REMOVE_BY_ENEMY_SPELL);
+                aura->ModStackAmount(-1, AURA_REMOVE_BY_ENEMY_SPELL);
 
             return;
         }
@@ -4059,7 +4039,7 @@ void Unit::RemoveArenaAuras(bool onleave)
         Aura const* aura = aurApp->GetBase();
         if (!(aura->GetSpellProto()->AttributesEx4 & SPELL_ATTR4_UNK21) // don't remove stances, shadowform, pally/hunter auras
             && !aura->IsPassive()                               // don't remove passive auras
-            && (!(aura->GetSpellProto()->Attributes & SPELL_ATTR0_UNAFFECTED_BY_INVULNERABILITY) || !(aura->GetSpellProto()->Attributes & SPELL_ATTR0_UNK8))   // not unaffected by invulnerability auras or not having that unknown flag (that seemed the most probable)
+            && !(aura->GetSpellProto()->AttributesEx3 & SPELL_ATTR3_DEATH_PERSISTENT) // not death persistent auras
             && (aurApp->IsPositive() ^ onleave))                   // remove positive buffs on enter, negative buffs on leave
             RemoveAura(iter);
         else
@@ -5658,6 +5638,18 @@ bool Unit::HandleDummyAuraProc(Unit* victim, uint32 damage, AuraEffect* triggere
                     basepoints0 = CalculatePctN(int32(damage), triggerAmount);
                     break;
                 }
+                case 65032: // Boom aura (321 Boombot)
+                {
+                    if (pVictim->GetEntry() != 33343)   // Scrapbot
+                        return false;
+
+                    InstanceScript* instance = GetInstanceScript();
+                    if (!instance)
+                        return false;
+
+                    instance->DoCastSpellOnPlayers(65037);  // Achievement criteria marker
+                    break;
+                }
             }
             break;
         }
@@ -5759,14 +5751,16 @@ bool Unit::HandleDummyAuraProc(Unit* victim, uint32 damage, AuraEffect* triggere
             {
                 // Glyph of Polymorph
                 case 56375:
+                {
                     target->RemoveAurasByType(SPELL_AURA_PERIODIC_DAMAGE, 0, target->GetAura(32409)); // SW:D shall not be removed.
                     target->RemoveAurasByType(SPELL_AURA_PERIODIC_DAMAGE_PERCENT);
                     target->RemoveAurasByType(SPELL_AURA_PERIODIC_LEECH);
                     return true;
+                }
                 // Glyph of Icy Veins
                 case 56374:
                 {
-                    RemoveAurasByType(SPELL_AURA_MOD_MELEE_HASTE, 0, 0, true, false);
+                    RemoveAurasByType(SPELL_AURA_HASTE_SPELLS, 0, 0, true, false);
                     RemoveAurasByType(SPELL_AURA_MOD_DECREASE_SPEED);
                     return true;
                 }
@@ -5826,6 +5820,22 @@ bool Unit::HandleDummyAuraProc(Unit* victim, uint32 damage, AuraEffect* triggere
                     }
                     target = victim;
                     triggered_spell_id = 64413;
+                    break;
+                }
+                case 47020: // Enter vehicle XT-002 (Scrapbot)
+                {
+                    if (GetTypeId() != TYPEID_UNIT)
+                        return false;
+
+                    Unit* vehicleBase = GetVehicleBase();
+                    if (!vehicleBase)
+                        return false;
+
+                    // Todo: Check if this amount is blizzlike
+                    vehicleBase->ModifyHealth(int32(vehicleBase->CountPctFromMaxHealth(1)));
+
+                    // Despawns the scrapbot
+                    ToCreature()->DespawnOrUnsummon();
                     break;
                 }
             }
@@ -6537,7 +6547,7 @@ bool Unit::HandleDummyAuraProc(Unit* victim, uint32 damage, AuraEffect* triggere
                 if (!procSpell)
                     return false;
 
-                Spell * spell = ToPlayer()->m_spellModTakingSpell;
+                Spell* spell = ToPlayer()->m_spellModTakingSpell;
 
                 // Disable charge drop because of Lock and Load
                 ToPlayer()->SetSpellModTakingSpell(spell, false);
@@ -6619,7 +6629,7 @@ bool Unit::HandleDummyAuraProc(Unit* victim, uint32 damage, AuraEffect* triggere
         case SPELLFAMILY_PALADIN:
         {
             // Seal of Righteousness - melee proc dummy (addition ${$MWS*(0.022*$AP+0.044*$SPH)} damage)
-            if (dummySpell->SpellFamilyFlags[0]&0x8000000)
+            if (dummySpell->SpellFamilyFlags[0] & 0x8000000)
             {
                 if (effIndex != 0)
                     return false;
@@ -7920,6 +7930,7 @@ bool Unit::HandleAuraProc(Unit* victim, uint32 damage, Aura* triggeredByAura, Sp
                     break;
                 }
             }
+
             break;
         case SPELLFAMILY_PALADIN:
         {
@@ -7985,7 +7996,7 @@ bool Unit::HandleAuraProc(Unit* victim, uint32 damage, Aura* triggeredByAura, Sp
                     if (!caster || !damage)
                         return false;
 
-                    //last charge and crit
+                    // last charge and crit
                     if (triggeredByAura->GetCharges() <= 1 && (procEx & PROC_EX_CRITICAL_HIT))
                         return true;                        // charge counting (will removed)
 
@@ -8674,14 +8685,6 @@ bool Unit::HandleProcTriggerSpell(Unit* victim, uint32 damage, AuraEffect* trigg
                 return false;
             break;
         }
-        // Evasive Maneuvers (Commendation of Kael`thas trinket)
-        case 45057:
-        {
-            // reduce you below $s1% health
-            if ((GetHealth() - damage) > CalculatePctN(GetMaxHealth(), triggerAmount))
-                return false;
-            break;
-        }
         // Rapid Recuperation
         case 53228:
         case 53232:
@@ -8723,6 +8726,17 @@ bool Unit::HandleProcTriggerSpell(Unit* victim, uint32 damage, AuraEffect* trigg
             if (victim)
                 victim->CastSpell(victim, trigger_spell_id, true);    // EffectImplicitTarget is self
             return true;
+        case 45057: // Evasive Maneuvers (Commendation of Kael`thas trinket)
+        case 71634: // Item - Icecrown 25 Normal Tank Trinket 1
+        case 71640: // Item - Icecrown 25 Heroic Tank Trinket 1
+        case 75475: // Item - Chamber of Aspects 25 Normal Tank Trinket
+        case 75481: // Item - Chamber of Aspects 25 Heroic Tank Trinket
+        {
+            // Procs only if damage takes health below $s1%
+            if (!HealthBelowPctDamaged(triggerAmount, damage))
+                return false;
+            break;
+        }
         default:
             break;
     }
@@ -8749,8 +8763,8 @@ bool Unit::HandleProcTriggerSpell(Unit* victim, uint32 damage, AuraEffect* trigg
     // Blade Barrier
     if (auraSpellInfo->SpellFamilyName == SPELLFAMILY_DEATHKNIGHT && auraSpellInfo->SpellIconID == 85)
     {
-        Player* plr = this->ToPlayer();
-        if (this->GetTypeId() != TYPEID_PLAYER || !plr || plr->getClass() != CLASS_DEATH_KNIGHT)
+        Player* plr = ToPlayer();
+        if (!plr || plr->getClass() != CLASS_DEATH_KNIGHT)
             return false;
 
         if (!plr->IsBaseRuneSlotsOnCooldown(RUNE_BLOOD))
@@ -9684,7 +9698,7 @@ uint32 Unit::BuildAuraStateUpdateForTarget(Unit* target) const
     return auraStates;
 }
 
-bool Unit::HasAuraState(AuraState flag, SpellEntry const* spellProto, Unit const* Caster) const
+bool Unit::HasAuraState(AuraState flag, SpellEntry const *spellProto, Unit const* Caster) const
 {
     if (Caster)
     {
@@ -10085,7 +10099,7 @@ Unit* Unit::SelectMagnetTarget(Unit* victim, SpellEntry const* spellInfo)
             if (Unit* magnet = (*itr)->GetBase()->GetUnitOwner())
                 if (magnet->isAlive())
                 {
-                    (*itr)->GetBase()->DropCharge();
+                    (*itr)->GetBase()->DropCharge(AURA_REMOVE_BY_EXPIRE);
                     return magnet;
                 }
     }
@@ -10098,7 +10112,7 @@ Unit* Unit::SelectMagnetTarget(Unit* victim, SpellEntry const* spellInfo)
                 if (magnet->isAlive() && magnet->IsWithinLOSInMap(this))
                     if (roll_chance_i((*i)->GetAmount()))
                     {
-                        (*i)->GetBase()->DropCharge();
+                        (*i)->GetBase()->DropCharge(AURA_REMOVE_BY_EXPIRE);
                         return magnet;
                     }
     }
@@ -11693,7 +11707,7 @@ void Unit::MeleeDamageBonus(Unit* victim, uint32 *pdamage, WeaponAttackType attT
                     default: return;
                 }
 
-                Item * item = ToPlayer()->GetItemByPos(INVENTORY_SLOT_BAG_0, slot);
+                Item* item = ToPlayer()->GetItemByPos(INVENTORY_SLOT_BAG_0, slot);
 
                 if (item && !item->IsBroken() && item->IsFitToSpellRequirements((*i)->GetSpellProto()))
                     AddPctN(DoneTotalMod, (*i)->GetAmount());
@@ -11904,14 +11918,13 @@ void Unit::ApplySpellImmune(uint32 spellId, uint32 op, uint32 type, bool apply)
     {
         for (SpellImmuneList::iterator itr = m_spellImmune[op].begin(); itr != m_spellImmune[op].end(); ++itr)
         {
-            if (itr->spellId == spellId)
+            if (itr->spellId == spellId && itr->type == type)
             {
                 m_spellImmune[op].erase(itr);
                 break;
             }
         }
     }
-
 }
 
 void Unit::ApplySpellDispelImmunity(const SpellEntry * spellProto, DispelType type, bool apply)
@@ -12902,9 +12915,10 @@ Unit* Creature::SelectVictim()
     // search nearby enemy before enter evade mode
     if (HasReactState(REACT_AGGRESSIVE))
     {
-        target = SelectNearestTargetInAttackDistance();
+        target = SelectNearestTargetInAttackDistance(m_CombatDistance ? m_CombatDistance : ATTACK_DISTANCE);
+
         if (target && _IsTargetAcceptable(target))
-                return target;
+            return target;
     }
 
     Unit::AuraEffectList const& iAuras = GetAuraEffectsByType(SPELL_AURA_MOD_INVISIBILITY);
@@ -13077,7 +13091,7 @@ int32 Unit::ModSpellDuration(SpellEntry const* spellProto, Unit const* target, i
     return std::max(duration, 0);
 }
 
-void Unit::ModSpellCastTime(SpellEntry const* spellProto, int32 & castTime, Spell * spell)
+void Unit::ModSpellCastTime(SpellEntry const* spellProto, int32 & castTime, Spell* spell)
 {
     if (!spellProto || castTime < 0)
         return;
@@ -14439,7 +14453,7 @@ void Unit::ProcDamageAndSpellFor(bool isVictim, Unit* pTarget, uint32 procFlag, 
         }
         // Remove charge (aura can be removed by triggers)
         if (useCharges && takeCharges)
-            i->aura->DropCharge();
+            i->aura->DropCharge(AURA_REMOVE_BY_EXPIRE);
 
         if (spellInfo->AttributesEx3 & SPELL_ATTR3_DISABLE_PROC)
             SetCantProc(false);
@@ -16178,7 +16192,7 @@ void Unit::GetPartyMembers(std::list<Unit*> &TagUnitMap)
     }
 }
 
-Aura* Unit::AddAura(uint32 spellId, Unit* target)
+Aura * Unit::AddAura(uint32 spellId, Unit* target)
 {
     if (!target)
         return NULL;
@@ -16193,7 +16207,7 @@ Aura* Unit::AddAura(uint32 spellId, Unit* target)
     return AddAura(spellInfo, MAX_EFFECT_MASK, target);
 }
 
-Aura* Unit::AddAura(SpellEntry const* spellInfo, uint8 effMask, Unit* target)
+Aura * Unit::AddAura(SpellEntry const* spellInfo, uint8 effMask, Unit* target)
 {
     if (!spellInfo)
         return NULL;
@@ -16209,7 +16223,7 @@ Aura* Unit::AddAura(SpellEntry const* spellInfo, uint8 effMask, Unit* target)
             effMask &= ~(1<<i);
     }
 
-    if (Aura* aura = Aura::TryCreate(spellInfo, effMask, target, this))
+    if (Aura* aura = Aura::TryRefreshStackOrCreate(spellInfo, effMask, target, this))
     {
         aura->ApplyForTargets();
         return aura;
@@ -16790,7 +16804,7 @@ bool Unit::HandleSpellClick(Unit* clicker, int8 seatId)
                 else    // This can happen during Player::_LoadAuras
                 {
                     int32 bp0 = seatId;
-                    Aura::TryCreate(spellEntry, this, clicker, &bp0, NULL, origCasterGUID);
+                    Aura::TryRefreshStackOrCreate(spellEntry, MAX_EFFECT_MASK, this, clicker, &bp0, NULL, origCasterGUID);
                 }
             }
             else
@@ -16798,7 +16812,7 @@ bool Unit::HandleSpellClick(Unit* clicker, int8 seatId)
                 if (IsInMap(caster))
                     caster->CastSpell(target, spellEntry, true, NULL, NULL, origCasterGUID);
                 else
-                    Aura::TryCreate(spellEntry, this, clicker, NULL, NULL, origCasterGUID);
+                    Aura::TryRefreshStackOrCreate(spellEntry, MAX_EFFECT_MASK, this, clicker, NULL, NULL, origCasterGUID);
             }
 
             success = true;
@@ -16857,12 +16871,11 @@ void Unit::_EnterVehicle(Vehicle* vehicle, int8 seatId, AuraApplication const* a
         // drop flag at invisible in bg
         if (Battleground *bg = plr->GetBattleground())
             bg->EventPlayerDroppedFlag(plr);
-    }
 
-    if (Player* thisPlr = this->ToPlayer())
-    {
         WorldPacket data(SMSG_ON_CANCEL_EXPECTED_RIDE_VEHICLE_AURA, 0);
-        thisPlr->GetSession()->SendPacket(&data);
+        plr->GetSession()->SendPacket(&data);
+
+        plr->UnsummonPetTemporaryIfAny();
     }
 
     ASSERT(!m_vehicle);
@@ -16935,6 +16948,9 @@ void Unit::_ExitVehicle(Position const* exitPosition)
 
     SendMonsterMoveExitVehicle(&pos);
     Relocate(&pos);
+
+    if (Player* plr = ToPlayer())
+        plr->ResummonPetTemporaryUnSummonedIfAny();
 
     WorldPacket data2;
     BuildHeartBeatMsg(&data2);

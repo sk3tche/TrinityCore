@@ -390,7 +390,7 @@ void BattlegroundQueue::RemovePlayer(const uint64& guid, bool decreaseInvitedCou
         // first send removal information
         if (Player* plr2 = sObjectMgr->GetPlayer(group->Players.begin()->first))
         {
-            Battleground * bg = sBattlegroundMgr->GetBattlegroundTemplate(group->BgTypeId);
+            Battleground* bg = sBattlegroundMgr->GetBattlegroundTemplate(group->BgTypeId);
             BattlegroundQueueTypeId bgQueueTypeId = BattlegroundMgr::BGQueueTypeId(group->BgTypeId, group->arenatype);
             uint32 queueSlot = plr2->GetBattlegroundQueueIndex(bgQueueTypeId);
             plr2->RemoveBattlegroundQueueId(bgQueueTypeId); // must be called this way, because if you move this call to
@@ -422,7 +422,7 @@ bool BattlegroundQueue::GetPlayerGroupInfoData(const uint64& guid, GroupQueueInf
     return true;
 }
 
-bool BattlegroundQueue::InviteGroupToBG(GroupQueueInfo * ginfo, Battleground * bg, uint32 side)
+bool BattlegroundQueue::InviteGroupToBG(GroupQueueInfo * ginfo, Battleground* bg, uint32 side)
 {
     // set side if needed
     if (side)
@@ -777,7 +777,7 @@ void BattlegroundQueue::Update(BattlegroundTypeId bgTypeId, BattlegroundBracketI
 
     // finished iterating through the bgs with free slots, maybe we need to create a new bg
 
-    Battleground * bg_template = sBattlegroundMgr->GetBattlegroundTemplate(bgTypeId);
+    Battleground* bg_template = sBattlegroundMgr->GetBattlegroundTemplate(bgTypeId);
     if (!bg_template)
     {
         sLog->outError("Battleground: Update: bg template not found for %u", bgTypeId);
@@ -832,7 +832,7 @@ void BattlegroundQueue::Update(BattlegroundTypeId bgTypeId, BattlegroundBracketI
         if (CheckPremadeMatch(bracket_id, MinPlayersPerTeam, MaxPlayersPerTeam))
         {
             //create new battleground
-            Battleground * bg2 = sBattlegroundMgr->CreateNewBattleground(bgTypeId, bracketEntry, ARENA_TYPE_NONE, false);
+            Battleground* bg2 = sBattlegroundMgr->CreateNewBattleground(bgTypeId, bracketEntry, ARENA_TYPE_NONE, false);
             if (!bg2)
             {
                 sLog->outError("BattlegroundQueue::Update - Cannot create battleground: %u", bgTypeId);
@@ -858,7 +858,7 @@ void BattlegroundQueue::Update(BattlegroundTypeId bgTypeId, BattlegroundBracketI
             || (bg_template->isArena() && CheckSkirmishForSameFaction(bracket_id, MinPlayersPerTeam)))
         {
             // we successfully created a pool
-            Battleground * bg2 = sBattlegroundMgr->CreateNewBattleground(bgTypeId, bracketEntry, arenatype, false);
+            Battleground* bg2 = sBattlegroundMgr->CreateNewBattleground(bgTypeId, bracketEntry, arenatype, false);
             if (!bg2)
             {
                 sLog->outError("BattlegroundQueue::Update - Cannot create battleground: %u", bgTypeId);

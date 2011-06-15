@@ -69,7 +69,7 @@ struct OutdoorPvPData;
 #define VISIBLE_RANGE       (166.0f)                        //MAX visible range (size of grid)
 
 // Generic scripting text function.
-void DoScriptText(int32 textEntry, WorldObject* pSource, Unit* pTarget = NULL);
+void DoScriptText(int32 textEntry, WorldObject* pSource, Unit *pTarget = NULL);
 
 /*
     TODO: Add more script type classes.
@@ -700,7 +700,7 @@ class PlayerScript : public ScriptObject
         virtual void OnTextEmote(Player* /*player*/, uint32 /*text_emote*/, uint32 /*emoteNum*/, uint64 /*guid*/) { }
 
         // Called in Spell::cast
-        virtual void OnSpellCast(Player* /*player*/, Spell * /*spell*/, bool /*skipCheck*/) { }
+        virtual void OnSpellCast(Player* /*player*/, Spell* /*spell*/, bool /*skipCheck*/) { }
 
         // Called when a player logs in or out
         virtual void OnLogin(Player* /*player*/) { }
@@ -931,7 +931,7 @@ class ScriptMgr
         void OnPVPKill(Player* killer, Player* killed);
         void OnCreatureKill(Player* killer, Creature* killed);
         void OnPlayerKilledByCreature(Creature* killer, Player* killed);
-        void OnPlayerLevelChanged(Player* player, uint8 newLevel);
+        void OnPlayerLevelChanged(Player* player, uint8 oldLevel);
         void OnPlayerFreeTalentPointsChanged(Player* player, uint32 newPoints);
         void OnPlayerTalentsReset(Player* player, bool no_cost);
         void OnPlayerMoneyChanged(Player* player, int32& amount);
@@ -947,7 +947,7 @@ class ScriptMgr
         void OnPlayerChat(Player* player, uint32 type, uint32 lang, std::string& msg, Channel* channel);
         void OnPlayerEmote(Player* player, uint32 emote);
         void OnPlayerTextEmote(Player* player, uint32 text_emote, uint32 emoteNum, uint64 guid);
-        void OnPlayerSpellCast(Player* player, Spell *spell, bool skipCheck);
+        void OnPlayerSpellCast(Player* player, Spell* spell, bool skipCheck);
         void OnPlayerLogin(Player* player);
         void OnPlayerLogout(Player* player);
         void OnPlayerCreate(Player* player);
@@ -955,12 +955,12 @@ class ScriptMgr
         void OnPlayerBindToInstance(Player* player, Difficulty difficulty, uint32 mapid, bool permanent);
 
     public: /* GuildScript */
-        void OnGuildAddMember(Guild *guild, Player* player, uint8& plRank);
-        void OnGuildRemoveMember(Guild *guild, Player* player, bool isDisbanding, bool isKicked);
-        void OnGuildMOTDChanged(Guild *guild, const std::string& newMotd);
-        void OnGuildInfoChanged(Guild *guild, const std::string& newInfo);
-        void OnGuildCreate(Guild *guild, Player* leader, const std::string& name);
-        void OnGuildDisband(Guild *guild);
+        void OnGuildAddMember(Guild* guild, Player* player, uint8& plRank);
+        void OnGuildRemoveMember(Guild* guild, Player* player, bool isDisbanding, bool isKicked);
+        void OnGuildMOTDChanged(Guild* guild, const std::string& newMotd);
+        void OnGuildInfoChanged(Guild* guild, const std::string& newInfo);
+        void OnGuildCreate(Guild* guild, Player* leader, const std::string& name);
+        void OnGuildDisband(Guild* guild);
         void OnGuildMemberWitdrawMoney(Guild* guild, Player* player, uint32 &amount, bool isRepair);
         void OnGuildMemberDepositMoney(Guild* guild, Player* player, uint32 &amount);
         void OnGuildItemMove(Guild* guild, Player* player, Item* pItem, bool isSrcBank, uint8 srcContainer, uint8 srcSlotId,

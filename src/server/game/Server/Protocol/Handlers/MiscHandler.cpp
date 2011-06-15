@@ -88,7 +88,7 @@ void WorldSession::HandleGossipSelectOptionOpcode(WorldPacket & recv_data)
 
     recv_data >> guid >> menuId >> gossipListId;
 
-    if (_player->PlayerTalkClass->GossipOptionCoded(gossipListId))
+    if (_player->PlayerTalkClass->IsGossipOptionCoded(gossipListId))
         recv_data >> code;
 
     Creature* unit = NULL;
@@ -128,7 +128,7 @@ void WorldSession::HandleGossipSelectOptionOpcode(WorldPacket & recv_data)
             unit->LastUsedScriptID = unit->GetCreatureInfo()->ScriptID;
         if (go)
             go->LastUsedScriptID = go->GetGOInfo()->ScriptId;
-        _player->PlayerTalkClass->CloseGossip();
+        _player->PlayerTalkClass->SendCloseGossip();
         return;
     }
     if (!code.empty())
@@ -136,13 +136,13 @@ void WorldSession::HandleGossipSelectOptionOpcode(WorldPacket & recv_data)
         if (unit)
         {
             unit->AI()->sGossipSelectCode(_player, menuId, gossipListId, code.c_str());
-            if (!sScriptMgr->OnGossipSelectCode(_player, unit, _player->PlayerTalkClass->GossipOptionSender(gossipListId), _player->PlayerTalkClass->GossipOptionAction(gossipListId), code.c_str()))
+            if (!sScriptMgr->OnGossipSelectCode(_player, unit, _player->PlayerTalkClass->GetGossipOptionSender(gossipListId), _player->PlayerTalkClass->GetGossipOptionAction(gossipListId), code.c_str()))
                 _player->OnGossipSelect(unit, gossipListId, menuId);
         }
         else
         {
             go->AI()->GossipSelectCode(_player, menuId, gossipListId, code.c_str());
-            sScriptMgr->OnGossipSelectCode(_player, go, _player->PlayerTalkClass->GossipOptionSender(gossipListId), _player->PlayerTalkClass->GossipOptionAction(gossipListId), code.c_str());
+            sScriptMgr->OnGossipSelectCode(_player, go, _player->PlayerTalkClass->GetGossipOptionSender(gossipListId), _player->PlayerTalkClass->GetGossipOptionAction(gossipListId), code.c_str());
         }
     }
     else
@@ -150,13 +150,13 @@ void WorldSession::HandleGossipSelectOptionOpcode(WorldPacket & recv_data)
         if (unit)
         {
             unit->AI()->sGossipSelect(_player, menuId, gossipListId);
-            if (!sScriptMgr->OnGossipSelect(_player, unit, _player->PlayerTalkClass->GossipOptionSender(gossipListId), _player->PlayerTalkClass->GossipOptionAction(gossipListId)))
+            if (!sScriptMgr->OnGossipSelect(_player, unit, _player->PlayerTalkClass->GetGossipOptionSender(gossipListId), _player->PlayerTalkClass->GetGossipOptionAction(gossipListId)))
                 _player->OnGossipSelect(unit, gossipListId, menuId);
         }
         else
         {
             go->AI()->GossipSelect(_player, menuId, gossipListId);
-            sScriptMgr->OnGossipSelect(_player, go, _player->PlayerTalkClass->GossipOptionSender(gossipListId), _player->PlayerTalkClass->GossipOptionAction(gossipListId));
+            sScriptMgr->OnGossipSelect(_player, go, _player->PlayerTalkClass->GetGossipOptionSender(gossipListId), _player->PlayerTalkClass->GetGossipOptionAction(gossipListId));
         }
     }
 }
@@ -367,7 +367,7 @@ void WorldSession::HandleLogoutRequestOpcode(WorldPacket & /*recv_data*/)
         reason = 1;
     else if (GetPlayer()->m_movementInfo.HasMovementFlag(MOVEMENTFLAG_JUMPING | MOVEMENTFLAG_FALLING))
         reason = 3;                                         // is jumping or falling
-    else if (GetPlayer()->duel || GetPlayer()->HasAura(9454) || GetPlayer()->IsMounted()) // is dueling, frozen (by GM), or mounted
+    else if (GetPlayer()->duel || GetPlayer()->HasAura(9454)) // is dueling or frozen by GM via freeze command
         reason = 2;                                         // FIXME - Need the correct value
 
     if (reason)
@@ -1221,7 +1221,7 @@ void WorldSession::HandleInspectOpcode(WorldPacket& recv_data)
 
     _player->SetSelection(guid);
 
-    Player* plr = sObjectMgr->GetPlayer(guid);
+    Player *plr = sObjectMgr->GetPlayer(guid);
     if (!plr)                                                // wrong player
         return;
 
@@ -1322,7 +1322,7 @@ void WorldSession::HandleWhoisOpcode(WorldPacket& recv_data)
         return;
     }
 
-    Player* plr = sObjectMgr->GetPlayer(charname.c_str());
+    Player *plr = sObjectMgr->GetPlayer(charname.c_str());
 
     if (!plr)
     {
@@ -1339,7 +1339,7 @@ void WorldSession::HandleWhoisOpcode(WorldPacket& recv_data)
         return;
     }
 
-    Field* fields = result->Fetch();
+    Field *fields = result->Fetch();
     std::string acc = fields[0].GetString();
     if (acc.empty())
         acc = "Unknown";
@@ -1491,7 +1491,7 @@ void WorldSession::HandleTimeSyncResp(WorldPacket & recv_data)
 void WorldSession::HandleResetInstancesOpcode(WorldPacket & /*recv_data*/)
 {
     sLog->outDebug(LOG_FILTER_NETWORKIO, "WORLD: CMSG_RESET_INSTANCES");
-    Group* pGroup = _player->GetGroup();
+    Group *pGroup = _player->GetGroup();
     if (pGroup)
     {
         if (pGroup->IsLeader(_player->GetGUID()))
@@ -1524,7 +1524,7 @@ void WorldSession::HandleSetDungeonDifficultyOpcode(WorldPacket & recv_data)
         return;
 
     // cannot reset while in an instance
-    Map* map = _player->GetMap();
+    Map *map = _player->GetMap();
     if (map && map->IsDungeon())
     {
         sLog->outError("WorldSession::HandleSetDungeonDifficultyOpcode: player %d tried to reset the instance while inside!", _player->GetGUIDLow());
@@ -1534,7 +1534,7 @@ void WorldSession::HandleSetDungeonDifficultyOpcode(WorldPacket & recv_data)
     if (_player->getLevel() < LEVELREQUIREMENT_HEROIC)
         return;
 
-    Group* pGroup = _player->GetGroup();
+    Group *pGroup = _player->GetGroup();
     if (pGroup)
     {
         if (pGroup->IsLeader(_player->GetGUID()))
@@ -1582,7 +1582,7 @@ void WorldSession::HandleSetRaidDifficultyOpcode(WorldPacket & recv_data)
     }
 
     // cannot reset while in an instance
-    Map* map = _player->GetMap();
+    Map *map = _player->GetMap();
     if (map && map->IsDungeon())
     {
         sLog->outError("WorldSession::HandleSetRaidDifficultyOpcode: player %d tried to reset the instance while inside!", _player->GetGUIDLow());
@@ -1595,7 +1595,7 @@ void WorldSession::HandleSetRaidDifficultyOpcode(WorldPacket & recv_data)
     if (_player->getLevel() < LEVELREQUIREMENT_HEROIC)
         return;
 
-    Group* pGroup = _player->GetGroup();
+    Group *pGroup = _player->GetGroup();
     if (pGroup)
     {
         if (pGroup->IsLeader(_player->GetGUID()))
@@ -1728,8 +1728,8 @@ void WorldSession::HandleHearthAndResurrect(WorldPacket& /*recv_data*/)
     if (_player->isInFlight())
         return;
 
-    AreaTableEntry const* atEntry = GetAreaEntryByAreaID(_player->GetAreaId());
-    if (!atEntry || !(atEntry->flags & AREA_FLAG_OUTDOOR_PVP2))
+    AreaTableEntry const *atEntry = GetAreaEntryByAreaID(_player->GetAreaId());
+    if (!atEntry || !(atEntry->flags & AREA_FLAG_WINTERGRASP_2))
         return;
 
     _player->BuildPlayerRepop();

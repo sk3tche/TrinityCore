@@ -251,7 +251,7 @@ public:
     void SetScript9(SmartScriptHolder &e, uint32 entry, Unit* invoker);
 
 protected:
-    GameObject * const go;
+    GameObject* const go;
     SmartScript mScript;
 };
 #endif

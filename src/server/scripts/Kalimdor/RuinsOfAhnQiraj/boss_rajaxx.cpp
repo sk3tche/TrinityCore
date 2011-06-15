@@ -38,7 +38,7 @@ enum Yells
     SAY_DEATH                 = -1509014,
     SAY_CHANGEAGGRO           = -1509015,
     SAY_KILLS_ANDOROV         = -1509016,
-    SAY_COMPLETE_QUEST        = -1509017                        // Yell when realm complete quest 8743 for world event
+    SAY_COMPLETE_QUEST        = -1509017    // Yell when realm complete quest 8743 for world event
     // Warriors, Captains, continue the fight! Sound: 8640
 };
 
@@ -56,36 +56,6 @@ enum Events
     EVENT_CHANGE_AGGRO      = 3,
 };
 
-//Waypoints
-/*
-Waypoint 1: X: 9122.947 Y: -1600.251 Z: -27.77769
-Waypoint 2: X: 9113.947 Y: -1596.751 Z: -22.27769
-Waypoint 3: X: 9112.697 Y: -1595.501 Z: -22.02769
-Waypoint 4: X: 9110.197 Y: -1592.001 Z: -22.02769
-Waypoint 5: X: 9110.197 Y: -1587.751 Z: -22.02769
-Waypoint 6: X: 9110.197 Y: -1583.501 Z: -22.02769
-Waypoint 7: X: 9099.697 Y: -1575.251 Z: -22.02769
-Waypoint 8: X: 9083.197 Y: -1579.501 Z: -22.02769
-Waypoint 9: X: 9074.697 Y: -1579.501 Z: -22.02769
-Waypoint 10: X: 9066.447 Y: -1581.501 Z: -22.02769
-Waypoint 11: X: 9063.197 Y: -1579.501 Z: -22.77769
-Waypoint 12: X: 9062.197 Y: -1578.251 Z: -22.77769
-Waypoint 13: X: 9060.197 Y: -1578.251 Z: -22.77769
-Waypoint 14: X: 9058.197 Y: -1578.251 Z: -22.77769
-Waypoint 15: X: 9055.947 Y: -1578.251 Z: -22.77769
-Waypoint 16: X: 9053.947 Y: -1578.251 Z: -22.77769
-Waypoint 17: X: 9051.947 Y: -1578.251 Z: -22.77769
-Waypoint 18: X: 9049.697 Y: -1578.251 Z: -22.77769
-Waypoint 19: X: 9047.697 Y: -1578.251 Z: -22.77769
-Waypoint 20: X: 9045.697 Y: -1578.251 Z: -22.77769
-Waypoint 21: X: 9043.447 Y: -1578.251 Z: -22.77769
-Waypoint 22: X: 9041.447 Y: -1578.251 Z: -22.77769
-Waypoint 23: X: 9039.447 Y: -1578.251 Z: -22.52769
-Waypoint 24: X: 9037.197 Y: -1578.251 Z: -22.52769
-Waypoint 25: X: 9033.197 Y: -1577.251 Z: -22.27769
-*/
-// http://www.youtube.com/watch?v=FOQaLSI5-Go
-
 class boss_rajaxx : public CreatureScript
 {
     public:
@@ -95,12 +65,11 @@ class boss_rajaxx : public CreatureScript
         {
             boss_rajaxxAI(Creature* creature) : BossAI(creature, BOSS_RAJAXX)
             {
-                instance = creature->GetInstanceScript();
             }
 
             void Reset()
             {
-                BossAI::Reset();
+                _Reset();
                 enraged = false;
                 events.ScheduleEvent(EVENT_DISARM, 10000);
                 events.ScheduleEvent(EVENT_THUNDERCRASH, 12000);
@@ -109,12 +78,12 @@ class boss_rajaxx : public CreatureScript
             void JustDied(Unit* killer)
             {
                 //SAY_DEATH
-                BossAI::JustDied(killer);
+                _JustDied();
             }
 
             void EnterCombat(Unit* victim)
             {
-                BossAI::EnterCombat(victim);
+                _EnterCombat();
             }
 
             void UpdateAI(const uint32 diff)
@@ -147,8 +116,6 @@ class boss_rajaxx : public CreatureScript
                 DoMeleeAttackIfReady();
             }
             private:
-                InstanceScript* instance;
-                EventMap events;
                 bool enraged;
         };
 

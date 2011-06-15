@@ -110,10 +110,10 @@ bool ObjectPosSelector::NextUsedAngle(float& angle)
     return false;
 }
 
-bool ObjectPosSelector::NextPosibleAngle( float& angle )
+bool ObjectPosSelector::NextPosibleAngle(float& angle)
 {
     // ++ direction less updated
-    if ( m_nextUsedPos[USED_POS_PLUS]!=m_UsedPosLists[USED_POS_PLUS].end() &&
+    if (m_nextUsedPos[USED_POS_PLUS]!=m_UsedPosLists[USED_POS_PLUS].end() &&
         (m_nextUsedPos[USED_POS_MINUS]==m_UsedPosLists[USED_POS_MINUS].end() || m_nextUsedPos[USED_POS_PLUS]->first <= m_nextUsedPos[USED_POS_MINUS]->first) )
     {
         bool ok;
@@ -127,7 +127,7 @@ bool ObjectPosSelector::NextPosibleAngle( float& angle )
         return ok;
     }
     // -- direction less updated
-    else if ( m_nextUsedPos[USED_POS_MINUS]!=m_UsedPosLists[USED_POS_MINUS].end())
+    else if (m_nextUsedPos[USED_POS_MINUS]!=m_UsedPosLists[USED_POS_MINUS].end())
     {
         bool ok;
         if (m_smallStepOk[USED_POS_MINUS])
@@ -141,15 +141,11 @@ bool ObjectPosSelector::NextPosibleAngle( float& angle )
     }
     else                                                    // both list empty
     {
-        if ( m_smallStepOk[USED_POS_PLUS] && (!m_smallStepOk[USED_POS_MINUS] || m_smallStepAngle[USED_POS_PLUS] <= m_smallStepAngle[USED_POS_MINUS]) )
-        {
+        if (m_smallStepOk[USED_POS_PLUS] && (!m_smallStepOk[USED_POS_MINUS] || m_smallStepAngle[USED_POS_PLUS] <= m_smallStepAngle[USED_POS_MINUS]))
             return NextSmallStepAngle(1.0, USED_POS_PLUS, angle);
-        }
         // -- direction less updated
-        else if ( m_smallStepOk[USED_POS_MINUS] )
-        {
+        else if (m_smallStepOk[USED_POS_MINUS])
             return NextSmallStepAngle(-1.0, USED_POS_MINUS, angle);
-        }
     }
 
     // no angles

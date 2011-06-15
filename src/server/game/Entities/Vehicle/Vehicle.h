@@ -120,6 +120,7 @@ class Vehicle
         void Uninstall();
         void Reset(bool evading = false);
         void InstallAllAccessories(bool evading);
+        void ApplyAllImmunities();
 
         Unit* GetBase() const { return me; }
         VehicleEntry const* GetVehicleInfo() const { return m_vehicleInfo; }

@@ -55,12 +55,12 @@ class boss_kurinnaxx : public CreatureScript
 
             void Reset()
             {
-                BossAI::Reset();
+                _Reset();
                 _enraged = false;
-                _events.ScheduleEvent(EVENT_MORTAL_WOUND, 8000);
-                _events.ScheduleEvent(EVENT_SANDTRAP, urand(5000,15000));
-                _events.ScheduleEvent(EVENT_TRASH, 1000);
-                _events.ScheduleEvent(EVENT_WIDE_SLASH, 11000);
+                events.ScheduleEvent(EVENT_MORTAL_WOUND, 8000);
+                events.ScheduleEvent(EVENT_SANDTRAP, urand(5000,15000));
+                events.ScheduleEvent(EVENT_TRASH, 1000);
+                events.ScheduleEvent(EVENT_WIDE_SLASH, 11000);
             }
 
             void DamageTaken(Unit* /*attacker*/, uint32& /*damage*/)
@@ -77,33 +77,33 @@ class boss_kurinnaxx : public CreatureScript
                 if (!UpdateVictim())
                     return;
 
-                _events.Update(diff);
+                events.Update(diff);
 
                 if (me->HasUnitState(UNIT_STAT_CASTING))
                     return;
 
-                while (uint32 eventId = _events.ExecuteEvent())
+                while (uint32 eventId = events.ExecuteEvent())
                 {
                     switch (eventId)
                     {
                         case EVENT_MORTAL_WOUND:
                             DoCastVictim(SPELL_MORTALWOUND);
-                            _events.ScheduleEvent(EVENT_MORTAL_WOUND, 8000);
+                            events.ScheduleEvent(EVENT_MORTAL_WOUND, 8000);
                             break;
                         case EVENT_SANDTRAP:
                             if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
                                 target->CastSpell(target, SPELL_SANDTRAP, true);
                             else
                                 me->getVictim()->CastSpell(me->getVictim(), SPELL_SANDTRAP, true);
-                            _events.ScheduleEvent(EVENT_SANDTRAP, urand(5000,15000));
+                            events.ScheduleEvent(EVENT_SANDTRAP, urand(5000,15000));
                             break;
                         case EVENT_WIDE_SLASH:
                             DoCast(me, SPELL_WIDE_SLASH);
-                            _events.ScheduleEvent(EVENT_WIDE_SLASH, 11000);
+                            events.ScheduleEvent(EVENT_WIDE_SLASH, 11000);
                             break;
                         case EVENT_TRASH:
                             DoCast(me, SPELL_TRASH);
-                            _events.ScheduleEvent(EVENT_WIDE_SLASH, 16000);
+                            events.ScheduleEvent(EVENT_WIDE_SLASH, 16000);
                             break;
                         default:
                             break;
@@ -113,7 +113,6 @@ class boss_kurinnaxx : public CreatureScript
                 DoMeleeAttackIfReady();
             }
             private:
-                EventMap _events;
                 bool _enraged;
         };
 

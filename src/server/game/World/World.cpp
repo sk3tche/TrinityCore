@@ -828,7 +828,7 @@ void World::LoadConfigSettings(bool reload)
         m_int_configs[CONFIG_MAX_RECRUIT_A_FRIEND_BONUS_PLAYER_LEVEL] = 60;
     }
 
-    m_int_configs[CONFIG_MAX_RECRUIT_A_FRIEND_BONUS_PLAYER_LEVEL_DIFFERENCE] = sConfig->GetIntDefault("RecruitAFriend.MaxDifference", 3);
+    m_int_configs[CONFIG_MAX_RECRUIT_A_FRIEND_BONUS_PLAYER_LEVEL_DIFFERENCE] = sConfig->GetIntDefault("RecruitAFriend.MaxDifference", 4);
     m_bool_configs[CONFIG_ALL_TAXI_PATHS] = sConfig->GetBoolDefault("AllFlightPaths", false);
     m_bool_configs[CONFIG_INSTANT_TAXI] = sConfig->GetBoolDefault("InstantFlightPaths", false);
 
@@ -1355,7 +1355,7 @@ void World::SetInitialWorldSettings()
     sLog->outString("Loading Creature Reputation OnKill Data...");
     sObjectMgr->LoadReputationOnKill();
 
-    sLog->outString( "Loading Reputation Spillover Data..." );
+    sLog->outString("Loading Reputation Spillover Data..." );
     sObjectMgr->LoadReputationSpilloverTemplate();
 
     sLog->outString("Loading Points Of Interest Data...");
@@ -1824,7 +1824,7 @@ void World::LoadAutobroadcasts()
     do
     {
 
-        Field* fields = result->Fetch();
+        Field *fields = result->Fetch();
         std::string message = fields[0].GetString();
 
         m_Autobroadcasts.push_back(message);
@@ -2008,7 +2008,7 @@ void World::ForceGameEventUpdate()
 }
 
 /// Send a packet to all players (except self if mentioned)
-void World::SendGlobalMessage(WorldPacket* packet, WorldSession *self, uint32 team)
+void World::SendGlobalMessage(WorldPacket* packet, WorldSession* self, uint32 team)
 {
     SessionMap::const_iterator itr;
     for (itr = m_sessions.begin(); itr != m_sessions.end(); ++itr)
@@ -2025,7 +2025,7 @@ void World::SendGlobalMessage(WorldPacket* packet, WorldSession *self, uint32 te
 }
 
 /// Send a packet to all GMs (except self if mentioned)
-void World::SendGlobalGMMessage(WorldPacket* packet, WorldSession *self, uint32 team)
+void World::SendGlobalGMMessage(WorldPacket* packet, WorldSession* self, uint32 team)
 {
     SessionMap::iterator itr;
     for (itr = m_sessions.begin(); itr != m_sessions.end(); ++itr)
@@ -2141,7 +2141,7 @@ void World::SendGMText(int32 string_id, ...)
 }
 
 /// DEPRECATED, only for debug purpose. Send a System Message to all players (except self if mentioned)
-void World::SendGlobalText(const char* text, WorldSession *self)
+void World::SendGlobalText(const char* text, WorldSession* self)
 {
     WorldPacket data;
 
@@ -2159,7 +2159,7 @@ void World::SendGlobalText(const char* text, WorldSession *self)
 }
 
 /// Send a packet to all players (or players selected team) in the zone (except self if mentioned)
-void World::SendZoneMessage(uint32 zone, WorldPacket* packet, WorldSession *self, uint32 team)
+void World::SendZoneMessage(uint32 zone, WorldPacket* packet, WorldSession* self, uint32 team)
 {
     SessionMap::const_iterator itr;
     for (itr = m_sessions.begin(); itr != m_sessions.end(); ++itr)
@@ -2177,7 +2177,7 @@ void World::SendZoneMessage(uint32 zone, WorldPacket* packet, WorldSession *self
 }
 
 /// Send a System Message to all players in the zone (except self if mentioned)
-void World::SendZoneText(uint32 zone, const char* text, WorldSession *self, uint32 team)
+void World::SendZoneText(uint32 zone, const char* text, WorldSession* self, uint32 team)
 {
     WorldPacket data;
     ChatHandler::FillMessageData(&data, NULL, CHAT_MSG_SYSTEM, LANG_UNIVERSAL, NULL, 0, text, NULL);
@@ -2313,7 +2313,7 @@ bool World::RemoveBanAccount(BanMode mode, std::string nameOrIP)
 /// Ban an account or ban an IP address, duration will be parsed using TimeStringToSecs if it is positive, otherwise permban
 BanReturn World::BanCharacter(std::string name, std::string duration, std::string reason, std::string author)
 {
-    Player* pBanned = sObjectMgr->GetPlayer(name.c_str());
+    Player *pBanned = sObjectMgr->GetPlayer(name.c_str());
     uint32 guid = 0;
 
     uint32 duration_secs = TimeStringToSecs(duration);
@@ -2354,7 +2354,7 @@ BanReturn World::BanCharacter(std::string name, std::string duration, std::strin
 /// Remove a ban from a character
 bool World::RemoveBanCharacter(std::string name)
 {
-    Player* pBanned = sObjectMgr->GetPlayer(name.c_str());
+    Player *pBanned = sObjectMgr->GetPlayer(name.c_str());
     uint32 guid = 0;
 
     /// Pick a player to ban if not online
@@ -2591,7 +2591,7 @@ void World::_UpdateRealmCharCount(PreparedQueryResult resultCharCount)
 {
     if (resultCharCount)
     {
-        Field* fields = resultCharCount->Fetch();
+        Field *fields = resultCharCount->Fetch();
         uint32 accountId = fields[0].GetUInt32();
         uint32 charCount = fields[1].GetUInt32();
 
@@ -2622,7 +2622,7 @@ void World::InitDailyQuestResetTime()
     QueryResult result = CharacterDatabase.Query("SELECT MAX(time) FROM character_queststatus_daily");
     if (result)
     {
-        Field* fields = result->Fetch();
+        Field *fields = result->Fetch();
         mostRecentQuestTime = time_t(fields[0].GetUInt32());
     }
     else
@@ -2794,7 +2794,7 @@ void World::LoadWorldStates()
 
     do
     {
-        Field* fields = result->Fetch();
+        Field *fields = result->Fetch();
         m_worldstates[fields[0].GetUInt32()] = fields[1].GetUInt32();
         ++count;
     }

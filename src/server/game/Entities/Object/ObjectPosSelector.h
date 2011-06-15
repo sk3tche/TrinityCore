@@ -53,7 +53,7 @@ struct ObjectPosSelector
     bool NextAngle(float& angle);
     bool NextUsedAngle(float& angle);
 
-    bool NextPosibleAngle( float& angle );
+    bool NextPosibleAngle(float& angle);
 
     bool CheckAngle(UsedPosList::value_type const& nextUsedPos, float sign, float angle ) const
     {
@@ -68,13 +68,13 @@ struct ObjectPosSelector
 
     bool CheckOriginal() const
     {
-        return (m_UsedPosLists[USED_POS_PLUS].empty()  || CheckAngle( *m_UsedPosLists[USED_POS_PLUS].begin(), 1.0, 0)) &&
-            (m_UsedPosLists[USED_POS_MINUS].empty() || CheckAngle( *m_UsedPosLists[USED_POS_MINUS].begin(), -1.0, 0));
+        return (m_UsedPosLists[USED_POS_PLUS].empty() || CheckAngle(*m_UsedPosLists[USED_POS_PLUS].begin(), 1.0, 0)) &&
+            (m_UsedPosLists[USED_POS_MINUS].empty() || CheckAngle(*m_UsedPosLists[USED_POS_MINUS].begin(), -1.0, 0));
     }
 
     bool IsNonBalanced() const { return m_UsedPosLists[USED_POS_PLUS].empty() != m_UsedPosLists[USED_POS_MINUS].empty(); }
 
-    bool NextAngleFor( UsedPosList::value_type const& usedPos, float sign, UsedPosType uptype, float &angle )
+    bool NextAngleFor(UsedPosList::value_type const& usedPos, float sign, UsedPosType uptype, float &angle)
     {
         float angle_step  = GetAngle(usedPos.second);
 
@@ -100,7 +100,7 @@ struct ObjectPosSelector
         return true;
     }
 
-    bool NextSmallStepAngle( float sign, UsedPosType uptype, float &angle )
+    bool NextSmallStepAngle(float sign, UsedPosType uptype, float &angle)
     {
         // next possible angle
         angle  = m_smallStepAngle[uptype] + m_anglestep * sign;

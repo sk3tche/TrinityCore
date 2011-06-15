@@ -687,8 +687,7 @@ uint32 Transport::AddNPCPassenger(uint32 tguid, uint32 entry, float x, float y, 
     else
         currenttguid = std::max(tguid, currenttguid);
 
-    // This causes major lags since way too many grids are loaded on startup.
-    //pCreature->setActive(true);
+
     pCreature->SetGUIDTransport(tguid);
     sScriptMgr->OnAddCreaturePassenger(this, pCreature);
     return tguid;
